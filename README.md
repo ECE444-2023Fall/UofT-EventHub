@@ -66,3 +66,28 @@ OrganizerLogoBucket(<ins>logoID</ins>, logoImage)
 > This is a bucket that maps logoIDs to actual images
 - Stores images for a specific logoID
 - Note logoImages is not a key and can hold duplicates.
+
+UserDetails(<ins>username</ins>, campus, degree, year, department, sex)
+### Database Integrity Constraints
+- Credentials[type] = {'user', 'organizer'}
+- UserPreferences[safesearch] = {'true', 'false'}; The deafult is false
+- UserPreferences[view] = {'calendar', 'list'}; The default is list
+- UserPreferences[username] \<subset\> Credentials[username]
+- OrganizerDetails[username] \<subset\> Credentials[username, type = 'organizer']
+- OrganizerDetails[averageRating] = [0, 5]; Precision upto 1 decimal place
+- OrganizerDetails[minRating] = [0, 5]; Only integers
+- OrganizerDetails[maxRating] = [0, 5]; Only integers
+- OrganizerDetails[logoID] \<subset\> OrganizerLogoBucket[logoID]
+- OrganizerEventDetails[username] \<subset\> Credentials[username, type = 'organizer']
+- OrganizerEventDetails[eventID] \<subset\> EventDetails[eventID]
+- UserDetails[username] \<subset\> Credentials[username, type = 'user']
+- UserDetails[campus] = {'UTSG', 'UTSC', 'UTM'}
+- UserDetails[degree] = {'UG', 'M', 'PG'}; undergrad, master and postgrad respectively
+- UserDetails[year] = {'1', '2', '3', '4', 'PEY', '5'}; 5 is for post grads in their fifth year or repeat students
+- UserDetails[department] = {'Engineering', 'Arts And Science', 'Rotman'}; Others can be added later
+- UserDetails[sex] = {'M', 'F'}
+- EventDetails[bannerID] \<subset\> EventGraphicsBucket[bannerID]
+- EventDetails[eventType] = {'online', 'in-person', 'hybrid'}
+
+
+
