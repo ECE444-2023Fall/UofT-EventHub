@@ -4,7 +4,6 @@ from flask_moment import Moment
 from forms import LoginForm, RegForm
 from enum import Enum
 from flask_sqlalchemy import SQLAlchemy
-
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -19,12 +18,21 @@ def create_app(debug):
     bootstrap = Bootstrap(app=app)
     moment = Moment(app)
 
-    from models import Credentials
+    # from models import Credentials
 
     with app.app_context():
         db.create_all()
 
     return app
+
+class Credentials(db.Model):
+    username = db.Column(db.String(150), primary_key=True)
+    password = db.Column(db.String(150))
+    role = db.Column(db.Integer)
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return f"Username : {self.username}, Password: {self.password}, Role: {self.role}"
 
 def create_database(app):
     if not path.exists(DB_NAME):
@@ -46,7 +54,7 @@ def login():
             if (user.password == password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('user_main'))
             else:
                 flash('Incorrect password, try again.', category='error')
 
@@ -56,6 +64,7 @@ def login():
             #     return redirect(url_for('views.home'))
             # else:
             #     flash('Incorrect password, try again.', category='error')
+
         else:
             flash('Email does not exist.', category='error')
 
@@ -64,7 +73,6 @@ def login():
         #     return redirect(url_for('user_main'))
         # else:
         #     return redirect(url_for('organizer_main'))
-        return redirect(url_for('user_main'))
         
         print(f"Entered Data: ({username}, {password})")
 
@@ -97,7 +105,7 @@ def register():
         else:
             return redirect(url_for('organizer_main'))
 
-    return render_template('login.html', form=form)
+    return render_template('register.html', form=form)
 
 @app.route('/user', methods=['GET'])
 def user_main():
