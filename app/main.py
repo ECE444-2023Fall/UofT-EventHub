@@ -5,16 +5,37 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import DataRequired, Email
 from enum import Enum
+from flask_sqlalchemy import SQLAlchemy
 
 from datetime import datetime
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '4829jfnwurduh4293k'
-bootstrap = Bootstrap(app=app)
-moment = Moment(app)
-
+db = SQLAlchemy()
+DB_NAME = "database.db"
 R_USER = "user"
 R_ORGANIZER = "organizer"
+
+def create_app(debug):
+    app = Flask(__name__)
+    app.debug = debug
+    app.config['SECRET_KEY'] = '4829jfnwurduh4293k'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    db.init_app(app)
+    bootstrap = Bootstrap(app=app)
+    moment = Moment(app)
+
+    from models import Credentials
+
+    with app.app_context():
+        db.create_all()
+
+    return app
+
+def create_database(app):
+    if not path.exists(DB_NAME):
+        db.create_all(app=app)
+        print('Created Database!')
+
+app = create_app(debug = True)
 
 class NameForm(FlaskForm):
     # NOTE: In the future the role will be infered after authorization
@@ -31,6 +52,16 @@ def login():
         username = form.username.data
         password = form.password.data
         # Authenticate the entry
+        # user = User.query.filter_by(username=username).first()
+        # if user:
+        #     if check_password_hash(user.password, password):
+        #         flash('Logged in successfully!', category='success')
+        #         login_user(user, remember=True)
+        #         return redirect(url_for('views.home'))
+        #     else:
+        #         flash('Incorrect password, try again.', category='error')
+        # else:
+        #     flash('Email does not exist.', category='error')
 
         # Attempt redirection
         if role == R_USER:
