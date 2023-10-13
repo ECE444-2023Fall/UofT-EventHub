@@ -34,10 +34,10 @@ def login():
 
         # Attempt redirection
         if role == R_USER:
-            print("HELLO")
             return redirect(url_for('user_main'))
         else:
-            pass
+            return redirect(url_for('organizer_main'))
+        
         print(f"Entered Data: ({role}, {username}, {password})")
 
         return redirect((url_for('login')))
@@ -46,3 +46,7 @@ def login():
 @app.route('/user', methods=['GET'])
 def user_main():
     return render_template('user_main.html')
+
+@app.route('/organizer', methods=['GET'])
+def organizer_main():
+    return render_template('organizer_main.html')
