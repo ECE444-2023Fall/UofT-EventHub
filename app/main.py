@@ -1,6 +1,9 @@
 from flask import Flask, render_template, session, redirect, url_for, flash
+from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
+from flask_login import UserMixin, LoginManager
 from forms import LoginForm, RegForm
 from enum import Enum
 from flask_sqlalchemy import SQLAlchemy
@@ -21,9 +24,16 @@ def create_app(debug):
     with app.app_context():
         db.create_all()
 
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(username):
+        return Credentials.query.get(username)
+
     return app
 
-class Credentials(db.Model):
+class Credentials(db.Model, UserMixin):
     username = db.Column(db.String(150), primary_key=True)
     password = db.Column(db.String(150))
     role = db.Column(db.Integer) # 0: User, 1: Organizer
@@ -31,6 +41,9 @@ class Credentials(db.Model):
     # A sample data from this table will look like this
     def __repr__(self):
         return f"Username : {self.username}, Password: {self.password}, Role: {self.role}"
+    
+    def get_id(self):
+        return (self.username)
 
 def create_database(app):
     if not path.exists(DB_NAME):
@@ -47,31 +60,23 @@ def login():
         password = form.password.data
         
         # Authenticate the entry
+        print(f"Entered Data: ({username}, {password})")
         user = Credentials.query.filter_by(username=username).first()
         if user:
-            if (user.password == password):
+            if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
-                # Attempt redirection
+                login_user(user, remember=True)
+
+                # Redirection to the correct home page
                 if (user.role == 0):
                     return redirect(url_for('user_main'))
                 else:
                     return redirect(url_for('organizer_main'))
             else:
                 flash('Incorrect password, try again.', category='error')
-
-            # if check_password_hash(user.password, password):
-            #     flash('Logged in successfully!', category='success')
-            #     login_user(user, remember=True)
-            #     return redirect(url_for('views.home'))
-            # else:
-            #     flash('Incorrect password, try again.', category='error')
-
         else:
             flash('Username does not exist.', category='error')
-        
-        print(f"Entered Data: ({username}, {password})")
 
-        return redirect((url_for('login')))
     return render_template('login.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -96,12 +101,16 @@ def register():
         else:
             print(f"Entered Data: ({username}, {password1}, {role})")
             if (role == "user"):
-                new_user = Credentials(username=username, password=password1, role = 0)
+                new_user = Credentials(username=username, password=generate_password_hash(
+                password1, method='sha256'), role = 0)
             else:
-                new_user = Credentials(username=username, password=password1, role = 1)
+                new_user = Credentials(username=username, password=generate_password_hash(
+                password1, method='sha256'), role = 1)
 
             db.session.add(new_user)
             db.session.commit()
+
+            login_user(new_user, remember=True)
 
             flash('Account created!', category='success')
             if (role == "user"):
