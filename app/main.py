@@ -18,8 +18,6 @@ def create_app(debug):
     bootstrap = Bootstrap(app=app)
     moment = Moment(app)
 
-    # from models import Credentials
-
     with app.app_context():
         db.create_all()
 
@@ -28,7 +26,7 @@ def create_app(debug):
 class Credentials(db.Model):
     username = db.Column(db.String(150), primary_key=True)
     password = db.Column(db.String(150))
-    role = db.Column(db.Integer)
+    role = db.Column(db.Integer) # 0: User, 1: Organizer
 
     # A sample data from this table will look like this
     def __repr__(self):
@@ -53,8 +51,11 @@ def login():
         if user:
             if (user.password == password):
                 flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('user_main'))
+                # Attempt redirection
+                if (user.role == 0):
+                    return redirect(url_for('user_main'))
+                else:
+                    return redirect(url_for('organizer_main'))
             else:
                 flash('Incorrect password, try again.', category='error')
 
@@ -66,13 +67,7 @@ def login():
             #     flash('Incorrect password, try again.', category='error')
 
         else:
-            flash('Email does not exist.', category='error')
-
-        # Attempt redirection
-        # if role == R_USER:
-        #     return redirect(url_for('user_main'))
-        # else:
-        #     return redirect(url_for('organizer_main'))
+            flash('Username does not exist.', category='error')
         
         print(f"Entered Data: ({username}, {password})")
 
@@ -85,25 +80,34 @@ def register():
     if form.validate_on_submit():
         role = form.role.data
         username = form.username.data
-        password = form.password.data
-        # Authenticate the entry
-        # user = User.query.filter_by(username=username).first()
-        # if user:
-        #     if check_password_hash(user.password, password):
-        #         flash('Logged in successfully!', category='success')
-        #         login_user(user, remember=True)
-        #         return redirect(url_for('views.home'))
-        #     else:
-        #         flash('Incorrect password, try again.', category='error')
-        # else:
-        #     flash('Email does not exist.', category='error')
+        password1 = form.password1.data
+        password2 = form.password2.data
 
-        print(f"Entered Data: ({username}, {password}, {role})")
-
-        if role == R_USER:
-            return redirect(url_for('user_main'))
+        # Authenticate the entry and add it to the database
+        user = Credentials.query.filter_by(username=username).first()
+        if user:
+            flash('Username already exists.', category='error')
+        elif len(username) < 4:
+            flash('Username must be greater than 3 characters.', category='error')
+        elif password1 != password2:
+            flash('Passwords don\'t match.', category='error')
+        elif len(password1) < 7:
+            flash('Password must be at least 7 characters.', category='error')
         else:
-            return redirect(url_for('organizer_main'))
+            print(f"Entered Data: ({username}, {password1}, {role})")
+            if (role == "user"):
+                new_user = Credentials(username=username, password=password1, role = 0)
+            else:
+                new_user = Credentials(username=username, password=password1, role = 1)
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash('Account created!', category='success')
+            if (role == "user"):
+                return redirect(url_for('user_main'))
+            else:
+                return redirect(url_for('organizer_main'))
 
     return render_template('register.html', form=form)
 

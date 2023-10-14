@@ -13,5 +13,6 @@ class LoginForm(FlaskForm):
 class RegForm(FlaskForm):
     role = SelectField('Role:', choices=[(R_USER, 'User'), (R_ORGANIZER, 'Organizer')], validators=[DataRequired()])
     username = StringField('Username:', validators=[DataRequired()])
-    password = PasswordField('Password:', validators=[DataRequired()])
+    password1 = PasswordField('Password:', validators=[DataRequired()])
+    password2 = PasswordField('Confirm Password:', validators=[DataRequired()])
     submit = SubmitField('Submit')
