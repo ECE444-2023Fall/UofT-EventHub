@@ -2,15 +2,20 @@ from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
-from flask_moment import Moment
 from flask_login import UserMixin, LoginManager
 from forms import LoginForm, RegForm
 from enum import Enum
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+## Initialize and import databases schemas
 db = SQLAlchemy()
+from database import Credentials
+
+## Global constants
 DB_NAME = "database.db"
+R_USER = "user"
+R_ORGANIZER = "organizer"
 
 def create_app(debug):
     app = Flask(__name__)
@@ -19,7 +24,6 @@ def create_app(debug):
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
     bootstrap = Bootstrap(app=app)
-    moment = Moment(app)
 
     with app.app_context():
         db.create_all()
@@ -32,18 +36,6 @@ def create_app(debug):
         return Credentials.query.get(username)
 
     return app
-
-class Credentials(db.Model, UserMixin):
-    username = db.Column(db.String(150), primary_key=True)
-    password = db.Column(db.String(150))
-    role = db.Column(db.Integer) # 0: User, 1: Organizer
-
-    # A sample data from this table will look like this
-    def __repr__(self):
-        return f"Username : {self.username}, Password: {self.password}, Role: {self.role}"
-    
-    def get_id(self):
-        return (self.username)
 
 def create_database(app):
     if not path.exists(DB_NAME):
