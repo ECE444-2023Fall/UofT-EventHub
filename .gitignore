@@ -1,3 +1,4 @@
 flask_env/
 venv/
-intstance/database.db
+app/instance/database.db
+app/__pycache__
