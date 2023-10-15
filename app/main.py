@@ -1,48 +1,48 @@
 from flask import Flask, render_template, session, redirect, url_for, flash
+from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
-from flask_moment import Moment
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, SelectField
-from wtforms.validators import DataRequired, Email
-from enum import Enum
+from flask_login import UserMixin, LoginManager
+from flask_sqlalchemy import SQLAlchemy
 
-from datetime import datetime
+## Initialize and import databases schemas
+db = SQLAlchemy()
+from database import Credentials
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '4829jfnwurduh4293k'
-bootstrap = Bootstrap(app=app)
-moment = Moment(app)
-
+## Global constants
+DB_NAME = "database.db"
 R_USER = "user"
 R_ORGANIZER = "organizer"
 
-class NameForm(FlaskForm):
-    # NOTE: In the future the role will be infered after authorization
-    role = SelectField('Role:', choices=[(R_USER, 'User'), (R_ORGANIZER, 'Organizer')], validators=[DataRequired()])
-    username = StringField('Username:', validators=[DataRequired()])
-    password = PasswordField('Password:', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+def create_app(debug):
+    app = Flask(__name__)
+    app.debug = debug
+    app.config['SECRET_KEY'] = '4829jfnwurduh4293k'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    db.init_app(app)
+    bootstrap = Bootstrap(app=app)
 
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    form = NameForm()
-    if form.validate_on_submit():
-        role = form.role.data
-        username = form.username.data
-        password = form.password.data
-        # Authenticate the entry
+    ## Register the auth path so that we can use the routes defined there. E.g. Login and Register
+    from auth import auth
+    from home import home
+    app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(home, url_prefix='/')
 
-        # Attempt redirection
-        if role == R_USER:
-            print("HELLO")
-            return redirect(url_for('user_main'))
-        else:
-            pass
-        print(f"Entered Data: ({role}, {username}, {password})")
+    with app.app_context():
+        db.create_all()
 
-        return redirect((url_for('login')))
-    return render_template('login.html', form=form)
+    login_manager = LoginManager()
+    login_manager.init_app(app)
 
-@app.route('/user', methods=['GET'])
-def user_main():
-    return render_template('user_main.html')
+    @login_manager.user_loader
+    def load_user(username):
+        return Credentials.query.get(username)
+
+    return app
+
+def create_database(app):
+    if not path.exists(DB_NAME):
+        db.create_all(app=app)
+        print('Created Database!')
+
+app = create_app(debug = True)

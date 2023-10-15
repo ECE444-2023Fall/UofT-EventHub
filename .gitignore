@@ -1,0 +1,4 @@
+flask_env/
+venv/
+app/instance/database.db
+app/__pycache__
