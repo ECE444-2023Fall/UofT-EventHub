@@ -1,5 +1,9 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11975958&assignment_repo_type=AssignmentRepo)
 
+## UI/UX Link:
+
+https://www.figma.com/file/9zWOhHfHbqO3n3ly3uMvlG/Karcis.com-%7C-Ticketing-Event-Website-UI-Design-(Community)-(Copy)?type=design&node-id=102-2658&mode=design&t=8WSIOL7IyAi8Hr7U-0
+
 ## Database design
 
 ### Database Schema
