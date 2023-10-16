@@ -37,6 +37,11 @@ def login():
 
     return render_template('login.html', form=form)
 
+@auth.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
