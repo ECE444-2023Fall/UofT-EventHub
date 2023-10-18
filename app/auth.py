@@ -27,9 +27,9 @@ def login():
 
                 # Redirection to the correct home page
                 if (user.role == 0):
-                    return redirect(url_for('home.user_main'))
+                    return redirect(url_for('user.main'))
                 else:
-                    return redirect(url_for('home.organizer_main'))
+                    return redirect(url_for('organizer.main'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -78,8 +78,8 @@ def register():
 
             flash('Account created!', category='success')
             if (role == "user"):
-                return redirect(url_for('home.user_main'))
+                return redirect(url_for('user.main'))
             else:
-                return redirect(url_for('home.organizer_main'))
+                return redirect(url_for('organizer.main'))
 
     return render_template('register.html', form=form)

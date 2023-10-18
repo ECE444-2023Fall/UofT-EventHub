@@ -33,3 +33,4 @@ class EventCreateForm(FlaskForm):
     link = URLField("Link:")
     banner_id = FileField("Event Banner:")
     additional_info = StringField('Additional Information:')
+    submit = SubmitField('Submit')
