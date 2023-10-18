@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField, DateField, TimeField, URLField, FileField
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired
 
 R_USER = "user"
 R_ORGANIZER = "organizer"
