@@ -39,9 +39,11 @@
 
     {% block page_content %}
         <div class="page-header">
-            <h1>MAIN ORGANIZER PAGE</h1>
+            <h1>Create Event</h1>
         </div>
-        <p> Interested in adding an event? <a href="/organizer/create_event">Create Event Post!</a> </p>
+        {{ wtf.quick_form(form) }}
+        <br />
+        <p><a href="/organizer">Retrun to main.</a></p>
     {% endblock %}
 </div>
 {% endblock %}

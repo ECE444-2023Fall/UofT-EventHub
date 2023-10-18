@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 ## Initialize and import databases schemas
 db = SQLAlchemy()
-from database import Credentials
+from database import Credentials, EventDetails
 
 ## Global constants
 DB_NAME = "database.db"
@@ -25,8 +25,10 @@ def create_app(debug):
     ## Register the auth path so that we can use the routes defined there. E.g. Login and Register
     from auth import auth
     from home import home
+    from organizer import organizer
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(home, url_prefix='/')
+    app.register_blueprint(organizer, url_prefix='/')
 
     with app.app_context():
         db.create_all()
