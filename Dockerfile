@@ -5,6 +5,7 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN apt-get update 
 RUN apt-get -y install gcc
+RUN pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 COPY . .
 ENV FLASK_APP=app/main.py 
