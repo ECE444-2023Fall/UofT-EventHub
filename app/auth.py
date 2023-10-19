@@ -1,8 +1,6 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, Flask, session
-from flask_login import login_user, login_required, logout_user, current_user
+from flask import Blueprint, render_template, flash, redirect, url_for
+from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_bootstrap import Bootstrap
-from flask_login import UserMixin, LoginManager
 from forms import LoginForm, RegForm
 
 from main import db
@@ -27,9 +25,9 @@ def login():
 
                 # Redirection to the correct home page
                 if (user.role == 0):
-                    return redirect(url_for('home.user_main'))
+                    return redirect(url_for('user.main'))
                 else:
-                    return redirect(url_for('home.organizer_main'))
+                    return redirect(url_for('organizer.main'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -78,8 +76,8 @@ def register():
 
             flash('Account created!', category='success')
             if (role == "user"):
-                return redirect(url_for('home.user_main'))
+                return redirect(url_for('user.main'))
             else:
-                return redirect(url_for('home.organizer_main'))
+                return redirect(url_for('organizer.main'))
 
     return render_template('register.html', form=form)
