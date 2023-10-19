@@ -8,7 +8,8 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-![GitHub contributors](https://img.shields.io/github/contributors/ECE444-2023Fall/project-1-web-application-design-group9-netninjas)
+
+<!-- ![GitHub Workflow Status](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/.github/workflows/main.yml/badge.svg) -->
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -94,7 +95,7 @@ This is a near-term roadmap for the tasks that are priorotized by the team. A mo
 
 - [ ] Add functionality to help users define and store their preference
 
-See the [open issues](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/issues?q=is%3Aopen+is%3Aissue) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/issues?q=is%3Aopen+is%3Aissue) for a full list fetaures we are currently working on.
 
 <!-- CONTRIBUTING -->
 ## Contributing
