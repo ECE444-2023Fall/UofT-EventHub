@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-        docker build . -t python-docker --tag ece444-event-planner
+        docker build . -t python-docker
         docker run -d -p 5000:5000 python-docker
         sleep 5
         docker ps -a
