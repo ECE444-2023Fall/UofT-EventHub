@@ -17,6 +17,6 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag ece444-event-planner:$(date +%s)
-        docker run -d -p 5000:5000 python-docker
+        docker run -d -p 5000:5000 ece444-event-planner
         curl http://localhost:5000/
 
