@@ -18,5 +18,5 @@ jobs:
       run: |
         docker build . -t python-docker --tag ece444-event-planner
         docker run -d -p 5000:5000 python-docker
-        curl http://localhost:5000/
+        curl --retry http://localhost:5000/
 
