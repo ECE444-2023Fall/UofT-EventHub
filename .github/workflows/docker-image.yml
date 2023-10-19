@@ -1,0 +1,30 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        docker build . -t python-docker
+        docker run -d -p 5000:5000 python-docker
+        sleep 5
+        docker ps -a
+        if curl -s http://localhost:5000/ | grep -o "500 Internal Server Error"
+          then
+            echo "A 500 Internal server error was reported. Cannot allow PR to merge!"
+            exit 1
+          else
+            echo "Website does not return a 500 error code."
+        fi
+
