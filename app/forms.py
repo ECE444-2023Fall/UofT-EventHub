@@ -8,7 +8,7 @@ R_ORGANIZER = "organizer"
 class LoginForm(FlaskForm):
     username = StringField('Username:', validators=[DataRequired()])
     password = PasswordField('Password:', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Log In')
 
 class RegForm(FlaskForm):
     role = SelectField('Role:', choices=[(R_USER, 'User'), (R_ORGANIZER, 'Organizer')], validators=[DataRequired()])
