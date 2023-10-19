@@ -1,3 +1,3 @@
 ## UI/UX Link:
 
-https://www.figma.com/file/9zWOhHfHbqO3n3ly3uMvlG/Karcis.com-%7C-Ticketing-Event-Website-UI-Design-(Community)-(Copy)?type=design&node-id=102-2658&mode=design&t=8WSIOL7IyAi8Hr7U-0
+https://www.figma.com/file/3JYqFRKQr5AztU0zEeqXWa/UofT-Events?type=design&node-id=0%3A1&mode=design&t=oyEJ9mmPBQNj02uc-1

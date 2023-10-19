@@ -32,13 +32,15 @@ to stay informed and engaged for students, clubs, and faculty members at the Uni
 <!-- GETTING STARTED -->
 ## Getting Started
 
-We have dockerized the project to prevent any complications that might arise from different environments. TO run the application locally you can:
+We have dockerized the project to prevent any complications that might arise from different environments. To run the application locally you can:
 
 - Initialize the python docker image using the Dockerfile we have added
 ```docker build -t python-docker .```
 
 - Run the website locally on a specific port
 ```docker run -d -p 5000:5000 python-docker```
+
+If the port 5000 is busy, you can replace it with other ports like 3000.
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -64,6 +66,10 @@ This is a near-term roadmap for the tasks that are priorotized by the team. A mo
 - [x] Add functionality to register organizers
 
 - [x] Make a sample events database – 3-4 entries
+
+- [ ] Write automated tests to verify that the website is functional
+
+- [ ] Set up CI/CD pipelines around the project to aid developer experience
 
 - [ ] Show all users the same event feed from the events database
 
