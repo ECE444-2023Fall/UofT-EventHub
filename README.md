@@ -1,8 +1,5 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11975958&assignment_repo_type=AssignmentRepo)
 
-## Code of Conduct
-For guidelines on how to interact with this project, please refer to our [Code of Conduct](./CODE_OF_CONDUCT.md).
-
 <!-- ![GitHub Workflow Status](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/.github/workflows/main.yml/badge.svg) -->
 
 <!-- TABLE OF CONTENTS -->
@@ -16,6 +13,7 @@ For guidelines on how to interact with this project, please refer to our [Code o
       <a href="#getting-started">Getting Started</a>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#code-of-conduct">Code of Conduct</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -91,6 +89,9 @@ This is a near-term roadmap for the tasks that are priorotized by the team. A mo
 
 See the [open issues](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/issues?q=is%3Aopen+is%3Aissue) for a full list fetaures we are currently working on.
 
+## Code of Conduct
+For guidelines on how to interact with this project, please refer to our [Code of Conduct](./CODE_OF_CONDUCT.md).
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -105,11 +106,11 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-Please set the reviewers of your pull requests to either @pandyah5 or @snehshah09
+Please set the reviewers of your pull requests to either @pandyah5 or @snehshah09. For detailed instructions on contributions please read our [CONTRIBUTION.md](./CONTRIBUTION.md).
 
 <!-- CONTACT -->
 ## Contact
-The best way to contact us is to join our [discord server] (https://discord.gg/8smuwBk4)
+The best way to contact us is to join our [discord server](https://discord.gg/8smuwBk4).
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
