@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile --tag ece444-event-planner
-        docker run -d -p 5000:5000 ece444-event-planner
+        docker build . -t python-docker --tag ece444-event-planner
+        docker run -d -p 5000:5000 python-docker
         curl http://localhost:5000/
 
