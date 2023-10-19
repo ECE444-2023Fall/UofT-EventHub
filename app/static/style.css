@@ -1,0 +1,33 @@
+h1{
+    color: blue;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+.page-header{
+    color:black;
+    font-family: Inter;
+    font-weight: 700px;
+    text-align: center;
+}
+
+.frame-15c {
+    width: 32.0605rem;
+    height: 24.8924rem;
+    position: relative;
+    object-fit: contain;
+    vertical-align: top;
+    flex-shrink: 0;
+  }
+
+.nav-link{
+    color: #333333 !important;
+}
