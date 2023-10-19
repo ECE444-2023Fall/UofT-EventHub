@@ -1,13 +1,7 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11975958&assignment_repo_type=AssignmentRepo)
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
+## Code of Conduct
+For guidelines on how to interact with this project, please refer to our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 <!-- ![GitHub Workflow Status](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/.github/workflows/main.yml/badge.svg) -->
 
