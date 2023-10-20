@@ -1,12 +1,10 @@
-from flask import Flask, render_template, session, redirect, url_for, flash
-from flask_login import login_user, login_required, logout_user, current_user
+from flask import Flask
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
-from flask_login import UserMixin, LoginManager
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
-import os, time
+import os
 import logging, sys
 
 ## Initialize and import databases schemas
@@ -24,7 +22,6 @@ es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
 DB_NAME = "database.db"
 R_USER = "user"
 R_ORGANIZER = "organizer"
-
 
 def create_app(debug):
     app = Flask(__name__)
@@ -87,12 +84,5 @@ def create_app(debug):
         return Credentials.query.get(username)
 
     return app
-
-
-def create_database(app):
-    if not path.exists(DB_NAME):
-        db.create_all(app=app)
-        logging.info("Created Database!")
-
 
 app = create_app(debug=True)

@@ -3,7 +3,6 @@ version: '3'
 services:
   web:
     container_name: web
-    restart: always
     build:
       context: .
       dockerfile: Dockerfile.test
@@ -35,15 +34,22 @@ services:
       retries: 5
 
   # tests:
+  #   container_name: web
+  #   restart: always
   #   build:
   #     context: .
   #     dockerfile: Dockerfile.test
+  #   ports:
+  #     - "5000:5000"
   #   environment:
+  #     - FLASK_ENV=testing
   #     - FLASK_APP=app/main.py
   #     - ELASTICSEARCH_HOST=elasticsearch
   #   depends_on:
+  #     - elasticsearch
+  #   networks:
+  #     - elk
   #     - web
-  #     - elasticsearch 
 
 networks:
   elk:

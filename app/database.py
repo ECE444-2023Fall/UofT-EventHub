@@ -3,22 +3,26 @@ from sqlalchemy import ForeignKey
 
 from app.main import db
 
+
 class Credentials(db.Model, UserMixin):
-    __tablename__ = 'credentials'
+    __tablename__ = "credentials"
 
     username = db.Column(db.String(150), primary_key=True)
     password = db.Column(db.String(150))
-    role = db.Column(db.Integer) # 0: User, 1: Organizer
+    role = db.Column(db.Integer)  # 0: User, 1: Organizer
 
     # A sample data from this table will look like this
     def __repr__(self):
-        return f"Username : {self.username}, Password: {self.password}, Role: {self.role}"
-    
+        return (
+            f"Username : {self.username}, Password: {self.password}, Role: {self.role}"
+        )
+
     def get_id(self):
-        return (self.username)
-    
+        return self.username
+
+
 class EventDetails(db.Model):
-    __tablename__ = 'event_details'
+    __tablename__ = "event_details"
 
     # Event Indetifier information
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -40,33 +44,34 @@ class EventDetails(db.Model):
     # A sample data from this table will look like this
     def __repr__(self):
         return f"ID : {self.id}, Name: {self.name}"
-    
+
     def get_id(self):
-        return (self.id)
+        return self.id
 
 
 class EventBanner(db.Model):
-    __tablename__ = 'event_banners'
+    __tablename__ = "event_banners"
 
     # Event Indetifier information
     # TODO: If we are restricting one graphics per event we can remove id and make event_id a primary key
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
+    event_id = db.Column(db.Integer, ForeignKey("event_details.id"))
     image = db.Column(db.String(250), nullable=True)
 
     # A sample data from this table will look like this
     def __repr__(self):
         return f"Event ID : {self.id}, Banner Image: {self.name}"
-    
+
     def get_id(self):
-        return (self.event_id)
-    
+        return self.event_id
+
+
 class OrganizerEventDetails(db.Model):
-    __tablename__ = 'organizer_event_relations'
+    __tablename__ = "organizer_event_relations"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
-    organizer_username = db.Column(db.String(150), ForeignKey('credentials.username'))
+    event_id = db.Column(db.Integer, ForeignKey("event_details.id"))
+    organizer_username = db.Column(db.String(150), ForeignKey("credentials.username"))
 
     # A sample data from this table will look like this
     def __repr__(self):
