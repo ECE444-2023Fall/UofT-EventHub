@@ -1,99 +1,124 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11975958&assignment_repo_type=AssignmentRepo)
+
+<!-- ![GitHub Workflow Status](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/.github/workflows/main.yml/badge.svg) -->
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+    </li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#code-of-conduct">Code of Conduct</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+The goal of the project is to create a user-centric event management platform that enhances the
+experience of students, faculty, and staff at the University of Toronto (UofT) by providing an accurate
+and user-friendly solution for discovering, managing, and participating in events and activities. Our
+platform aims to serve as a one stop solution which significantly reduces the time and effort required
+to stay informed and engaged for students, clubs, and faculty members at the University of Toronto.
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+We have dockerized the project to prevent any complications that might arise from different environments. To run the application locally you can:
+
+- Initialize the python docker image using the Dockerfile we have added
+```docker build -t python-docker .```
+
+- Run the website locally on a specific port
+```docker run -d -p 5000:5000 python-docker```
+
+If the port 5000 is busy, you can replace it with other ports like 3000.
+
+<!-- ROADMAP -->
+## Roadmap
+
+This is a near-term roadmap for the tasks that are priorotized by the team. A more detailed issue management information can be found on our GitHub Project management tool [here](https://github.com/orgs/ECE444-2023Fall/projects/4).
+
+- [x] Define the database schemas 
+
+- [x] Define database integrity constraints
+
+- [x] Make login/register page
+
+- [x] Make blank user entry page
+
+- [x] Make blank organizer entry page
+
+- [x] Make successful redirection for users/organizers
+
+- [x] Make a credentials database and connect it with the website
+
+- [x] Add functionality to register users
+
+- [x] Add functionality to register organizers
+
+- [x] Make a sample events database – 3-4 entries
+
+- [ ] Write automated tests to verify that the website is functional
+
+- [ ] Set up CI/CD pipelines around the project to aid developer experience
+
+- [ ] Show all users the same event feed from the events database
+
+- [ ] Add functionality for organizers to add an event to the database
+
+- [ ] Organize events in a list view for users
+
+- [ ] Organize events in a calendar view for users
+
+- [ ] Add sorting of events for users
+
+- [ ] Import events to Google calendar
+
+- [ ] Add ratings for organizer’s
+
+- [ ] Add ability for users to add ratings
+
+- [ ] Add functionality to assign tags to events (for organizers)
+
+- [ ] Add search for events (user side)
+
+- [ ] Add functionality to help users define and store their preference
+
+See the [open issues](https://github.com/ECE444-2023Fall/project-1-web-application-design-group9-netninjas/issues?q=is%3Aopen+is%3Aissue) for a full list fetaures we are currently working on.
+
 ## Code of Conduct
 For guidelines on how to interact with this project, please refer to our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
-## UI/UX Link:
+<!-- CONTRIBUTING -->
+## Contributing
 
-[https://www.figma.com/file/9zWOhHfHbqO3n3ly3uMvlG/Karcis.com-%7C-Ticketing-Event-Website-UI-Design-(Community)-(Copy)?type=design&node-id=102-2658&mode=design&t=8WSIOL7IyAi8Hr7U-0](https://www.figma.com/file/3JYqFRKQr5AztU0zEeqXWa/UofT-Events?type=design&node-id=26%3A2457&mode=design&t=zyaHdxMx2tZ8jxyV-1)
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-## Database design
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-### Database Schema
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Credentials(<ins>username</ins>, password, type)
-> This table will hold the credentials of the users and organizers. 
-- username is a key here.
-- password will be currently stored in plain text.
-- type here refers to either user or organizer.
-- In the future we can look into hashing passwords in our database
+Please set the reviewers of your pull requests to either @pandyah5 or @snehshah09. For detailed instructions on contributions please read our [CONTRIBUTION.md](./CONTRIBUTION.md).
 
+<!-- CONTACT -->
+## Contact
+The best way to contact us is to join our [discord server](https://discord.gg/8smuwBk4).
 
-UserPreferences(<ins>username</ins>, safesearch, view, type)
-> This table stores the user preferences.
-- safesearch can be true or false for both user/organizer.
-- An organizer will be able to see their own events in their dashboard regardless of safesearch preference.
-- view would be if user prefers calendar or list views.
-- type indicates if it is a user or an organizer.
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
 
-
-OrganizerDetails(<ins>username</ins>, <ins>name</ins>, averageRating, minRating, maxRating, numRating, <ins>logoID</ins>)
-> This table details about the organizer
-- username may only belong to organizers.
-- averageRating, minRating, maxRating are self-explanatory.
-- numRating is the number of ratings the organizer has received.
-
-
-OrganizerEventDetails(username, <ins>eventID</ins>)
-> This table stores details about the events that belong to an organizer
-- username may only belong to organizers.
-- eventIDs for the events an organizer has organized
-
-
-UserDetails(<ins>username</ins>, campus, degree, year, department, sex)
-> Contains information that can help organizers target certain target user audiences
-- username here only includes user, organizers do not need to provide details.
-- campus can take one of three values: UTSG, UTSC, UTM
-- degree can be either undergraduate/graduate programs
-- year is a value between (1, 2, 3, 4, PEY)
-- department is the list of departments under the University of Toronto
-- sex refers to the either male or female
-
-
-EventDetails(<ins>eventID</ins>, name, description, eventType, venue, startDate, endDate, startTime, endTime, link, bannerID, additionalInfo)
-> This table contains information about a specific event
-- name is the name of the event, we can set a 50 character limit here to avoid misuse
-- description is a text based summary of the event. We can limit it by 100 characters to keep it short and sweet.
-- eventType can be online, in-person, hybrid
-- venue can be the place for in-person events for in-person events or hybrid events.
-- venue can be set to the platform for online events like Zoom, Google Meet etc.
-- startDate, endDate, startTime, endTime are self-explanatory
-- link can be either a link to the online venue or a redirection to another website. It can also be set to NULL
-- bannerID is the id of the image which will need to be loaded for the event
-- additionalInfo is a place for the organizer to add details/notes/instructuons for potential attendees.
-
-
-EventGraphicsBucket(<ins>bannerID</ins>, bannerImage)
-> This is a bucket that maps bannerIDs to actual images
-- Stores images for a specific bannerID
-- Note bannerImages is not a key and can hold duplicates.
-
-
-OrganizerLogoBucket(<ins>logoID</ins>, logoImage)
-> This is a bucket that maps logoIDs to actual images
-- Stores images for a specific logoID
-- Note logoImages is not a key and can hold duplicates.
-
-UserDetails(<ins>username</ins>, campus, degree, year, department, sex)
-### Database Integrity Constraints
-- Credentials[type] = {'user', 'organizer'}
-- UserPreferences[safesearch] = {'true', 'false'}; The deafult is false
-- UserPreferences[view] = {'calendar', 'list'}; The default is list
-- UserPreferences[username] \<subset\> Credentials[username]
-- OrganizerDetails[username] \<subset\> Credentials[username, type = 'organizer']
-- OrganizerDetails[averageRating] = [0, 5]; Precision upto 1 decimal place
-- OrganizerDetails[minRating] = [0, 5]; Only integers
-- OrganizerDetails[maxRating] = [0, 5]; Only integers
-- OrganizerDetails[logoID] \<subset\> OrganizerLogoBucket[logoID]
-- OrganizerEventDetails[username] \<subset\> Credentials[username, type = 'organizer']
-- OrganizerEventDetails[eventID] \<subset\> EventDetails[eventID]
-- UserDetails[username] \<subset\> Credentials[username, type = 'user']
-- UserDetails[campus] = {'UTSG', 'UTSC', 'UTM'}
-- UserDetails[degree] = {'UG', 'M', 'PG'}; undergrad, master and postgrad respectively
-- UserDetails[year] = {'1', '2', '3', '4', 'PEY', '5'}; 5 is for post grads in their fifth year or repeat students
-- UserDetails[department] = {'Engineering', 'Arts And Science', 'Rotman'}; Others can be added later
-- UserDetails[sex] = {'M', 'F'}
-- EventDetails[bannerID] \<subset\> EventGraphicsBucket[bannerID]
-- EventDetails[eventType] = {'online', 'in-person', 'hybrid'}
-
-
-
+We would like to acknowledge the ECE444 Teaching Team from the University of Toronto, who has guided us all the way to build this project.
