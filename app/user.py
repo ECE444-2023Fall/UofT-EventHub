@@ -14,6 +14,8 @@ def main():
     dict_of_events_details = {}
     for row in events_data:
         event_detail = {}
+
+        ## TODO: Ideally we should only be passing information that is required by the user_main.html
         for column in row.__table__.columns:
             event_detail[column.name] = ((str(getattr(row, column.name))))
 
