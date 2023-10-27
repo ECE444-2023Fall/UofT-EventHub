@@ -1,7 +1,9 @@
 {% extends "bootstrap/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}User's Page{% endblock %}
+<!-- This is the general template for showcasing events -->
+
+{% block title %}Event's Page{% endblock %}
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
@@ -39,14 +41,8 @@
 
     {% block page_content %}
         <div class="page-header">
-            <h1>MAIN USER PAGE</h1>
+            <h1>EVENT PAGE - ID: {{event_id}}</h1>
         </div>
-        <h2>All Events List</h2>
-        <ul>
-            {% for key, value in event_data.items() %}
-            <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
-            {% endfor %}
-        </ul>
     {% endblock %}
 </div>
 {% endblock %}

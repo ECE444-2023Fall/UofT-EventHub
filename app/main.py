@@ -26,9 +26,11 @@ def create_app(debug):
     from auth import auth
     from user import user
     from organizer import organizer
+    from events import events
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(user, url_prefix='/')
     app.register_blueprint(organizer, url_prefix='/')
+    app.register_blueprint(events, url_prefix='/')
 
     with app.app_context():
         db.create_all()
