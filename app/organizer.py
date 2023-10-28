@@ -4,7 +4,7 @@ from forms import EventCreateForm
 from flask import current_app
 import os
 
-from main import db
+from main import db, es # db is for database and es for elastic search
 from database import EventDetails, OrganizerEventDetails, EventBanner
 
 organizer = Blueprint('organizer', __name__)
@@ -35,6 +35,9 @@ def create_event():
         db.session.add(new_event)
         db.session.commit()
 
+        # Add the event details to the index for elastic search
+        add_event_to_index(new_event)
+
         # Add the banner information for the newly created event
         banner_file = form.banner_image.data
         filename = "event_banner_" + str(new_event.id) + ".png"
@@ -61,3 +64,17 @@ def create_event():
     print(organizer)
 
     return render_template('create_event.html', form=form)
+
+def add_event_to_index(new_event):
+    event_detail = {
+        "name": new_event.name,
+        "description": new_event.description,
+        "type": new_event.type,
+        "venue": new_event.venue,
+        "additional_info": new_event.additional_info
+    }
+    
+    print("The event dict for indexing:", event_detail)
+    es.index(index="events", document=event_detail)
+    es.indices.refresh(index="events")
+    print(es.cat.count(index="events", format="json"))

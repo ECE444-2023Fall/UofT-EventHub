@@ -45,7 +45,6 @@
             <p>{{event.description}}</p>
             <p>Venue: {{event.venue}}</p>
         </div>
-        <!-- <img src="{{url_for('events.send_file', filename='event_banner_1.png')}}" alt="Event Banner">  -->
         <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
     {% endblock %}
 </div>

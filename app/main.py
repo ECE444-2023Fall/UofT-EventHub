@@ -4,11 +4,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
 from flask_login import UserMixin, LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from elasticsearch import Elasticsearch
 import os
 
 ## Initialize and import databases schemas
 db = SQLAlchemy()
 from database import Credentials, EventDetails
+
+## Initialize elastic search server for autocomplete functionality
+es = Elasticsearch(hosts=["http://localhost:9200"])
 
 ## Global constants
 DB_NAME = "database.db"
@@ -36,6 +40,25 @@ def create_app(debug):
 
     with app.app_context():
         db.create_all()
+
+        # Index the events database using elasticsearch
+        es = Elasticsearch(hosts=["http://127.0.0.1:9200"])
+        if not es.indices.exists(index="events"):
+            events_data = EventDetails.query.all()
+
+            for row in events_data:
+                event_detail = {
+                    "name": str(getattr(row, "name")),
+                    "description": str(getattr(row, "description")),
+                    "type": str(getattr(row, "type")),
+                    "venue": str(getattr(row, "venue")),
+                    "additional_info": str(getattr(row, "additional_info"))
+                }
+                print("The event dict for indexing:", event_detail)
+                es.index(index="events", document=event_detail)
+            
+        es.indices.refresh(index="events")
+        print(es.cat.count(index="events", format="json"))
 
     login_manager = LoginManager()
     login_manager.init_app(app)
