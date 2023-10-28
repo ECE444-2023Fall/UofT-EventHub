@@ -23,29 +23,3 @@ def main():
         dict_of_events_details[row.id] = event_detail
     
     return render_template('user_main.html', event_data=dict_of_events_details)
-
-@user.route('/user/search', methods=['GET'])
-@login_required
-def search_autocomplete():
-    query = request.args["search"].lower()
-    print("User searched for:", query)
-    tokens = query.split(" ")
-
-    clauses = [
-        {
-            "span_multi": {
-                "match": {"fuzzy": {"name": {"value": i, "fuzziness": "AUTO"}}}
-            }
-        }
-        for i in tokens
-    ]
-
-    payload = {
-        "bool": {
-            "must": [{"span_near": {"clauses": clauses, "slop": 0, "in_order": False}}]
-        }
-    }
-
-    resp = es.search(index="cars", query=payload, size=MAX_SIZE)
-    return [result['_source']['name'] for result in resp['hits']['hits']]
-

@@ -39,19 +39,42 @@
     {% endfor %}
 
     {% block page_content %}
+
+        <script>
+            $(document).ready(function() {
+                console.log("Hello")
+                let debounce;
+                $('.search-box').on('keydown', function (e) {
+                  clearTimeout(debounce)
+                  debounce = setTimeout(() => {
+                          getAutoComplete();  
+                  }, 300);
+                })
+            })
+
+            function getAutoComplete() {
+              const query = $('.search-box').val();
+              console.log(query)
+              fetch(`http://localhost:5000/search?search=${encodeURIComponent(query.trim())}`)
+                .then((resp) => resp.json())
+                .then((data) => {
+                        $('.results').empty();
+                        for (let i = 0; i < data.length; i++) {
+                                $('.results').append(`<li>${data[i]}</li>`)
+                        }
+                      })
+            }
+        </script>
+
         <div class="page-header">
             <h1>MAIN USER PAGE</h1>
         </div>
-        <!-- <div class="input-group">
-            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-            <button type="button" class="btn btn-outline-primary">search</button>
-        </div> -->
-        <form class="form-inline my-2 my-lg-0" action="{{ url_for('user.search_autocomplete') }}">
-            <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search Events" aria-label="Search">
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search.search_autocomplete') }}">
+            <input class="search-box" id="search-text">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
         <h2>All Events List</h2>
-        <ul>
+        <ul class="results">
             {% for key, value in event_data.items() %}
             <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
             {% endfor %}

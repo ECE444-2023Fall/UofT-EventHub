@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
+from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
 from flask_login import UserMixin, LoginManager
@@ -28,15 +29,20 @@ def create_app(debug):
     db.init_app(app)
     bootstrap = Bootstrap(app=app)
 
+    ## Make the app CORS compliant
+    CORS(app)
+
     ## Register the auth path so that we can use the routes defined there. E.g. Login and Register
     from auth import auth
     from user import user
     from organizer import organizer
     from events import events
+    from search import search
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(user, url_prefix='/')
     app.register_blueprint(organizer, url_prefix='/')
     app.register_blueprint(events, url_prefix='/')
+    app.register_blueprint(search, url_prefix='/')
 
     with app.app_context():
         db.create_all()
