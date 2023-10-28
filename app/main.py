@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
 from flask_login import UserMixin, LoginManager
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 ## Initialize and import databases schemas
 db = SQLAlchemy()
@@ -19,6 +20,7 @@ def create_app(debug):
     app.debug = debug
     app.config['SECRET_KEY'] = '4829jfnwurduh4293k'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['GRAPHIC_DIRECTORY'] = path = os.path.join(app.root_path, 'assets', 'event-assets')
     db.init_app(app)
     bootstrap = Bootstrap(app=app)
 
