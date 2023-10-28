@@ -18,6 +18,7 @@ class Credentials(db.Model, UserMixin):
     
 class EventDetails(db.Model):
     __tablename__ = 'event_details'
+
     # Event Indetifier information
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=False)
@@ -42,6 +43,23 @@ class EventDetails(db.Model):
     
     def get_id(self):
         return (self.id)
+
+
+class EventGraphics(db.Model):
+    __tablename__ = 'event_graphics'
+
+    # Event Indetifier information
+    # TODO: If we are restricting one graphics per event we can remove id and make event_id a primary key
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
+    image = db.Column(db.String(250), nullable=True)
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return f"Event ID : {self.id}, Image: {self.name}"
+    
+    def get_id(self):
+        return (self.event_id)
     
 class OrganizerEventDetails(db.Model):
     __tablename__ = 'organizer_event_relations'

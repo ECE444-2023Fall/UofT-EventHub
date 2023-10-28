@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from forms import EventCreateForm
+from flask import current_app
+import os
 
 from main import db
 from database import EventDetails, OrganizerEventDetails
@@ -19,8 +21,7 @@ def create_event():
     form = EventCreateForm()
 
     if form.validate_on_submit():
-        # Currently I am not passing the banner information. 
-        # This will be possible after the creation of the EventGraphicsBucket database 
+        # Add the event details
         new_event = EventDetails(name=form.name.data, 
                                  description=form.description.data,  
                                  type=form.type.data,  
@@ -33,6 +34,19 @@ def create_event():
                                  additional_info=form.additional_info.data)
         db.session.add(new_event)
         db.session.commit()
+
+        # Add the banner information for the newly created event
+        print("Newly created event ID:", new_event.id)
+        banner_file = form.banner_image.data
+        filename = "event_banner_" + str(new_event.id) + ".png"
+
+        # Save the banner in assets/event-assets
+        banner_file.save(os.path.join(
+            current_app.root_path, 'assets', 'event-assets', filename
+        ))
+
+        # event_graphic = EventGraphics(event_id = new_event.id,
+        #                               image = "event_banner_" + str(new_event.id) + ".png")
 
         new_organizer_event_relation = OrganizerEventDetails(event_id=new_event.id, organizer_username=current_user.username)
         db.session.add(new_organizer_event_relation)
