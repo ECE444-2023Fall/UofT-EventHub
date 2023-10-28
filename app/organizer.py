@@ -5,7 +5,7 @@ from flask import current_app
 import os
 
 from main import db
-from database import EventDetails, OrganizerEventDetails
+from database import EventDetails, OrganizerEventDetails, EventBanner
 
 organizer = Blueprint('organizer', __name__)
 
@@ -36,7 +36,6 @@ def create_event():
         db.session.commit()
 
         # Add the banner information for the newly created event
-        print("Newly created event ID:", new_event.id)
         banner_file = form.banner_image.data
         filename = "event_banner_" + str(new_event.id) + ".png"
 
@@ -45,8 +44,12 @@ def create_event():
             current_app.root_path, 'assets', 'event-assets', filename
         ))
 
-        # event_graphic = EventGraphics(event_id = new_event.id,
-        #                               image = "event_banner_" + str(new_event.id) + ".png")
+        # Store the path to the banner EventBanner
+        event_graphic = EventBanner(event_id = new_event.id,
+                                    image = filename)
+
+        db.session.add(event_graphic)
+        db.session.commit()
 
         new_organizer_event_relation = OrganizerEventDetails(event_id=new_event.id, organizer_username=current_user.username)
         db.session.add(new_organizer_event_relation)

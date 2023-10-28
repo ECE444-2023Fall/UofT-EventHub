@@ -34,7 +34,6 @@ class EventDetails(db.Model):
 
     # Additional informations
     link = db.Column(db.String(300))
-    banner_id = db.Column(db.Integer)
     additional_info = db.Column(db.String(1000))
 
     # A sample data from this table will look like this
@@ -45,8 +44,8 @@ class EventDetails(db.Model):
         return (self.id)
 
 
-class EventGraphics(db.Model):
-    __tablename__ = 'event_graphics'
+class EventBanner(db.Model):
+    __tablename__ = 'event_banners'
 
     # Event Indetifier information
     # TODO: If we are restricting one graphics per event we can remove id and make event_id a primary key
@@ -56,7 +55,7 @@ class EventGraphics(db.Model):
 
     # A sample data from this table will look like this
     def __repr__(self):
-        return f"Event ID : {self.id}, Image: {self.name}"
+        return f"Event ID : {self.id}, Banner Image: {self.name}"
     
     def get_id(self):
         return (self.event_id)
