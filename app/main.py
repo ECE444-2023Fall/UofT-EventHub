@@ -49,19 +49,21 @@ def create_app(debug):
 
         # Index the events database using elasticsearch
         es = Elasticsearch(hosts=["http://127.0.0.1:9200"])
-        if not es.indices.exists(index="events"):
-            events_data = EventDetails.query.all()
+        if es.indices.exists(index="events"):
+            es.options(ignore_status=[400,404]).indices.delete(index='events')
 
-            for row in events_data:
-                event_detail = {
-                    "name": str(getattr(row, "name")),
-                    "description": str(getattr(row, "description")),
-                    "type": str(getattr(row, "type")),
-                    "venue": str(getattr(row, "venue")),
-                    "additional_info": str(getattr(row, "additional_info"))
-                }
-                print("The event dict for indexing:", event_detail)
-                es.index(index="events", document=event_detail)
+        events_data = EventDetails.query.all()
+        for row in events_data:
+            event_detail = {
+                "id": str(getattr(row, "id")),
+                "name": str(getattr(row, "name")),
+                "description": str(getattr(row, "description")),
+                "type": str(getattr(row, "type")),
+                "venue": str(getattr(row, "venue")),
+                "additional_info": str(getattr(row, "additional_info"))
+            }
+            print("The event dict for indexing:", event_detail)
+            es.index(index="events", document=event_detail)
             
         es.indices.refresh(index="events")
         print(es.cat.count(index="events", format="json"))

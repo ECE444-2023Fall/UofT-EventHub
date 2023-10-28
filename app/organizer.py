@@ -67,6 +67,7 @@ def create_event():
 
 def add_event_to_index(new_event):
     event_detail = {
+        "id": new_event.id,
         "name": new_event.name,
         "description": new_event.description,
         "type": new_event.type,

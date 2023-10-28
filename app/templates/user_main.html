@@ -69,8 +69,8 @@
         <div class="page-header">
             <h1>MAIN USER PAGE</h1>
         </div>
-        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search.search_autocomplete') }}">
-            <input class="search-box" id="search-text">
+        <form action="{{ url_for('search.search_events') }}" method="post">
+            <input class="search-box" name="query" id="search-text">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
         <h2>All Events List</h2>
