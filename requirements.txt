@@ -23,3 +23,4 @@ WTForms==3.0.1
 flask_cors==4.0.0
 Flask-Uploads==0.2.1
 elasticsearch==8.10.1
+pytest==7.4.3
