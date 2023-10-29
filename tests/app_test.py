@@ -34,4 +34,3 @@ def test_register_success(client):
         follow_redirects=True)
     assert response.status_code == 200
     assert b"Account created!" in response.data
-    
