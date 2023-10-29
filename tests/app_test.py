@@ -18,12 +18,6 @@ def client():
         db.drop_all()
 
 # Test function written by Rahul
-# Test to ensure that the database exists
-def test_database(client):
-    tester = Path("test.db").is_file()
-    assert tester
-
-# Test function written by Rahul
 # Test if home page is accessible
 def test_index():
     tester = app.test_client()
@@ -31,12 +25,13 @@ def test_index():
     assert response.status_code == 200
 
 # Test function written by Rahul
-# Test if user can register
+# Test if a new user can successfully register
 def test_register_success(client):
     response = client.post("/register", data=dict(username="user123",
         password1="PaSsWoRd",
         password2="PaSsWoRd",
-        role="user"
-    ), follow_redirects=True)
+        role="user"),
+        follow_redirects=True)
     assert response.status_code == 200
     assert b"Account created!" in response.data
+    
