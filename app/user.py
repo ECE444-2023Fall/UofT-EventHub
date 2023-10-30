@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
-from auth import login_required
 
-from database import EventDetails
+from app.auth import login_required
+from app.database import EventDetails
 
 user = Blueprint('user', __name__)
 
