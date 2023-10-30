@@ -90,6 +90,11 @@ def test_organizer_login_success(client):
     # The system should redirect the user to the event feed
     assert b"All Events List" in response.data
 
+def test_unathorized_logout():
+    tester = app.test_client()
+    response = tester.get("/logout", content_type="html/text")
+    assert response.status_code == 401
+
 
 # Test function written by Fabin
 # Test if a user can access organizer pages without proper login
