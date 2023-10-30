@@ -40,7 +40,7 @@ def test_register_success(client):
 
 
 # Test function written by Hetav
-# Test if login functionality is successful
+# Test if a registered user is able to login
 def test_login_success(client):
     # Register a new user
     response = client.post("/register", data=dict(username="admin",
