@@ -17,7 +17,7 @@ def client():
     with app.app_context():
         db.create_all()
         yield app.test_client()
-        # db.drop_all()
+        db.drop_all()
 
 # Test function written by Rahul
 # Test if home page is accessible
@@ -51,7 +51,7 @@ def test_login_success(client):
     assert response.status_code == 200
 
     # Logout of the system
-    response = client.post("/logout",
+    response = client.get("/logout",
         follow_redirects=True)
     assert response.status_code == 200
 
@@ -60,6 +60,7 @@ def test_login_success(client):
         password="password"),
         follow_redirects=True)
     assert response.status_code == 200
+    print(response.data)
 
     # The system should redirect the user to the event feed
     assert b"All Events List" in response.data
