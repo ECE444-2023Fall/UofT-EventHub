@@ -17,7 +17,7 @@ def client():
     with app.app_context():
         db.create_all()
         yield app.test_client()
-        # db.drop_all()
+        db.drop_all()
 
 # Test function written by Rahul
 # Test if home page is accessible
@@ -63,3 +63,35 @@ def test_login_success(client):
 
     # The system should redirect the user to the event feed
     assert b"All Events List" in response.data
+
+# Test function written by Fabin
+# Test if a user can access organizer pages without proper login
+def test_organizer_content_auth(client):
+    # Testing access without logining in
+    response = client.get("/organizer", content_type="html/text")
+    assert response.status_code == 401
+
+    test_organizer_data = {
+        'username': "admin",
+        'password1': "password",
+        'password2': "password",
+        'role': "organizer"
+    }
+    test_user_data = {
+        'username': "user1",
+        'password1': "password",
+        'password2': "password",
+        'role': "user"
+    }
+    # Testing access to organizer page as a user
+    response = client.post("/register", data=test_user_data, follow_redirects=True)
+    assert response.status_code == 200
+    response = client.get("/organizer", content_type="html/text")
+    assert response.status_code == 401
+
+    response = client.get("/logout")
+    # Testing access to organizer page as a organizer
+    response = client.post("/register", data=test_organizer_data, follow_redirects=True)
+    assert response.status_code == 200
+    response = client.get("/organizer", content_type="html/text")
+    assert response.status_code == 200
