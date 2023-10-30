@@ -2,3 +2,4 @@ flask_env/
 venv/
 app/instance/database.db
 app/__pycache__
+tests/__pycache__

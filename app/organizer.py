@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from forms import EventCreateForm
 
-from main import db
-from database import EventDetails, OrganizerEventDetails
+from app.forms import EventCreateForm
+from app.main import db
+from app.database import EventDetails, OrganizerEventDetails
 
 organizer = Blueprint('organizer', __name__)
 

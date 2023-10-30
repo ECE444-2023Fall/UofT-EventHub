@@ -1,6 +1,7 @@
 import pytest
 from app.main import app, db
 from pathlib import Path
+from flask_login import current_user
 
 TEST_DB = "test.db"
 
@@ -10,12 +11,13 @@ def client():
     BASE_DIR = Path(__file__).resolve().parent.parent
     app.config["TESTING"] = True
     app.config["DATABASE"] = BASE_DIR.joinpath(TEST_DB)
+    app.config['WTF_CSRF_ENABLED'] = False
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{BASE_DIR.joinpath(TEST_DB)}"
 
     with app.app_context():
         db.create_all()
         yield app.test_client()
-        db.drop_all()
+        # db.drop_all()
 
 # Test function written by Rahul
 # Test if home page is accessible
@@ -23,6 +25,7 @@ def test_index():
     tester = app.test_client()
     response = tester.get("/", content_type="html/text")
     assert response.status_code == 200
+
 
 # Test function written by Rahul
 # Test if a new user can successfully register
@@ -34,3 +37,29 @@ def test_register_success(client):
         follow_redirects=True)
     assert response.status_code == 200
     assert b"Account created!" in response.data
+
+
+# Test function written by Hetav
+# Test if login functionality is successful
+def test_login_success(client):
+    # Register a new user
+    response = client.post("/register", data=dict(username="admin",
+        password1="password",
+        password2="password",
+        role="user"),
+        follow_redirects=True)
+    assert response.status_code == 200
+
+    # Logout of the system
+    response = client.post("/logout",
+        follow_redirects=True)
+    assert response.status_code == 200
+
+    # Login back into the system
+    response = client.post("/", data=dict(username="admin",
+        password="password"),
+        follow_redirects=True)
+    assert response.status_code == 200
+
+    # The system should redirect the user to the event feed
+    assert b"All Events List" in response.data
