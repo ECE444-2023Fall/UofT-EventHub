@@ -140,15 +140,15 @@ def test_user_content_auth(client):
     assert response.status_code == 401
 
     test_organizer_data = {
-        "username": "admin",
-        "password1": "password",
-        "password2": "password",
+        "username": "jhanavi_org",
+        "password1": "test_password",
+        "password2": "test_password",
         "role": "organizer",
     }
     test_user_data = {
-        "username": "user1",
-        "password1": "password",
-        "password2": "password",
+        "username": "jhanavi_user",
+        "password1": "test_password",
+        "password2": "test_password",
         "role": "user",
     }
 
@@ -169,7 +169,7 @@ def test_user_content_auth(client):
 # Test function written by Jhanavi
 def test_organiser_add_events_endpoint(client):
     test_organizer_data = {
-        "username": "admin",
+        "username": "jhanavi2",
         "password1": "password",
         "password2": "password",
         "role": "organizer",
