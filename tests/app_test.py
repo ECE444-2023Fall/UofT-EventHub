@@ -60,7 +60,6 @@ def test_user_login_success(client):
         password="password"),
         follow_redirects=True)
     assert response.status_code == 200
-    print(response.data)
 
     # The system should redirect the user to the event feed
     assert b"All Events List" in response.data
@@ -78,7 +77,7 @@ def test_organizer_login_success(client):
     assert response.status_code == 200
 
     # Logout of the system
-    response = client.post("/logout",
+    response = client.get("/logout",
         follow_redirects=True)
     assert response.status_code == 200
 
@@ -88,8 +87,8 @@ def test_organizer_login_success(client):
         follow_redirects=True)
     assert response.status_code == 200
 
-    # The system should redirect the user to the event feed
-    assert b"All Events List" in response.data
+    # The system should redirect the organizer to the main organizer page
+    assert b"MAIN ORGANIZER PAGE" in response.data
 
 
 # Test function written by Fabin
@@ -111,6 +110,7 @@ def test_organizer_content_auth(client):
         'password2': "password",
         'role': "user"
     }
+
     # Testing access to organizer page as a user
     response = client.post("/register", data=test_user_data, follow_redirects=True)
     assert response.status_code == 200
@@ -118,6 +118,7 @@ def test_organizer_content_auth(client):
     assert response.status_code == 401
 
     response = client.get("/logout")
+
     # Testing access to organizer page as a organizer
     response = client.post("/register", data=test_organizer_data, follow_redirects=True)
     assert response.status_code == 200
