@@ -1,3 +1,4 @@
+black==23.10.0
 blinker==1.6.2
 certifi==2023.7.22
 click==8.1.7
@@ -7,10 +8,12 @@ dominate==2.8.0
 elastic-transport==8.4.1
 elasticsearch==8.10.1
 email-validator==2.0.0.post2
+flake8==6.1.0
 Flask==2.3.3
 Flask-Bootstrap==3.3.7.1
 Flask-Cors==4.0.0
 Flask-Login==0.6.2
+Flask-Moment==1.0.5
 Flask-SQLAlchemy==3.1.1
 Flask-Uploads==0.2.1
 Flask-WTF==1.1.1
@@ -20,9 +23,20 @@ iniconfig==2.0.0
 itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.3
+mccabe==0.7.0
+mypy-extensions==1.0.0
 packaging==23.1
+<<<<<<< HEAD
 pluggy==1.3.0
 pytest==7.4.3
+=======
+pathspec==0.11.2
+platformdirs==3.11.0
+pluggy==1.3.0
+pycodestyle==2.11.1
+pyflakes==3.1.0
+pytest==7.4.2
+>>>>>>> e4640f2ff4dc879f3fe626644c08a01029b9a084
 SQLAlchemy==2.0.22
 typing_extensions==4.8.0
 urllib3==1.26.18

@@ -13,6 +13,7 @@ db = SQLAlchemy()
 from database import Credentials, EventDetails
 
 ## Initialize elastic search server for autocomplete functionality
+print("Trying to connect to ES")
 es = Elasticsearch(hosts=["http://localhost:9200"])
 
 ## Global constants
