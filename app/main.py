@@ -6,27 +6,34 @@ from flask_bootstrap import Bootstrap
 from flask_login import UserMixin, LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
-import os
+import os, time
 
 ## Initialize and import databases schemas
 db = SQLAlchemy()
 from database import Credentials, EventDetails
 
 ## Initialize elastic search server for autocomplete functionality
-print("Trying to connect to ES")
-es = Elasticsearch(hosts=["http://localhost:9200"])
+## Keeping the previous definition of Elastic search in for clarity:
+## print("Trying to connect to ES")
+##es = Elasticsearch(hosts=["http://elasticsearch:9200"])
+
+elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
+es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
 
 ## Global constants
 DB_NAME = "database.db"
 R_USER = "user"
 R_ORGANIZER = "organizer"
 
+
 def create_app(debug):
     app = Flask(__name__)
     app.debug = debug
-    app.config['SECRET_KEY'] = '4829jfnwurduh4293k'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
-    app.config['GRAPHIC_DIRECTORY'] = path = os.path.join(app.root_path, 'assets', 'event-assets')
+    app.config["SECRET_KEY"] = "4829jfnwurduh4293k"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+    app.config["GRAPHIC_DIRECTORY"] = path = os.path.join(
+        app.root_path, "assets", "event-assets"
+    )
     db.init_app(app)
     bootstrap = Bootstrap(app=app)
 
@@ -39,19 +46,20 @@ def create_app(debug):
     from organizer import organizer
     from events import events
     from search import search
-    app.register_blueprint(auth, url_prefix='/')
-    app.register_blueprint(user, url_prefix='/')
-    app.register_blueprint(organizer, url_prefix='/')
-    app.register_blueprint(events, url_prefix='/')
-    app.register_blueprint(search, url_prefix='/')
+
+    app.register_blueprint(auth, url_prefix="/")
+    app.register_blueprint(user, url_prefix="/")
+    app.register_blueprint(organizer, url_prefix="/")
+    app.register_blueprint(events, url_prefix="/")
+    app.register_blueprint(search, url_prefix="/")
 
     with app.app_context():
         db.create_all()
 
         # Index the events database using elasticsearch
-        es = Elasticsearch(hosts=["http://127.0.0.1:9200"])
+        es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
         if es.indices.exists(index="events"):
-            es.options(ignore_status=[400,404]).indices.delete(index='events')
+            es.options(ignore_status=[400, 404]).indices.delete(index="events")
 
         events_data = EventDetails.query.all()
         for row in events_data:
@@ -61,11 +69,11 @@ def create_app(debug):
                 "description": str(getattr(row, "description")),
                 "type": str(getattr(row, "type")),
                 "venue": str(getattr(row, "venue")),
-                "additional_info": str(getattr(row, "additional_info"))
+                "additional_info": str(getattr(row, "additional_info")),
             }
             print("The event dict for indexing:", event_detail)
             es.index(index="events", document=event_detail)
-            
+
         es.indices.refresh(index="events")
         print(es.cat.count(index="events", format="json"))
 
@@ -78,9 +86,11 @@ def create_app(debug):
 
     return app
 
+
 def create_database(app):
     if not path.exists(DB_NAME):
         db.create_all(app=app)
-        print('Created Database!')
+        print("Created Database!")
 
-app = create_app(debug = True)
+
+app = create_app(debug=True)
