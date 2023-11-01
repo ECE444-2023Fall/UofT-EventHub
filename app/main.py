@@ -10,7 +10,7 @@ import os, time
 
 ## Initialize and import databases schemas
 db = SQLAlchemy()
-from database import Credentials, EventDetails
+from app.database import Credentials, EventDetails
 
 ## Initialize elastic search server for autocomplete functionality
 ## Keeping the previous definition of Elastic search in for clarity:
@@ -40,7 +40,7 @@ def create_app(debug):
     ## Make the app CORS compliant
     CORS(app)
 
-    ## Register the auth path so that we can use the routes defined there. E.g. Login and Register
+    ## Register the paths so that we can use the routes defined there. E.g. Login and Register
     from auth import auth
     from user import user
     from organizer import organizer

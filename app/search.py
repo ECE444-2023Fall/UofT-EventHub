@@ -29,7 +29,6 @@ def search_autocomplete():
     resp = es.search(index="events", query=payload, size=10)
 
     # Return a list of event name and id ordered by the most relevant on top
-    # print([[result['_source']['name'], result['_source']['id']] for result in resp['hits']['hits']])
     return [[result['_source']['name'], result['_source']['id']] for result in resp['hits']['hits']]
 
 @search.route('/search_events', methods=['POST'])
