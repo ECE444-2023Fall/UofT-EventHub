@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from app.forms import EventCreateForm
 from app.main import db
-from app.database import EventDetails, OrganizerEventDetails
+from app.database import EventDetails, OrganizerEventDetails, Tag
 
 organizer = Blueprint('organizer', __name__)
 
@@ -33,6 +33,19 @@ def create_event():
                                  additional_info=form.additional_info.data)
         db.session.add(new_event)
         db.session.commit()
+
+        # Parse through tags and link associated tags
+        tags = form.tags.data.split(',')  # Split tags by comma
+        for tag_name in tags:
+            tag_name = tag_name.strip()  # Remove leading/trailing whitespace
+            if tag_name:
+                # Check if the tag already exists, if not, create it
+                tag = Tag.query.filter_by(name=tag_name).first()
+                if not tag:
+                    tag = Tag(name=tag_name)
+                    db.session.add(tag)
+                    db.session.commit()
+                new_event.tags.append(tag)  # Associate tag with the event
 
         new_organizer_event_relation = OrganizerEventDetails(event_id=new_event.id, organizer_username=current_user.username)
         db.session.add(new_organizer_event_relation)
