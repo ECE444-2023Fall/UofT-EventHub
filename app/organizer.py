@@ -1,9 +1,12 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
+from forms import EventCreateForm
+from flask import current_app
+import os
 
 from app.forms import EventCreateForm
-from app.main import db
-from app.database import EventDetails, OrganizerEventDetails, Tag
+from app.main import db, es # db is for database and es for elastic search
+from app.database import EventDetails, OrganizerEventDetails, Tag, EventBanner
 
 organizer = Blueprint('organizer', __name__)
 
@@ -21,7 +24,7 @@ def create_event():
     if form.validate_on_submit():
         # Currently I am not passing the banner information. 
         # This will be possible after the creation of the EventGraphicsBucket database 
-        # Create a new event
+        # Create a new event and add the event details
         new_event = EventDetails(name=form.name.data, 
                                  description=form.description.data,  
                                  type=form.type.data,  
@@ -48,6 +51,25 @@ def create_event():
                     db.session.commit()
                 new_event.tags.append(tag)  # Associating tag with the event
 
+        # Add the event details to the index for elastic search
+        add_event_to_index(new_event)
+
+        # Add the banner information for the newly created event
+        banner_file = form.banner_image.data
+        filename = "event_banner_" + str(new_event.id) + ".png"
+
+        # Save the banner in assets/event-assets
+        banner_file.save(os.path.join(
+            current_app.root_path, 'assets', 'event-assets', filename
+        ))
+
+        # Store the path to the banner EventBanner
+        event_graphic = EventBanner(event_id = new_event.id,
+                                    image = filename)
+
+        db.session.add(event_graphic)
+        db.session.commit()
+        
         # Create a relationship between the organizer and the event
         new_organizer_event_relation = OrganizerEventDetails(event_id=new_event.id, organizer_username=current_user.username)
         db.session.add(new_organizer_event_relation)
@@ -59,3 +81,18 @@ def create_event():
     print(organizer)
 
     return render_template('create_event.html', form=form)
+
+def add_event_to_index(new_event):
+    event_detail = {
+        "id": new_event.id,
+        "name": new_event.name,
+        "description": new_event.description,
+        "type": new_event.type,
+        "venue": new_event.venue,
+        "additional_info": new_event.additional_info
+    }
+    
+    logging.info("The event dict for indexing:", event_detail)
+    es.index(index="events", document=event_detail)
+    es.indices.refresh(index="events")
+    logging.info(es.cat.count(index="events", format="json"))

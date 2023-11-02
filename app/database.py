@@ -31,6 +31,7 @@ event_tags = db.Table('event_tags',
 
 class EventDetails(db.Model):
     __tablename__ = 'event_details'
+
     # Event Indetifier information
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=False)
@@ -46,7 +47,6 @@ class EventDetails(db.Model):
 
     # Additional informations
     link = db.Column(db.String(300))
-    banner_id = db.Column(db.Integer)
     additional_info = db.Column(db.String(1000))
 
     # Add a relationship to the tags
@@ -58,6 +58,23 @@ class EventDetails(db.Model):
     
     def get_id(self):
         return (self.id)
+
+
+class EventBanner(db.Model):
+    __tablename__ = 'event_banners'
+
+    # Event Indetifier information
+    # TODO: If we are restricting one graphics per event we can remove id and make event_id a primary key
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
+    image = db.Column(db.String(250), nullable=True)
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return f"Event ID : {self.id}, Banner Image: {self.name}"
+    
+    def get_id(self):
+        return (self.event_id)
     
 class OrganizerEventDetails(db.Model):
     __tablename__ = 'organizer_event_relations'

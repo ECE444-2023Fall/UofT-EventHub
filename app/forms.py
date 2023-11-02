@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField, DateField, TimeField, URLField, FileField
+from flask_wtf.file import FileAllowed
 from wtforms.validators import DataRequired
 
 R_USER = "user"
@@ -31,7 +32,7 @@ class EventCreateForm(FlaskForm):
 
     # Additional informations
     link = URLField("Link:")
-    banner_id = FileField("Event Banner:")
+    banner_image = FileField("Image:", validators=[FileAllowed(['png'], 'PNG Images only!')])
     additional_info = StringField('Additional Information:')
     submit = SubmitField('Submit')
 

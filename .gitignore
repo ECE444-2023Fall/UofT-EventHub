@@ -5,3 +5,4 @@ app/instance/database.db
 virtual-environment-snehNinja/
 **/.DS_Store
 .pytest_cache
+.vscode/
