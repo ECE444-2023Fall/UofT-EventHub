@@ -2,6 +2,7 @@ import pytest
 from app.main import app, db
 from pathlib import Path
 from flask_login import current_user
+from app.database import EventDetails, Tag
 
 TEST_DB = "test.db"
 
@@ -187,3 +188,24 @@ def test_organiser_add_events_endpoint(client):
     assert response.status_code == 200
     response = client.get("/organizer/create_event", content_type="html/text")
     assert response.status_code == 200
+
+def test_create_event_with_tags(client):
+    # Create tags
+    social_tag = Tag(name='social')
+    cultural_tag = Tag(name='cultural')
+    networking_tag = Tag(name='networking')
+
+    # Create an event and associate tags
+    new_event = EventDetails(name="Sample Event", description="A test event", venue="Sample Venue")
+    new_event.tags.extend([social_tag, cultural_tag, networking_tag])
+
+    db.session.add(new_event)
+    db.session.commit()
+
+    # Query events with their associated tags
+    events = EventDetails.query.all()
+    assert len(events) == 1
+    event = events[0]
+    assert event.name == "Sample Event"
+    assert len(event.tags) == 3
+    assert {"social", "cultural", "networking"} == {tag.name for tag in event.tags}
