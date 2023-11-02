@@ -75,7 +75,7 @@ def add_event_to_index(new_event):
         "additional_info": new_event.additional_info
     }
     
-    print("The event dict for indexing:", event_detail)
+    logging.info("The event dict for indexing:", event_detail)
     es.index(index="events", document=event_detail)
     es.indices.refresh(index="events")
-    print(es.cat.count(index="events", format="json"))
+    logging.info(es.cat.count(index="events", format="json"))

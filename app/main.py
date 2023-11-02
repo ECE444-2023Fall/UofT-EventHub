@@ -7,16 +7,16 @@ from flask_login import UserMixin, LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 import os, time
+import logging, sys
 
 ## Initialize and import databases schemas
 db = SQLAlchemy()
 from app.database import Credentials, EventDetails
 
-## Initialize elastic search server for autocomplete functionality
-## Keeping the previous definition of Elastic search in for clarity:
-## print("Trying to connect to ES")
-##es = Elasticsearch(hosts=["http://elasticsearch:9200"])
+# Initialize logger module
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
+## Initialize elastic search server for autocomplete functionality
 elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
 es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
 
@@ -57,7 +57,7 @@ def create_app(debug):
         db.create_all()
 
         # Index the events database using elasticsearch
-        es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
+        # es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
         if es.indices.exists(index="events"):
             es.options(ignore_status=[400, 404]).indices.delete(index="events")
 
@@ -71,11 +71,11 @@ def create_app(debug):
                 "venue": str(getattr(row, "venue")),
                 "additional_info": str(getattr(row, "additional_info")),
             }
-            print("The event dict for indexing:", event_detail)
+            logging.info("The event dict for indexing:", event_detail)
             es.index(index="events", document=event_detail)
 
         es.indices.refresh(index="events")
-        print(es.cat.count(index="events", format="json"))
+        logging.info(es.cat.count(index="events", format="json"))
 
     login_manager = LoginManager()
     login_manager.init_app(app)
@@ -90,7 +90,7 @@ def create_app(debug):
 def create_database(app):
     if not path.exists(DB_NAME):
         db.create_all(app=app)
-        print("Created Database!")
+        logging.info("Created Database!")
 
 
 app = create_app(debug=True)

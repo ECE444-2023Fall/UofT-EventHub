@@ -4,3 +4,4 @@ app/instance/database.db
 app/__pycache__
 tests/__pycache__
 virtual-environment-snehNinja/
+.vscode/
