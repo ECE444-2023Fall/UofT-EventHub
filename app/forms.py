@@ -23,14 +23,17 @@ class EventCreateForm(FlaskForm):
     type = StringField('Type:')
 
     # Location and Time information
-    venue = StringField('Venue:')
-    start_date = DateField('Start Date:')
+    venue = StringField('Venue:', validators=[DataRequired()])
+    start_date = DateField('Start Date:', validators=[DataRequired()])
     end_date = DateField('End Date:')
-    start_time = TimeField('Start Time:')
-    end_time = TimeField('End Time:')
+    start_time = TimeField('Start Time:', validators=[DataRequired()])
+    end_time = TimeField('End Time:', validators=[DataRequired()])
 
     # Additional informations
     link = URLField("Link:")
     banner_id = FileField("Event Banner:")
     additional_info = StringField('Additional Information:')
     submit = SubmitField('Submit')
+
+    # Tags
+    tags = StringField('Tags (Comma-separated)')
