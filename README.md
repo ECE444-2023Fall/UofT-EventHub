@@ -42,6 +42,19 @@ We have dockerized the project to prevent any complications that might arise fro
 
 If the port 5000 is busy, you can replace it with other ports like 3000.
 
+
+CHANGES TO STARTUP: 
+
+- In order to run the application ensure docker and docker-compose are downloaded
+- Run the website using:
+ ``` docker-compose up -d ```
+Note: the -d flag represents running the containers in detached mode. It basically will not show any logs on the terminal screen.
+
+After running the previous command, you should be able to access the website on your localhost:5000 link as we have been doing previously.
+
+when you are done using the application, just run:
+ ``` docker-compose down```
+
 <!-- ROADMAP -->
 ## Roadmap
 

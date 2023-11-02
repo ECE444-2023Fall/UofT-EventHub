@@ -29,6 +29,7 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
@@ -38,14 +39,45 @@
     {% endfor %}
 
     {% block page_content %}
+
+        <script>
+            $(document).ready(function() {
+                console.log("Hello")
+                let debounce;
+                $('.search-box').on('keydown', function (e) {
+                  clearTimeout(debounce)
+                  debounce = setTimeout(() => {
+                          getAutoComplete();  
+                  }, 300);
+                })
+            })
+
+            function getAutoComplete() {
+              const query = $('.search-box').val();
+              console.log(query)
+              fetch(`http://localhost:5000/search?search=${encodeURIComponent(query.trim())}`)
+                .then((resp) => resp.json())
+                .then((data) => {
+                        $('.results').empty();
+                        for (let i = 0; i < data.length; i++) {
+                                $('.results').append(`<li>${data[i]}</li>`)
+                        }
+                      })
+            }
+        </script>
+
         <div class="page-header">
             <h1>MAIN USER PAGE</h1>
         </div>
+        <form action="{{ url_for('search.search_events') }}" method="post">
+            <input class="search-box" name="query" id="search-text">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
         <h2>All Events List</h2>
-        <ul>
-            {% for event_data in events_data %}
-            <li>{{ event_data }}</li>
-            {% endfor %}    
+        <ul class="results">
+            {% for key, value in event_data.items() %}
+            <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
+            {% endfor %}
         </ul>
     {% endblock %}
 </div>
