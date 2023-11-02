@@ -21,6 +21,7 @@ def create_event():
     if form.validate_on_submit():
         # Currently I am not passing the banner information. 
         # This will be possible after the creation of the EventGraphicsBucket database 
+        # Create a new event
         new_event = EventDetails(name=form.name.data, 
                                  description=form.description.data,  
                                  type=form.type.data,  
@@ -35,18 +36,19 @@ def create_event():
         db.session.commit()
 
         # Parse through tags and link associated tags
-        tags = form.tags.data.split(',')  # Split tags by comma
+        tags = form.tags.data.split(',')  # Splitting tags by comma
         for tag_name in tags:
-            tag_name = tag_name.strip()  # Remove leading/trailing whitespace
+            tag_name = tag_name.strip()  # Remove leading & trailing whitespace
             if tag_name:
-                # Check if the tag already exists, if not, create it
+                # Check if the tag already exists, otherwise create it
                 tag = Tag.query.filter_by(name=tag_name).first()
                 if not tag:
                     tag = Tag(name=tag_name)
                     db.session.add(tag)
                     db.session.commit()
-                new_event.tags.append(tag)  # Associate tag with the event
+                new_event.tags.append(tag)  # Associating tag with the event
 
+        # Create a relationship between the organizer and the event
         new_organizer_event_relation = OrganizerEventDetails(event_id=new_event.id, organizer_username=current_user.username)
         db.session.add(new_organizer_event_relation)
         db.session.commit()
