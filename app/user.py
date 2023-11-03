@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request
-from auth import login_required
-from main import es
 
+from app.main import es
 from app.auth import login_required
 from app.database import EventDetails
 

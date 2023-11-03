@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from forms import EventCreateForm
 from flask import current_app
+import logging
 import os
 
-from main import db, es # db is for database and es for elastic search
-from database import EventDetails, OrganizerEventDetails, EventBanner
+from app.main import db, es # db is for database and es for elastic search
+from app.forms import EventCreateForm
+from app.database import EventDetails, OrganizerEventDetails, EventBanner
 
 organizer = Blueprint('organizer', __name__)
 

@@ -1,6 +1,7 @@
-from app.main import db
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey
+
+from app.main import db
 
 class Credentials(db.Model, UserMixin):
     __tablename__ = 'credentials'
