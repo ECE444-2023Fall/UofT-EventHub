@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
-import os
+import os, time
 import logging, sys
 
 ## Initialize and import databases schemas
@@ -15,8 +15,30 @@ from app.database import Credentials, EventDetails
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 ## Initialize elastic search server for autocomplete functionality
+def create_elasticsearch(elasticsearch_host, max_retries=60, retry_delay=5):
+    es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
+
+    # Retry until Elasticsearch becomes available or the maximum number of retries is reached
+    for retry in range(max_retries):
+        try:
+            # Attempt to ping Elasticsearch
+            if es.ping():
+                print("Elasticsearch is up and running")
+                break  # Elasticsearch is available; exit the loop
+        except Exception as e:
+            print(f"Retry {retry + 1}/{max_retries}: Elasticsearch is not available yet. Error: {e}")
+
+        # Wait for a few seconds before the next retry
+        time.sleep(retry_delay)
+
+    # If the loop completes without success, we can raise an error
+    if retry == max_retries - 1:
+        raise TimeoutError(f"Elasticsearch did not become available within {max_retries} retries.")
+
+    return es
+
 elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
-es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
+es = create_elasticsearch(elasticsearch_host)
 
 ## Global constants
 DB_NAME = "database.db"
@@ -54,11 +76,11 @@ def create_app(debug):
         db.create_all()
 
         # Index the events database using elasticsearch
-        # es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
+        # Scrape any existing "junk" data
         if es.indices.exists(index="events"):
             es.options(ignore_status=[400, 404]).indices.delete(index="events")
-        else:
-            es.index(index="events", document={})
+        # Initialize the events index to an empty dict
+        es.index(index="events", document={})
 
         events_data = EventDetails.query.all()
         for row in events_data:
