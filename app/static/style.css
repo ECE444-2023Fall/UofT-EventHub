@@ -28,6 +28,4 @@ input[type=button], input[type=submit], input[type=reset] {
     flex-shrink: 0;
   }
 
-.nav-link{
-    color: #333333 !important;
-}
+
