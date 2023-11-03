@@ -78,9 +78,17 @@
         <div class="page-header">
             <h1 style="color: #050151;">University of Toronto Events</h1>
         </div>
-        <form action="{{ url_for('search.search_events') }}" method="post">
+        <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
             <input class="search-box" name="query" id="search-text">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
+            <select class="filter-dropdown" name="filter-tag" id="filter-tag">
+                {% for filter_tag in filter_tags %}
+                <option value="{{filter_tag}}">{{ filter_tag }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filter</button>
         </form>
         <h2>All Events List</h2>
         <ul class="results">

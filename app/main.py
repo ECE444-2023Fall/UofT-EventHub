@@ -65,12 +65,14 @@ def create_app(debug):
     from app.organizer import organizer
     from app.events import events
     from app.search import search
+    from app.filter import filter
 
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(user, url_prefix="/")
     app.register_blueprint(organizer, url_prefix="/")
     app.register_blueprint(events, url_prefix="/")
     app.register_blueprint(search, url_prefix="/")
+    app.register_blueprint(filter, url_prefix="/")
 
     with app.app_context():
         db.create_all()
@@ -80,7 +82,8 @@ def create_app(debug):
         if es.indices.exists(index="events"):
             es.options(ignore_status=[400, 404]).indices.delete(index="events")
         # Initialize the events index to an empty dict
-        es.index(index="events", document={})
+        if not es.indices.exists(index="events"):
+            es.index(index="events", document={})
 
         events_data = EventDetails.query.all()
         for row in events_data:

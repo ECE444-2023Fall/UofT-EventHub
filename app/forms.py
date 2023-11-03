@@ -15,7 +15,6 @@ from wtforms.validators import DataRequired
 R_USER = "user"
 R_ORGANIZER = "organizer"
 
-
 class LoginForm(FlaskForm):
     username = StringField("Username:", validators=[DataRequired()])
     password = PasswordField("Password:", validators=[DataRequired()])

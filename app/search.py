@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 
 from app.main import es
 from app.auth import login_required
@@ -37,13 +37,20 @@ def search_autocomplete():
 
 
 @search.route("/search_events", methods=["POST"])
+@search.route("/search_events/<filter>", methods=["POST"])
 @login_required
-def search_events():
+def search_events(filter="all"):
     if request.method != "POST":
         return
 
     print("User searched for:", request.form["query"])
     query = request.form["query"]
+
+    return redirect(url_for("user.main", search=query, filter=filter))
+
+# This Function contains the logic that searches for the events based
+# on the input search_query
+def func_search_events(query):
     tokens = query.split(" ")
 
     # Make a JSON query to elastic search to get the list of relevant events
@@ -75,4 +82,4 @@ def search_events():
         dict_of_events_details[result["_source"]["id"]] = event_detail
 
     print("The relevant event list is:", dict_of_events_details)
-    return render_template("user_main.html", event_data=dict_of_events_details)
+    return dict_of_events_details
