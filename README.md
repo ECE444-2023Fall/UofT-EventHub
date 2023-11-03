@@ -49,6 +49,13 @@ CHANGES TO STARTUP:
 - Run the website using:
  ``` docker-compose up -d ```
 Note: the -d flag represents running the containers in detached mode. It basically will not show any logs on the terminal screen.
+To show logs for docker compose:
+``` docker-compose up ```
+
+When re-running the code make sure to run: 
+``` docker-compose up --build```
+This will re-build your container as docker-compose tends to use the cached containers. 
+Alternatively you can also use: ```docker-compose build --no-cache``` before you run the ```docker-compose up ```
 
 After running the previous command, you should be able to access the website on your localhost:5000 link as we have been doing previously.
 
