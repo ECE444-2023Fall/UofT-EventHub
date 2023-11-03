@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, send_from_directory
 from flask_login import login_required, current_user
-from forms import EventCreateForm
 from flask import current_app
 import os
 
-from main import db
-from database import EventDetails
+from app.main import db
+from app.database import EventDetails
+from app.forms import EventCreateForm
 
 events = Blueprint('events', __name__)
 

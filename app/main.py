@@ -41,11 +41,11 @@ def create_app(debug):
     CORS(app)
 
     ## Register the paths so that we can use the routes defined there. E.g. Login and Register
-    from auth import auth
-    from user import user
-    from organizer import organizer
-    from events import events
-    from search import search
+    from app.auth import auth
+    from app.user import user
+    from app.organizer import organizer
+    from app.events import events
+    from app.search import search
 
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(user, url_prefix="/")
@@ -60,6 +60,8 @@ def create_app(debug):
         # es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
         if es.indices.exists(index="events"):
             es.options(ignore_status=[400, 404]).indices.delete(index="events")
+        else:
+            es.index(index="events", document={})
 
         events_data = EventDetails.query.all()
         for row in events_data:
