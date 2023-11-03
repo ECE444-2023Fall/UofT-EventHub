@@ -32,6 +32,15 @@ to stay informed and engaged for students, clubs, and faculty members at the Uni
 <!-- GETTING STARTED -->
 ## Getting Started
 
+**Steps to Run the application for development: **
+1. Before you start making changes:  ``` docker-compose up -d ```
+2. Make changes locally when you'd like to test the change: refresh docker container through docker desktop or re-run ``` docker-compose up -d ```
+3. All changes to the files within the app/ folder can be tested this way. 
+4. Before pushing the code do - ``` docker-compose up --build ```
+5. If everything works on the new container, you are all set to push the changes!
+6. After pushing the changes run ``` docker-compose down``` to stop the container. 
+
+Older version and explanation of commands:
 We have dockerized the project to prevent any complications that might arise from different environments. To run the application locally you can:
 
 - Initialize the python docker image using the Dockerfile we have added
@@ -41,9 +50,6 @@ We have dockerized the project to prevent any complications that might arise fro
 ```docker run -d -p 5000:5000 python-docker```
 
 If the port 5000 is busy, you can replace it with other ports like 3000.
-
-
-CHANGES TO STARTUP: 
 
 - In order to run the application ensure docker and docker-compose are downloaded
 - Run the website using:
