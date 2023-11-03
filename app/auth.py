@@ -3,6 +3,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
+from app.globals import Role
 from app.main import db
 from app.forms import LoginForm, RegForm
 from app.database import Credentials
@@ -12,9 +13,9 @@ auth = Blueprint("auth", __name__)
 
 @auth.route("/", methods=["GET", "POST"])
 def login():
-    if hasattr(current_user, "role") and current_user.role == 0:
+    if hasattr(current_user, "role") and current_user.role == Role.USER.value:
         return redirect(url_for("user.main"))
-    elif hasattr(current_user, "role") and current_user.role == 1:
+    elif hasattr(current_user, "role") and current_user.role == Role.ORGANIZER.value:
         return redirect(url_for("organizer.main"))
 
     form = LoginForm()
@@ -31,7 +32,7 @@ def login():
                 login_user(user, remember=True)
 
                 # Redirection to the correct home page
-                if user.role == 0:
+                if user.role == Role.USER.value:
                     return redirect(url_for("user.main"))
                 else:
                     return redirect(url_for("organizer.main"))
@@ -71,18 +72,11 @@ def register():
             flash("Password must be at least 7 characters.", category="error")
         else:
             print(f"Entered Data: ({username}, {password1}, {role})")
-            if role == "user":
-                new_user = Credentials(
-                    username=username,
-                    password=generate_password_hash(password1, method="sha256"),
-                    role=0,
-                )
-            else:
-                new_user = Credentials(
-                    username=username,
-                    password=generate_password_hash(password1, method="sha256"),
-                    role=1,
-                )
+            new_user = Credentials(
+                username=username,
+                password=generate_password_hash(password1, method="sha256"),
+                role=role,
+            )
 
             db.session.add(new_user)
             db.session.commit()
@@ -90,7 +84,7 @@ def register():
             login_user(new_user, remember=True)
 
             flash("Account created!", category="success")
-            if role == "user":
+            if role == Role.USER.value:
                 return redirect(url_for("user.main"))
             else:
                 return redirect(url_for("organizer.main"))

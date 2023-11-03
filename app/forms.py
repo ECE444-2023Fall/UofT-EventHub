@@ -12,8 +12,7 @@ from wtforms import (
 from flask_wtf.file import FileAllowed
 from wtforms.validators import DataRequired
 
-R_USER = "user"
-R_ORGANIZER = "organizer"
+from app.globals import Role
 
 class LoginForm(FlaskForm):
     username = StringField("Username:", validators=[DataRequired()])
@@ -24,7 +23,7 @@ class LoginForm(FlaskForm):
 class RegForm(FlaskForm):
     role = SelectField(
         "Role:",
-        choices=[(R_USER, "User"), (R_ORGANIZER, "Organizer")],
+        choices=[(Role.USER.value, "User"), (Role.ORGANIZER.value, "Organizer")],
         validators=[DataRequired()],
     )
     username = StringField("Username:", validators=[DataRequired()])

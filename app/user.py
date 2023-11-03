@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template
 
+from app.globals import FILTERS
 from app.auth import login_required, user_required
 from app.database import EventDetails
 from app.search import func_search_events
 from app.filter import func_filter_events
 
-FILTERS = ['In-Person', 'Today', 'Free', 'Music']
 
 user = Blueprint("user", __name__)
 

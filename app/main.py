@@ -40,10 +40,7 @@ def create_elasticsearch(elasticsearch_host, max_retries=60, retry_delay=5):
 elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
 es = create_elasticsearch(elasticsearch_host)
 
-## Global constants
-DB_NAME = "database.db"
-R_USER = "user"
-R_ORGANIZER = "organizer"
+from app.globals import DB_NAME
 
 def create_app(debug):
     app = Flask(__name__)
