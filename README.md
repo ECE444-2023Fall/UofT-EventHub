@@ -40,7 +40,7 @@ to stay informed and engaged for students, clubs, and faculty members at the Uni
 5. If everything works on the new container, you are all set to push the changes!
 6. After pushing the changes run ``` docker-compose down``` to stop the container. 
 
-Older version and explanation of commands:
+**Older version and explanation of commands:**
 We have dockerized the project to prevent any complications that might arise from different environments. To run the application locally you can:
 
 - Initialize the python docker image using the Dockerfile we have added
