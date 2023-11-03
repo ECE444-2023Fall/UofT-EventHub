@@ -32,7 +32,7 @@ to stay informed and engaged for students, clubs, and faculty members at the Uni
 <!-- GETTING STARTED -->
 ## Getting Started
 
-**Steps to Run the application for development: **
+**Steps to Run the application for development:**
 1. Before you start making changes:  ``` docker-compose up -d ```
 2. Make changes locally when you'd like to test the change: refresh docker container through docker desktop or re-run ``` docker-compose up -d ```
 3. All changes to the files within the app/ folder can be tested this way. 
