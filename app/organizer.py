@@ -35,13 +35,15 @@ def create_event():
         new_event = EventDetails(
             name=form.name.data,
             description=form.description.data,
-            type=form.type.data,
+            category=form.category.data.lower(),
+            is_online=form.is_online.data,
             venue=form.venue.data,
             start_date=form.start_date.data,
             end_date=form.end_date.data,
             start_time=form.start_time.data,
             end_time=form.end_time.data,
-            link=form.link.data,
+            ticket_price=form.ticket_price.data,
+            redirect_link=form.redirect_link.data,
             additional_info=form.additional_info.data,
         )
         db.session.add(new_event)
@@ -84,7 +86,7 @@ def add_event_to_index(new_event):
         "id": new_event.id,
         "name": new_event.name,
         "description": new_event.description,
-        "type": new_event.type,
+        "category": new_event.category,
         "venue": new_event.venue,
         "additional_info": new_event.additional_info,
     }

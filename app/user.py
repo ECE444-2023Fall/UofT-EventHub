@@ -3,8 +3,8 @@ from flask import Blueprint, render_template
 from app.globals import FILTERS
 from app.auth import login_required, user_required
 from app.database import EventDetails
-from app.search import func_search_events
-from app.filter import func_filter_events
+from app.search import get_eventids_matching_search_query
+from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list
 
 
 user = Blueprint("user", __name__)
@@ -16,15 +16,22 @@ user = Blueprint("user", __name__)
 @login_required
 @user_required
 def main(filter="all", search=None):
-    dict_of_events_details = {}
-    if search == None:
-        dict_of_events_details = get_all_events_from_database()
-    else:
-        dict_of_events_details = func_search_events(query=search)
-    
-    # Filter the events list
-    if filter != "tags":
-        dict_of_events_details = func_filter_events(events=dict_of_events_details, tag=filter)
+    dict_of_events_details = get_all_events_from_database()
+
+    # Filter the events list based on the search query
+    if search != None:
+        list_event_ids = get_eventids_matching_search_query(query=search)
+        dict_of_events_details = filter_events_on_event_ids_list(events=dict_of_events_details, event_ids=list_event_ids)
+
+    # Filter the events list based on the filter tags
+    if filter == "in-person":
+        dict_of_events_details = filter_for_inperson_events(events=dict_of_events_details)
+    elif filter == "free":
+        dict_of_events_details = filter_for_free_events(events=dict_of_events_details)
+    elif filter == "today":
+        dict_of_events_details = filter_for_today_events(events=dict_of_events_details)
+    elif filter != "all":
+        dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
     return render_template("user_main.html", event_data=dict_of_events_details, search=search, filter=filter, filter_tags=FILTERS)
 

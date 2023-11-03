@@ -28,17 +28,21 @@ class EventDetails(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(1000))
-    type = db.Column(db.String(150))
+    category = db.Column(db.String(150))
 
     # Location and Time information
+    is_online = db.Column(db.Integer)
     venue = db.Column(db.String(150))
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
 
+    # Ticket Price Information
+    ticket_price = db.Column(db.Float)
+
     # Additional informations
-    link = db.Column(db.String(300))
+    redirect_link = db.Column(db.String(300))
     additional_info = db.Column(db.String(1000))
 
     # A sample data from this table will look like this

@@ -43,14 +43,28 @@ def search_events(filter="all"):
     if request.method != "POST":
         return
 
-    print("User searched for:", request.form["query"])
-    query = request.form["query"]
+    # Assemble the arguments for the redrect link based on 
+    # if the user decided to "Clear Search" or "Search"
+    
+    # Pass on the existing filter value
+    redirect_args = {"filter": filter}
+    if "clear-search-button" in request.form.keys():
+        # Omit the search query from the redirect link
+        if filter == "all":
+            # If there is no search query and filter = "all"
+            # then it is redundant to pass a filter argument
+            del redirect_args["filter"]
+    else:
+        # Add the search query in the redirect link
+        print("User searched for:", request.form["query"])
+        query = request.form["query"]
+        redirect_args["search"] = query
 
-    return redirect(url_for("user.main", search=query, filter=filter))
+    return redirect(url_for("user.main", **redirect_args))
 
-# This Function contains the logic that searches for the events based
-# on the input search_query
-def func_search_events(query):
+# Primary ElasticSearch retrival logic
+# Gets the events depending on the search query
+def get_eventids_matching_search_query(query):
     tokens = query.split(" ")
 
     # Make a JSON query to elastic search to get the list of relevant events
@@ -72,14 +86,9 @@ def func_search_events(query):
     resp = es.search(index="events", query=payload, size=10)
 
     ## Make a dict for relevant event details
-    dict_of_events_details = {}
+    list_event_ids = []
     for result in resp["hits"]["hits"]:
-        event_detail = {}
+        list_event_ids.append( int(result["_source"]["id"]) )
 
-        for column in result["_source"].keys():
-            event_detail[column] = result["_source"][column]
-
-        dict_of_events_details[result["_source"]["id"]] = event_detail
-
-    print("The relevant event list is:", dict_of_events_details)
-    return dict_of_events_details
+    print("The relevant event list IDs are:", list_event_ids)
+    return list_event_ids

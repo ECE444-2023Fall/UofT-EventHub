@@ -81,14 +81,13 @@
         <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
             <input class="search-box" name="query" id="search-text">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button>
         </form>
         <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
-            <select class="filter-dropdown" name="filter-tag" id="filter-tag">
-                {% for filter_tag in filter_tags %}
-                <option value="{{filter_tag}}">{{ filter_tag }}</option>
-                {% endfor %}
-            </select>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filter</button>
+            {% for filter_tag in filter_tags %}
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
+            {% endfor %}
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
         </form>
         <h2>All Events List</h2>
         <ul class="results">

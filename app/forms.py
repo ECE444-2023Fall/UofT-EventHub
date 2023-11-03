@@ -8,11 +8,14 @@ from wtforms import (
     TimeField,
     URLField,
     FileField,
+    TextAreaField,
+    BooleanField,
+    FloatField,
 )
 from flask_wtf.file import FileAllowed
 from wtforms.validators import DataRequired
 
-from app.globals import Role
+from app.globals import Role, EVENT_CATEGORIES
 
 class LoginForm(FlaskForm):
     username = StringField("Username:", validators=[DataRequired()])
@@ -35,19 +38,27 @@ class RegForm(FlaskForm):
 class EventCreateForm(FlaskForm):
     name = StringField("Name:", validators=[DataRequired()])
     description = StringField("Description:")
-    type = StringField("Type:")
+    category = SelectField(
+        "Category:", 
+        choices=EVENT_CATEGORIES, 
+        validators=[DataRequired()]
+    )
 
     # Location and Time information
+    is_online = BooleanField("Is this an online event?")
     venue = StringField("Venue:")
     start_date = DateField("Start Date:")
     end_date = DateField("End Date:")
     start_time = TimeField("Start Time:")
     end_time = TimeField("End Time:")
 
+    # Ticket Price Information
+    ticket_price = FloatField("Ticket Price:", default=0.0)
+
     # Additional informations
-    link = URLField("Link:")
+    redirect_link = URLField("Registration Redirect Link:")
     banner_image = FileField(
         "Image:", validators=[FileAllowed(["png"], "PNG Images only!")]
     )
-    additional_info = StringField("Additional Information:")
+    additional_info = TextAreaField("Additional Information:")
     submit = SubmitField("Submit")
