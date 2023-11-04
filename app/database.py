@@ -43,6 +43,21 @@ class EventDetails(db.Model):
     def get_id(self):
         return (self.id)
     
+class EventRating(db.Model):
+    __tablename__ = 'event_ratings'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    #username of the user who gave the rating:
+    #TODO: Will add this later
+    # user_id = db.Column(db.String(150), ForeignKey('credentials.username'))
+    # Event on which the rating was given for:
+    event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
+    #the rating:
+    rating = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"ID : {self.event_id}, Name: {self.rating}"
+    
 class OrganizerEventDetails(db.Model):
     __tablename__ = 'organizer_event_relations'
 
