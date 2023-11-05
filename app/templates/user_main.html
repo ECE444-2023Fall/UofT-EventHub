@@ -3,6 +3,7 @@
 
 {% block title %}User's Page{% endblock %}
 {% block navbar %}
+<!-- Implementation of Navbar -->
 <nav class="navbar navbar-blue">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -38,6 +39,7 @@
 {% endblock %}
 
 {% block content %}
+<!-- The script tag includes a link to jQuery hosted on a CDN with specific integrity checks for security -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="container">
     {% for message in get_flashed_messages() %}
@@ -50,17 +52,21 @@
     {% block page_content %}
 
         <script>
+            // This script enhances a search box's functionality by providing an autocomplete feature.
             $(document).ready(function() {
                 console.log("Hello")
-                let debounce;
+                let debounce; // A variable to store the timer for delaying the autocomplete function.
+                // This event is triggered when a key is pressed in the search box.
                 $('.search-box').on('keydown', function (e) {
                   clearTimeout(debounce)
+                  // Sets a new timeout after the key is pressed and waits for 300 milliseconds.
                   debounce = setTimeout(() => {
-                          getAutoComplete();  
+                          getAutoComplete(); // Calls the function to fetch autocomplete suggestions after the delay.
                   }, 300);
                 })
             })
 
+            // This function is responsible for obtaining autocomplete suggestions.
             function getAutoComplete() {
               const query = $('.search-box').val();
               console.log(query)
@@ -69,7 +75,7 @@
                 .then((data) => {
                         $('.results').empty();
                         for (let i = 0; i < data.length; i++) {
-                                $('.results').append(`<li>${data[i]}</li>`)
+                                $('.results').append(`<li>${data[i]}</li>`) // Appends each suggestion to the results list.
                         }
                       })
             }
@@ -78,10 +84,12 @@
         <div class="page-header">
             <h1 style="color: #050151;">University of Toronto Events</h1>
         </div>
+        <!-- Generates a form with a search input field and a search button. -->
         <form action="{{ url_for('search.search_events') }}" method="post">
             <input class="search-box" name="query" id="search-text">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
+        <!-- Displays a list of events, each as a hyperlink with their respective names. -->
         <h2>All Events List</h2>
         <ul class="results">
             {% for key, value in event_data.items() %}
