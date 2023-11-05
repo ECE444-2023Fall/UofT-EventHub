@@ -11,6 +11,9 @@ def search_autocomplete():
     query = request.args["search"].lower()
     tokens = query.split(" ")
 
+# This block creates a list of clauses, each specifying a fuzzy matching criterion for a token in the 'tokens' list.
+# Each clause is configured to perform a fuzzy match on the 'name' field of the Elasticsearch documents.
+
     clauses = [
         {
             "span_multi": {
@@ -20,12 +23,16 @@ def search_autocomplete():
         for i in tokens
     ]
 
+    # Constructing the search query parameters.
+    # This operation looks for proximity matches of the clauses with zero distance and not necessarily in order.
+
     payload = {
         "bool": {
             "must": [{"span_near": {"clauses": clauses, "slop": 0, "in_order": False}}]
         }
     }
 
+    # It searches the 'events' index and retrieves a maximum of 10 matching results.
     resp = es.search(index="events", query=payload, size=10)
 
     # Return a list of event name and id ordered by the most relevant on top
