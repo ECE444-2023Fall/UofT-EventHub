@@ -2,6 +2,7 @@ h1{
     color: blue;
 }
 
+/* CSS for all buttons on the applications */
 input[type=button], input[type=submit], input[type=reset] {
     background-color: #04AA6D;
     border: none;
@@ -19,6 +20,7 @@ input[type=button], input[type=submit], input[type=reset] {
     text-align: center;
 }
 
+/* Spacing and alignment of the Login page */
 .frame-15c {
     width: 32.0605rem;
     height: 24.8924rem;
