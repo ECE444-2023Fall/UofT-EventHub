@@ -66,6 +66,7 @@ def create_event():
 
     return render_template('create_event.html', form=form)
 
+#adds event to the organizers page
 def add_event_to_index(new_event):
     event_detail = {
         "id": new_event.id,
