@@ -36,7 +36,6 @@ def search_autocomplete():
     ]
 
 
-@search.route("/search_events", methods=["POST"])
 @search.route("/search_events/<filter>", methods=["POST"])
 @login_required
 def search_events(filter="all"):
