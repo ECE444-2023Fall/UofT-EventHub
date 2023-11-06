@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
+import logging
 
 from app.main import es
 from app.auth import login_required
@@ -7,10 +8,14 @@ search = Blueprint("search", __name__)
 
 
 @search.route("/search", methods=["GET"])
-@login_required
 def search_autocomplete():
+    # This function is a standalone method to query our events database with a set of keywords
+    # Login won't be required for this method
+    
     query = request.args["search"].lower()
     tokens = query.split(" ")
+
+    logging.info("Search autocomplete received the query: ", tokens)
 
     clauses = [
         {
