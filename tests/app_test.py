@@ -1,9 +1,9 @@
 import pytest
 from app.main import app, db
 from pathlib import Path
-from flask_login import current_user
 
 TEST_DB = "test.db"
+
 
 # Test function written by Rahul
 @pytest.fixture
@@ -56,8 +56,7 @@ def test_user_login_success(client):
     assert response.status_code == 200
 
     # Logout of the system
-    response = client.get("/logout",
-        follow_redirects=True)
+    response = client.get("/logout", follow_redirects=True)
     assert response.status_code == 200
 
     # Login back into the system
@@ -98,6 +97,7 @@ def test_organizer_login_success(client):
 
     # The system should redirect the organizer to the main organizer page
     assert b"MAIN ORGANIZER PAGE" in response.data
+
 
 def test_unathorized_logout():
     tester = app.test_client()

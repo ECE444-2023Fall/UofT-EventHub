@@ -1,15 +1,17 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, send_from_directory
-from flask_login import login_required, current_user
+from flask import (
+    Blueprint,
+    render_template,
+    send_from_directory,
+)
+from flask_login import login_required
 from flask import current_app
-import os
 
-from app.main import db
 from app.database import EventDetails
-from app.forms import EventCreateForm
 
-events = Blueprint('events', __name__)
+events = Blueprint("events", __name__)
 
-@events.route('/events/<int:id>', methods=['GET'])
+
+@events.route("/events/<int:id>", methods=["GET"])
 @login_required
 def show_event(id):
     print(f"Loading webpage for event ID: {id}")
@@ -18,9 +20,12 @@ def show_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        print("Integrity Error: The event ID passed to show_event has no valid entry in the database")
+        print(
+            "Integrity Error: The event ID passed to show_event has no valid entry in the database"
+        )
 
-    return render_template('event.html', event=event.__dict__)
+    return render_template("event.html", event=event.__dict__)
+
 
 @events.route("/events/send_file/<filename>")
 @login_required
