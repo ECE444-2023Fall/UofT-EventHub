@@ -32,29 +32,14 @@ to stay informed and engaged for students, clubs, and faculty members at the Uni
 <!-- GETTING STARTED -->
 ## Getting Started
 
-We have dockerized the project to prevent any complications that might arise from different environments. To run the application locally you can:
-
-- Initialize the python docker image using the Dockerfile we have added
-```docker build -t python-docker .```
-
-- Run the website locally on a specific port
-```docker run -d -p 5000:5000 python-docker```
-
-If the port 5000 is busy, you can replace it with other ports like 3000.
-
-
-CHANGES TO STARTUP: 
-
-- In order to run the application ensure docker and docker-compose are downloaded
-- Run the website using:
- ``` docker-compose up -d ```
-Note: the -d flag represents running the containers in detached mode. It basically will not show any logs on the terminal screen.
-
-After running the previous command, you should be able to access the website on your localhost:5000 link as we have been doing previously.
-
-when you are done using the application, just run:
- ``` docker-compose down```
-
+**Steps to Run the application for development:**
+1. Before you start making changes:  ``` docker-compose up -d ```
+2. Make changes locally when you'd like to test the change: refresh docker container through docker desktop or re-run ``` docker-compose up -d ```
+3. All changes to the files within the app/ folder can be tested this way. 
+4. Before pushing the code do - ``` docker-compose up --build ```
+5. If everything works on the new container, you are all set to push the changes!
+6. After pushing the changes run ``` docker-compose down``` to stop the container.
+   
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -135,3 +120,34 @@ The best way to contact us is to join our [discord server](https://discord.gg/8s
 ## Acknowledgments
 
 We would like to acknowledge the ECE444 Teaching Team from the University of Toronto, who has guided us all the way to build this project.
+
+<!-- Deprecated  Comments-->
+## Deprecated  Comments
+
+**Older version and explanation of commands:**
+We have dockerized the project to prevent any complications that might arise from different environments. To run the application locally you can:
+
+- Initialize the python docker image using the Dockerfile we have added
+```docker build -t python-docker .```
+
+- Run the website locally on a specific port
+```docker run -d -p 5000:5000 python-docker```
+
+If the port 5000 is busy, you can replace it with other ports like 3000.
+
+- In order to run the application ensure docker and docker-compose are downloaded
+- Run the website using:
+ ``` docker-compose up -d ```
+Note: the -d flag represents running the containers in detached mode. It basically will not show any logs on the terminal screen.
+To show logs for docker compose:
+``` docker-compose up ```
+
+When re-running the code make sure to run: 
+``` docker-compose up --build```
+This will re-build your container as docker-compose tends to use the cached containers. 
+Alternatively you can also use: ```docker-compose build --no-cache``` before you run the ```docker-compose up ```
+
+After running the previous command, you should be able to access the website on your localhost:5000 link as we have been doing previously.
+
+when you are done using the application, just run:
+ ``` docker-compose down```

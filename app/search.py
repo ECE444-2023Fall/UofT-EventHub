@@ -1,12 +1,13 @@
-from flask import Blueprint, render_template, request
-from auth import login_required
-from main import es
+from flask import Blueprint, render_template, request, redirect, url_for
 
-from database import EventDetails
+from app.main import es
+from app.auth import login_required
 
-search = Blueprint('search', __name__)
+search = Blueprint("search", __name__)
 
-@search.route('/search', methods=['GET'])
+
+@search.route("/search", methods=["GET"])
+@login_required
 def search_autocomplete():
     query = request.args["search"].lower()
     tokens = query.split(" ")
@@ -29,15 +30,40 @@ def search_autocomplete():
     resp = es.search(index="events", query=payload, size=10)
 
     # Return a list of event name and id ordered by the most relevant on top
-    return [[result['_source']['name'], result['_source']['id']] for result in resp['hits']['hits']]
+    return [
+        [result["_source"]["name"], result["_source"]["id"]]
+        for result in resp["hits"]["hits"]
+    ]
 
-@search.route('/search_events', methods=['POST'])
-def search_events():
-    if request.method != 'POST':
+
+@search.route("/search_events/<filter>", methods=["POST"])
+@login_required
+def search_events(filter="all"):
+    if request.method != "POST":
         return
+
+    # Assemble the arguments for the redrect link based on 
+    # if the user decided to "Clear Search" or "Search"
     
-    print("User searched for:", request.form['query'])
-    query = request.form['query']
+    # Pass on the existing filter value
+    redirect_args = {"filter": filter}
+    if "clear-search-button" in request.form.keys():
+        # Omit the search query from the redirect link
+        if filter == "all":
+            # If there is no search query and filter = "all"
+            # then it is redundant to pass a filter argument
+            del redirect_args["filter"]
+    else:
+        # Add the search query in the redirect link
+        print("User searched for:", request.form["query"])
+        query = request.form["query"]
+        redirect_args["search"] = query
+
+    return redirect(url_for("user.main", **redirect_args))
+
+# Primary ElasticSearch retrival logic
+# Gets the events depending on the search query
+def get_eventids_matching_search_query(query):
     tokens = query.split(" ")
 
     # Make a JSON query to elastic search to get the list of relevant events
@@ -59,15 +85,9 @@ def search_events():
     resp = es.search(index="events", query=payload, size=10)
 
     ## Make a dict for relevant event details
-    dict_of_events_details = {}
-    for result in resp['hits']['hits']:
-        event_detail = {}
+    list_event_ids = []
+    for result in resp["hits"]["hits"]:
+        list_event_ids.append( int(result["_source"]["id"]) )
 
-        for column in result['_source'].keys():
-            event_detail[column] = result['_source'][column]
-
-        dict_of_events_details[result['_source']['id']] = event_detail
-
-    print("The relevant event list is:", dict_of_events_details)
-    return render_template('user_main.html', event_data=dict_of_events_details)
-
+    print("The relevant event list IDs are:", list_event_ids)
+    return list_event_ids

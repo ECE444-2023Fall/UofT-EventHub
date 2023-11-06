@@ -6,3 +6,5 @@ virtual-environment-snehNinja/
 **/.DS_Store
 .pytest_cache
 .vscode/
+*.db
+instance/database.db

@@ -1,9 +1,7 @@
-from flask import Flask, render_template, session, redirect, url_for, flash
-from flask_login import login_user, login_required, logout_user, current_user
+from flask import Flask
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
-from flask_login import UserMixin, LoginManager
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 import os, time
@@ -17,14 +15,32 @@ from app.database import Credentials, EventDetails
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 ## Initialize elastic search server for autocomplete functionality
+def create_elasticsearch(elasticsearch_host, max_retries=60, retry_delay=5):
+    es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
+
+    # Retry until Elasticsearch becomes available or the maximum number of retries is reached
+    for retry in range(max_retries):
+        try:
+            # Attempt to ping Elasticsearch
+            if es.ping():
+                print("Elasticsearch is up and running")
+                break  # Elasticsearch is available; exit the loop
+        except Exception as e:
+            print(f"Retry {retry + 1}/{max_retries}: Elasticsearch is not available yet. Error: {e}")
+
+        # Wait for a few seconds before the next retry
+        time.sleep(retry_delay)
+
+    # If the loop completes without success, we can raise an error
+    if retry == max_retries - 1:
+        raise TimeoutError(f"Elasticsearch did not become available within {max_retries} retries.")
+
+    return es
+
 elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
-es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
+es = create_elasticsearch(elasticsearch_host)
 
-## Global constants
-DB_NAME = "database.db"
-R_USER = "user"
-R_ORGANIZER = "organizer"
-
+from app.globals import DB_NAME
 
 def create_app(debug):
     app = Flask(__name__)
@@ -41,25 +57,30 @@ def create_app(debug):
     CORS(app)
 
     ## Register the paths so that we can use the routes defined there. E.g. Login and Register
-    from auth import auth
-    from user import user
-    from organizer import organizer
-    from events import events
-    from search import search
+    from app.auth import auth
+    from app.user import user
+    from app.organizer import organizer
+    from app.events import events
+    from app.search import search
+    from app.filter import filter
 
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(user, url_prefix="/")
     app.register_blueprint(organizer, url_prefix="/")
     app.register_blueprint(events, url_prefix="/")
     app.register_blueprint(search, url_prefix="/")
+    app.register_blueprint(filter, url_prefix="/")
 
     with app.app_context():
         db.create_all()
 
         # Index the events database using elasticsearch
-        # es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
+        # Scrape any existing "junk" data
         if es.indices.exists(index="events"):
             es.options(ignore_status=[400, 404]).indices.delete(index="events")
+        # Initialize the events index to an empty dict
+        if not es.indices.exists(index="events"):
+            es.index(index="events", document={})
 
         events_data = EventDetails.query.all()
         for row in events_data:
@@ -67,7 +88,7 @@ def create_app(debug):
                 "id": str(getattr(row, "id")),
                 "name": str(getattr(row, "name")),
                 "description": str(getattr(row, "description")),
-                "type": str(getattr(row, "type")),
+                "category": str(getattr(row, "category")),
                 "venue": str(getattr(row, "venue")),
                 "additional_info": str(getattr(row, "additional_info")),
             }
@@ -85,12 +106,5 @@ def create_app(debug):
         return Credentials.query.get(username)
 
     return app
-
-
-def create_database(app):
-    if not path.exists(DB_NAME):
-        db.create_all(app=app)
-        logging.info("Created Database!")
-
 
 app = create_app(debug=True)

@@ -1,30 +1,36 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
-from forms import EventCreateForm
 from flask import current_app
+import logging
 import os
 
-from app.forms import EventCreateForm
 from app.main import db, es # db is for database and es for elastic search
-from app.database import EventDetails, OrganizerEventDetails, Tag, EventBanner
+from app.database import EventDetails, OrganizerEventDetails, EventBanner
+from app.auth import organizer_required
 
-organizer = Blueprint('organizer', __name__)
+organizer = Blueprint("organizer", __name__)
 
-@organizer.route('/organizer', methods=['GET'])
+
+@organizer.route("/organizer", methods=["GET"])
 @login_required
+@organizer_required
 def main():
-    my_events_data = db.session.query(EventDetails).join(OrganizerEventDetails).filter(OrganizerEventDetails.organizer_username == current_user.username)
-    return render_template('organizer_main.html', my_events_data=my_events_data)
+    my_events_data = (
+        db.session.query(EventDetails)
+        .join(OrganizerEventDetails)
+        .filter(OrganizerEventDetails.organizer_username == current_user.username)
+    )
+    return render_template("organizer_main.html", my_events_data=my_events_data)
 
-@organizer.route('/organizer/create_event', methods=['GET', 'POST'])
+
+@organizer.route("/organizer/create_event", methods=["GET", "POST"])
 @login_required
+@organizer_required
 def create_event():
     form = EventCreateForm()
 
     if form.validate_on_submit():
-        # Currently I am not passing the banner information. 
-        # This will be possible after the creation of the EventGraphicsBucket database 
-        # Create a new event and add the event details
+        # Add the event details
         new_event = EventDetails(name=form.name.data, 
                                  description=form.description.data,  
                                  type=form.type.data,  
@@ -59,39 +65,38 @@ def create_event():
         filename = "event_banner_" + str(new_event.id) + ".png"
 
         # Save the banner in assets/event-assets
-        banner_file.save(os.path.join(
-            current_app.root_path, 'assets', 'event-assets', filename
-        ))
+        banner_file.save(
+            os.path.join(current_app.root_path, "assets", "event-assets", filename)
+        )
 
         # Store the path to the banner EventBanner
-        event_graphic = EventBanner(event_id = new_event.id,
-                                    image = filename)
+        event_graphic = EventBanner(event_id=new_event.id, image=filename)
 
         db.session.add(event_graphic)
         db.session.commit()
-        
-        # Create a relationship between the organizer and the event
+
         new_organizer_event_relation = OrganizerEventDetails(event_id=new_event.id, organizer_username=current_user.username)
         db.session.add(new_organizer_event_relation)
         db.session.commit()
 
-        return redirect(url_for('organizer.main'))
+        return redirect(url_for("organizer.main"))
 
     organizer = current_user
     print(organizer)
 
-    return render_template('create_event.html', form=form)
+    return render_template("create_event.html", form=form)
+
 
 def add_event_to_index(new_event):
     event_detail = {
         "id": new_event.id,
         "name": new_event.name,
         "description": new_event.description,
-        "type": new_event.type,
+        "category": new_event.category,
         "venue": new_event.venue,
-        "additional_info": new_event.additional_info
+        "additional_info": new_event.additional_info,
     }
-    
+
     logging.info("The event dict for indexing:", event_detail)
     es.index(index="events", document=event_detail)
     es.indices.refresh(index="events")
