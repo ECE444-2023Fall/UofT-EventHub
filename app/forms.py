@@ -25,10 +25,10 @@ class EventCreateForm(FlaskForm):
 
     # Location and Time information
     venue = StringField('Venue:')
-    start_date = DateField('Start Date:')
-    end_date = DateField('End Date:')
-    start_time = TimeField('Start Time:')
-    end_time = TimeField('End Time:')
+    start_date = DateField('Start Date:', validators=[DataRequired()])
+    end_date = DateField('End Date:', validators=[DataRequired()])
+    start_time = TimeField('Start Time:', validators=[DataRequired()])
+    end_time = TimeField('End Time:', validators=[DataRequired()])
 
     # Additional informations
     link = URLField("Link:")
