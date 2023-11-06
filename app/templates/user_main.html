@@ -1,9 +1,9 @@
-{% import "bootstrap/wtf.html" as wtf %}
-{% extends "bootstrap/base.html" %}
+<link rel="stylesheet" href="../static/style.css">
+{% import "bootstrap/wtf.html" as wtf %} {% extends "bootstrap/base.html" %} 
+{%block title %}User's Page{% endblock %} 
 
-{% block title %}User's Page{% endblock %}
 {% block navbar %}
-<nav class="navbar navbar-blue">
+<!--<nav class="navbar navbar-blue">
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">
@@ -33,68 +33,120 @@
         </li>
       </ul>
     </div>
-  </nav>
+  </nav>-->
+<header>
+  <div class="container">
+    <h1 class="logo"></h1>
 
-{% endblock %}
+    <nav class="custom-navbar">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Engineering</a></li>
+        <li><a href="#">Arts & Science</a></li>
+        <li><a href="/">Rotman</a></li>
+        <li><a href="/">Cultural</a></li>
+        <li><a href="/">Others</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+{% endblock %} 
 
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+  integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
 <div class="container">
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+  </div>
+  {% endfor %} {% block page_content %}
+
+  <script>
+    $(document).ready(function () {
+      console.log("Hello");
+      let debounce;
+      $(".search-box").on("keydown", function (e) {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          getAutoComplete();
+        }, 300);
+      });
+    });
+
+    function getAutoComplete() {
+      const query = $(".search-box").val();
+      console.log(query);
+      fetch(
+        `http://localhost:5000/search?search=${encodeURIComponent(
+          query.trim()
+        )}`
+      )
+        .then((resp) => resp.json())
+        .then((data) => {
+          $(".results").empty();
+          for (let i = 0; i < data.length; i++) {
+            $(".results").append(`<li>${data[i]}</li>`);
+          }
+        });
+    }
+  </script>
+
+  <div class="page-header">
+    <h1 style="color: #050151">University of Toronto Events</h1>
+  </div>
+  <form
+    action="{{ url_for('search.search_events', filter=filter) }}"
+    method="post"
+  >
+    <input class="search-box" name="query" id="search-text" />
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+      Search
+    </button>
+    <button
+      class="btn btn-outline-success my-2 my-sm-0"
+      type="submit"
+      name="clear-search-button"
+      value="clear"
+    >
+      Clear Search
+    </button>
+  </form>
+  <form
+    action="{{ url_for('filter.filter_events', search=search) }}"
+    method="post"
+  >
+    {% for filter_tag in filter_tags %}
+    <button
+      class="btn btn-outline-success my-2 my-sm-0"
+      type="submit"
+      name="filter-tag"
+      value="{{filter_tag | lower}}"
+    >
+      {{filter_tag}}
+    </button>
     {% endfor %}
-
-    {% block page_content %}
-
-        <script>
-            $(document).ready(function() {
-                console.log("Hello")
-                let debounce;
-                $('.search-box').on('keydown', function (e) {
-                  clearTimeout(debounce)
-                  debounce = setTimeout(() => {
-                          getAutoComplete();  
-                  }, 300);
-                })
-            })
-
-            function getAutoComplete() {
-              const query = $('.search-box').val();
-              console.log(query)
-              fetch(`http://localhost:5000/search?search=${encodeURIComponent(query.trim())}`)
-                .then((resp) => resp.json())
-                .then((data) => {
-                        $('.results').empty();
-                        for (let i = 0; i < data.length; i++) {
-                                $('.results').append(`<li>${data[i]}</li>`)
-                        }
-                      })
-            }
-        </script>
-
-        <div class="page-header">
-            <h1 style="color: #050151;">University of Toronto Events</h1>
-        </div>
-        <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
-            <input class="search-box" name="query" id="search-text">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button>
-        </form>
-        <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
-            {% for filter_tag in filter_tags %}
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
-            {% endfor %}
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
-        </form>
-        <h2>All Events List</h2>
-        <ul class="results">
-            {% for key, value in event_data.items() %}
-            <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% endblock %}
+    <button
+      class="btn btn-outline-success my-2 my-sm-0"
+      type="submit"
+      name="filter-tag"
+      value="clear"
+    >
+      Clear Filters
+    </button>
+  </form>
+  <h2>All Events List</h2>
+  <ul class="results">
+    {% for key, value in event_data.items() %}
+    <li><a href="/events/{{ key }}">{{ value.name }}</a></li>
+    {% endfor %}
+  </ul>
+  {% endblock %}
 </div>
 {% endblock %}

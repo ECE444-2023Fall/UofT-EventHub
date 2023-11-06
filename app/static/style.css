@@ -2,6 +2,74 @@ h1{
     color: blue;
 }
 
+
+.container {
+	width: 80%;
+	margin: 0 auto;
+}
+
+header {
+  background: #55d6aa;
+}
+
+header::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.logo {
+  float: left;
+  padding: 10px 0;
+}
+
+.custom-navbar {
+  float: right;
+}
+
+.custom-navbar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.custom-navbar li {
+  display: inline-block;
+  margin-left: 70px;
+  padding-top: 23px;
+
+  position: relative;
+}
+
+.custom-navbar a {
+  color: #444;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.custom-navbar a:hover {
+  color: #000;
+}
+
+.custom-navbar a::before {
+  content: '';
+  display: block;
+  height: 5px;
+  background-color: #444;
+
+  position: absolute;
+  top: 0;
+  width: 0%;
+
+  transition: all ease-in-out 250ms;
+}
+
+.custom-navbar a:hover::before {
+  width: 100%;
+}
+
+
 input[type=button], input[type=submit], input[type=reset] {
     background-color: #04AA6D;
     border: none;

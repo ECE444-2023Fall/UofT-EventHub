@@ -6,13 +6,12 @@
   <link rel="icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
-  <title>Welcome Screen</title>
+  <title>{% block title %}Welcome Screen{% endblock %}</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=SF+Pro+Display%3A600"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C600%2C700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A400%2C500%2C700"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+  <link rel="stylesheet" href="../static/style.css">
+    
     {% import "bootstrap/wtf.html" as wtf %}
     {% extends "bootstrap/base.html" %}
 
@@ -20,9 +19,7 @@
 </head>
  
 <body>
-    <!-- {% block navbar %}
-
-      {% endblock %} -->
+     {% block navbar %} {% endblock %} 
 
 
 
