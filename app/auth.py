@@ -77,6 +77,7 @@ def register():
                 password=generate_password_hash(password1, method="sha256"),
                 role=role,
             )
+            
 
             db.session.add(new_user)
             db.session.commit()

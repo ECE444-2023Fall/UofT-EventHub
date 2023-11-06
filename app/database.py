@@ -84,3 +84,17 @@ class OrganizerEventDetails(db.Model):
     # A sample data from this table will look like this
     def __repr__(self):
         return f"Organizer: {self.organizer_name}, Event ID: {self.event_id}"
+
+class EventRegistration(db.Model):
+    __tablename__ = "event_registration"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    event_id = db.Column(db.Integer, ForeignKey("event_details.id"), nullable=False)
+    attendee_username = db.Column(db.String(150), ForeignKey("credentials.username"), nullable=False)
+
+    # Unique constraint
+    __table_args__ = (db.UniqueConstraint("event_id", "attendee_username"),)
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return f"Attendee: {self.attendee_username}, Event ID: {self.event_id}"

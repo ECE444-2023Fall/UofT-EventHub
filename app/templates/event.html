@@ -55,13 +55,27 @@
             $(function() {
               $('button#register_btn').on('click', function(e) {
                 e.preventDefault()
-                $.getJSON("/event_register/{{event.id}}/1",
-                    function(data) {
-                        console.log(data)
-                  // If registration is full, give a pop-up error
+                $.getJSON("/event_register/{{event.id}}",
+                    function(data) {                  
+                        // If successfully registered change the button color and text
+                        if (data == "0") {
+                            // Change button text and color
+                            $("button#register_btn").text("Registered");
+                            $("button#register_btn").css("background-color", "#808080");
+                            console.log("User is registered")
 
-                  // If successfully registered change the button color and text
+                            // TODO: Pop up to say you are now registered
+                        }
 
+                        // If the user is already registered
+                        if (data == "4") {
+                            // Change button text and color
+                            $("button#register_btn").text("Registered");
+                            $("button#register_btn").css("background-color", "#808080");
+
+                            // TODO: Pop up to say you are already registered
+                            console.log("User is already registered")
+                        }
                 });
                 return false;
               });
