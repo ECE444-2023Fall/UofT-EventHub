@@ -38,6 +38,10 @@ class EventDetails(db.Model):
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
 
+    # Participant capacity information
+    max_capacity = db.Column(db.Integer)
+    current_capacity = db.Column(db.Integer)
+
     # Ticket Price Information
     ticket_price = db.Column(db.Float)
 

@@ -31,6 +31,8 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <div class="container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
@@ -44,8 +46,27 @@
             <h1>{{event.name}}</h1>
             <p>{{event.description}}</p>
             <p>Venue: {{event.venue}}</p>
+            <button type="button" id="register_btn" class="btn btn-primary">Register</button>
         </div>
-        <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
+        <div>
+          <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
+        </div>
+        <script type=text/javascript>
+            $(function() {
+              $('button#register_btn').on('click', function(e) {
+                e.preventDefault()
+                $.getJSON("/event_register/{{event.id}}/1",
+                    function(data) {
+                        console.log(data)
+                  // If registration is full, give a pop-up error
+
+                  // If successfully registered change the button color and text
+
+                });
+                return false;
+              });
+            });
+    </script>
     {% endblock %}
 </div>
 {% endblock %}
