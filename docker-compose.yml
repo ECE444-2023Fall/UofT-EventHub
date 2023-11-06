@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  web:
+    container_name: web
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app/main.py
+      - ELASTICSEARCH_HOST=elasticsearch
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+    volumes:
+      - ./app:/app # mounting local directory with container directory to reflect changes to flask application. 
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "xpack.security.enabled=false"
+      - "discovery.type=single-node"
+    networks:
+      - elk
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
+      interval: "30s"
+      timeout: "10s"
+      retries: 5
+
+networks:
+  elk:
+    name: elk
