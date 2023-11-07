@@ -6,7 +6,7 @@ import os
 
 from app.main import db, es  # db is for database and es for elastic search
 from app.forms import EventCreateForm
-from app.database import EventDetails, OrganizerEventDetails, EventBanner
+from app.database import EventDetails, EventBanner, Credentials
 from app.auth import organizer_required
 
 organizer = Blueprint("organizer", __name__)
@@ -18,8 +18,8 @@ organizer = Blueprint("organizer", __name__)
 def main():
     my_events_data = (
         db.session.query(EventDetails)
-        .join(OrganizerEventDetails)
-        .filter(OrganizerEventDetails.organizer_username == current_user.username)
+        .join(Credentials)
+        .filter(EventDetails.organizer == current_user.username)
     )
     return render_template("organizer_main.html", my_events_data=my_events_data)
 
@@ -36,6 +36,7 @@ def create_event():
             name=form.name.data,
             description=form.description.data,
             category=form.category.data.lower(),
+            organizer=current_user.username,
             is_online=form.is_online.data,
             venue=form.venue.data,
             start_date=form.start_date.data,
@@ -67,12 +68,6 @@ def create_event():
         event_graphic = EventBanner(event_id=new_event.id, image=filename)
 
         db.session.add(event_graphic)
-        db.session.commit()
-
-        new_organizer_event_relation = OrganizerEventDetails(
-            event_id=new_event.id, organizer_username=current_user.username
-        )
-        db.session.add(new_organizer_event_relation)
         db.session.commit()
 
         return redirect(url_for("organizer.main"))
