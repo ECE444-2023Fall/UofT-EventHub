@@ -16,9 +16,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-        docker build . -t python-docker
-        docker run -d -p 5000:5000 python-docker
-        sleep 5
+        echo "Running docker compose build"
+        docker-compose up --build --no-cache
+        docker-compose up
+        sleep 20
         docker ps -a
         if curl -s http://localhost:5000/ | grep -o "500 Internal Server Error"
           then
