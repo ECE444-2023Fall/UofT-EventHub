@@ -6,7 +6,6 @@ input[type=button], input[type=submit], input[type=reset] {
     background-color: #b3f4ff;
     border: none;
     color: white;
-    pad
     ding: 10px 16px;
     text-decoration: none;
     margin: 4px 2px;
@@ -34,7 +33,13 @@ input[type=button], input[type=submit], input[type=reset] {
 }
 
 .custom-navbar {
-  background-color: #ffffff !important;/* Change the background color */
-  color: #333; /* Change the text color */
+  background-color: #ffffff !important;
   border-bottom: 1px solid #000000;
+}
+
+ul.navbar-nav {
+  color: #cb1010 !important;
+  font-weight: 600;
+  background-color: #ffffff;
+  font-family: Georgia, serif;
 }

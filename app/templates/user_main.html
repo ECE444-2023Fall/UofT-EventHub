@@ -1,35 +1,6 @@
 {% extends "base.html" %}
 {%block title %}User's Page{% endblock %} 
 
-{% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
-  <a class="navbar-brand" href="#"> <img src="../static/images/logo-part2.png" alt="logo" width="50" height="50"></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only"></span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Engineering</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Profile
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Settings</a>
-          <a class="dropdown-item" href="/logout">Logout</a>
-         </div>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-{% endblock %} 
-
 {% block content %}
 <script
   src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
@@ -56,7 +27,7 @@
         }, 300);
       });
     });
-
+   //what should the URL be, do not use localhost as it will fail when deployed.
     function getAutoComplete() {
       const query = $(".search-box").val();
       console.log(query);
@@ -119,7 +90,7 @@
       Clear Filters
     </button>
   </form>
-  <h2>All Events List</h2>
+  <h2 style="color: #050151; font-family: Georgia, serif;">All Events List</h2>
   <ul class="results">
     {% for key, value in event_data.items() %}
     <li><a href="/events/{{ key }}">{{ value.name }}</a></li>
