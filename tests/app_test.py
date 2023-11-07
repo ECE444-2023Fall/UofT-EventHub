@@ -2,6 +2,9 @@ import pytest
 from app.main import app, db
 from pathlib import Path
 from flask_login import current_user
+from unittest.mock import MagicMock
+from app.database import EventDetails
+from app.events import create_google_calendar_event
 
 TEST_DB = "test.db"
 
@@ -187,3 +190,23 @@ def test_organiser_add_events_endpoint(client):
     assert response.status_code == 200
     response = client.get("/organizer/create_event", content_type="html/text")
     assert response.status_code == 200
+
+
+# Mocking the necessary objects for testing
+class MockEvent:
+    id = 1
+    name = "Test Event"
+    venue = "Test Venue"
+    start_date = "2023-12-25"
+    start_time = "09:00"
+    end_date = "2023-12-25"
+    end_time = "11:00"
+
+def test_create_google_calendar_event(client, monkeypatch):
+    # Mocking the EventDetails.query.get method to return the mock event created above
+    monkeypatch.setattr(EventDetails.query, 'get', MagicMock(return_value=MockEvent))
+
+    # Calling the function with the event id == 1
+    result = create_google_calendar_event(1)
+
+    assert "Event created:" in result
