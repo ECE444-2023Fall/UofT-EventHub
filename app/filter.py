@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from datetime import date
+import logging
 
 from app.auth import login_required
 
@@ -12,7 +13,7 @@ def filter_events(search=None):
     if request.method != "POST":
         return
     
-    print("User filtering for:", request.form["filter-tag"])
+    logging.info("User filtering for: %s", request.form["filter-tag"])
     tag = request.form["filter-tag"]
 
     # Assemble the arguments for the redrect link based on 

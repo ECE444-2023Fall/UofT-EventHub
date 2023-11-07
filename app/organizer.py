@@ -42,6 +42,8 @@ def create_event():
             end_date=form.end_date.data,
             start_time=form.start_time.data,
             end_time=form.end_time.data,
+            max_capacity=form.max_capacity.data,
+            current_capacity=0,
             ticket_price=form.ticket_price.data,
             redirect_link=form.redirect_link.data,
             additional_info=form.additional_info.data,
@@ -76,7 +78,6 @@ def create_event():
         return redirect(url_for("organizer.main"))
 
     organizer = current_user
-    print(organizer)
 
     return render_template("create_event.html", form=form)
 

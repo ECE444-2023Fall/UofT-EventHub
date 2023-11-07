@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
+import logging
 
 from app.main import es
 from app.auth import login_required
@@ -7,10 +8,14 @@ search = Blueprint("search", __name__)
 
 
 @search.route("/search", methods=["GET"])
-@login_required
 def search_autocomplete():
+    # This function is a standalone method to query our events database with a set of keywords
+    # Login won't be required for this method
+    
     query = request.args["search"].lower()
     tokens = query.split(" ")
+
+    logging.info("Search autocomplete received the query: ", tokens)
 
     clauses = [
         {
@@ -55,7 +60,7 @@ def search_events(filter="all"):
             del redirect_args["filter"]
     else:
         # Add the search query in the redirect link
-        print("User searched for:", request.form["query"])
+        logging.info("User searched for: %s", request.form["query"])
         query = request.form["query"]
         redirect_args["search"] = query
 
@@ -89,5 +94,4 @@ def get_eventids_matching_search_query(query):
     for result in resp["hits"]["hits"]:
         list_event_ids.append( int(result["_source"]["id"]) )
 
-    print("The relevant event list IDs are:", list_event_ids)
     return list_event_ids

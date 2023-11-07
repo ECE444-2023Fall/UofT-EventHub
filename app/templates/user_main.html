@@ -7,7 +7,7 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">
-          <img src="https://w1.pngwing.com/pngs/759/630/png-transparent-calendar-calendar-date-symbol-blue-text-line-area-rectangle.png" width="30" height="30" class="d-inline-block align-top navbar-left" alt="">
+          <!-- <img src="https://w1.pngwing.com/pngs/759/630/png-transparent-calendar-calendar-date-symbol-blue-text-line-area-rectangle.png" width="30" height="30" class="d-inline-block align-top navbar-left" alt=""> -->
           <big>UofT Event Hub</big>
         </a>
       </div>
@@ -90,6 +90,40 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
         </form>
         <h2>All Events List</h2>
+
+        <div class="container m-4">
+          <div class="row row-cols-1 row-cols-md-2 
+                row-cols-lg-3 g-4">
+                <div class="col">
+                  <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                      <div class="col-md-6 text-center">
+                        <img src=
+          "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20190710102234/download3.png"
+                          class="img-fluid rounded-start"
+                          alt="...">
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card-body">
+                          <h5 class="card-title">
+                            Data Structures
+                          </h5>
+                          <p class="card-text">
+                            A data structure is a storage that is used to store and organize data. 
+                          </p>
+                          <p class="card-text">
+                            <small class="text-muted">
+                              Last updated now
+                            </small>
+                          </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div> 
+
         <ul class="results">
             {% for key, value in event_data.items() %}
             <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
