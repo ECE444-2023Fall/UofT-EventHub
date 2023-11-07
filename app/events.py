@@ -43,6 +43,7 @@ def show_event(id):
 
 
 @events.route("/events/send_file/<filename>")
+@events.route("/events/register/send_file/<filename>")
 @login_required
 def send_file(filename):
     """
