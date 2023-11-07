@@ -1,6 +1,8 @@
 import pytest
 from app.main import app, db
 from pathlib import Path
+from app.user import get_organizers
+
 
 TEST_DB = "test.db"
 
@@ -187,3 +189,12 @@ def test_organiser_add_events_endpoint(client):
     assert response.status_code == 200
     response = client.get("/organizer/create_event", content_type="html/text")
     assert response.status_code == 200
+
+
+def test_get_organizer_usernames(client):
+    # Calling the function to get organizer usernames
+    organizer_usernames = get_organizers()
+        
+    # Performing the assertions to check if the function works as expected
+    assert isinstance(organizer_usernames, list)
+    assert all(isinstance(username, str) for username in organizer_usernames)
