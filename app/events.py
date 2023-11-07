@@ -21,7 +21,7 @@ events = Blueprint('events', __name__)
 def show_event(id):
     print(f"Loading webpage for event ID: {id}")
 
-    ## Get all the details for the event
+    # Get all the details for the event
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
@@ -38,15 +38,23 @@ def send_file(filename):
 
     return send_from_directory(current_app.config["GRAPHIC_DIRECTORY"], filename)
 
-def create_google_calendar_event():
+def create_google_calendar_event(id):
+    # Get the event details from the database
+    event = EventDetails.query.filter_by(id=id).all()
+
+    if not event:
+        print("Error! The event id passed to create_google_calendar_event() does not exit in the database")
+
     SCOPES = ['https://www.googleapis.com/auth/calendar']
     creds = None
+
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
+    
+    # If there are no (valid) credentials available, let the user log in
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -60,21 +68,21 @@ def create_google_calendar_event():
 
     try:
         service = build('calendar', 'v3', credentials=creds)
-        event = {
-            "summary": "My ECE444 Event",
-            "location": "room BA1160",
+        event_data = {
+            "summary": event.name,
+            "location": event.venue,
             "colorId": 6,
             "start": {
-                "dateTime": "2023-12-02T09:00:00",
+                "dateTime": f"{event.start_date}T{event.start_time}:00",
                 "timeZone": "Canada/Eastern"
             },
             "end": {
-                "dateTime": "2023-12-02T17:00:00",
+                "dateTime": f"{event.end_date}T{event.end_time}:00",
                 "timeZone": "Canada/Eastern"
             }
         }
 
-        event = service.events().insert(calendarId="primary", body=event).execute()
+        event = service.events().insert(calendarId="primary", body=event_data).execute()
         print(f'Event created: {event.get("htmlLink")}')
 
     except HttpError as error:
