@@ -31,9 +31,11 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <div class="container">
     {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
+    <div class="alert alert-info" role="alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         {{ message }}
     </div>
@@ -44,8 +46,27 @@
             <h1>{{event.name}}</h1>
             <p>{{event.description}}</p>
             <p>Venue: {{event.venue}}</p>
+
+            <form action="/events/register/{{event.id}}" method="post">
+                <input type="submit" id="register_btn" class="btn btn-primary" value="Register"></input>
+            </form>
         </div>
-        <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
+        <div>
+          <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
+        </div>
+        <script type=text/javascript>
+            console.log("JS: Is running");
+            console.log("is_registered: {{is_registered}}");
+
+            if("{{is_registered}}" == "True") {
+                console.log("JS: User is already registered");
+                document.getElementById('register_btn').value = 'Cancel Registration';
+                document.getElementById('register_btn').style.background='#808080';
+            }
+            else {
+                console.log("JS: User is not registered");
+            }
+    </script>
     {% endblock %}
 </div>
 {% endblock %}
