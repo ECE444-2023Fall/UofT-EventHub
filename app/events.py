@@ -4,19 +4,17 @@ from flask import (
     send_from_directory,
     flash,
     current_app,
-    request,
     redirect,
     url_for,
     abort,
 )
 from flask_login import login_required, current_user
-from sqlalchemy import delete
 import logging
 import os
 
 from app.main import db, es  # db is for database and es for elastic search
 from app.globals import Role
-from app.auth import login_required, organizer_required
+from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner
 from app.forms import EventCreateForm
 
@@ -25,10 +23,9 @@ events = Blueprint("events", __name__)
 @events.route("/events/<int:id>", methods=["GET"])
 @login_required
 def show_event(id):
-    print("Loading webpage for event ID: %d", id)
     logging.info("Loading webpage for event ID: %d", id)
 
-    ## Get all the details for the event
+    # Get all the details for the event
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
@@ -36,8 +33,8 @@ def show_event(id):
             "Integrity Error: The event ID passed to show_event has no valid entry in the database"
         )
         abort(404, {
-            "type": "event_not_found", 
-            "caller": "show_event", 
+            "type": "event_not_found",
+            "caller": "show_event",
             "message": "Can not show the event since the event does not exist"
         })
 
@@ -56,7 +53,7 @@ def show_event(id):
 def show_event_admin(id):
     logging.info("Loading admin webpage for event ID: %d", id)
 
-    ## Get all the details for the event
+    # Get all the details for the event
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
@@ -64,8 +61,8 @@ def show_event_admin(id):
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, {
-            "type": "event_not_found", 
-            "caller": "show_event_admin", 
+            "type": "event_not_found",
+            "caller": "show_event_admin",
             "message": "Can not show the event since the event does not exist"
         })
 
@@ -122,8 +119,6 @@ def create_event():
 
         return redirect(url_for("events.show_event_admin", id=new_event.id))
 
-    organizer = current_user
-
     return render_template("create_event.html", form=form)
 
 @events.route("/events/edit_event/<int:id>", methods=["GET", "POST"])
@@ -132,7 +127,7 @@ def create_event():
 def edit_event(id):
     logging.info("Loading edit event webpage for event ID: %d", id)
 
-    ## Get all the details for the event
+    # Get all the details for the event
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
@@ -140,8 +135,8 @@ def edit_event(id):
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, {
-            "type": "event_not_found", 
-            "caller": "edit_event", 
+            "type": "event_not_found",
+            "caller": "edit_event",
             "message": "Can not edit the event since the event does not exist"
         })
 
@@ -149,34 +144,34 @@ def edit_event(id):
     event_create_form_default = {}
     for field_name, default_value in event.__dict__.items():
         if not hasattr(EventCreateForm, field_name):
-            logging.info(f"Form doesn't have attribute: {field_name}")   
+            logging.info(f"Form doesn't have attribute: {field_name}")
             continue
-        # NOTE: Since we are decapitilizing the category data on form submition, 
+        # NOTE: Since we are decapitilizing the category data on form submition,
         # we must perform the opposite operation here
         if field_name == "category":
             default_value = default_value.capitalize()
         event_create_form_default[field_name] = default_value
-    logging.info(f"Default Values: {event_create_form_default}")   
+    logging.info(f"Default Values: {event_create_form_default}")
 
     form = EventCreateForm(**event_create_form_default)
 
     if form.validate_on_submit():
         logging.info(f"Edited Event Entries: {form.name.data}, {form.category.data}")
         # Add the event details
-        event.name=form.name.data
-        event.description=form.description.data
-        event.category=form.category.data.lower()
-        event.is_online=form.is_online.data
-        event.venue=form.venue.data
-        event.start_date=form.start_date.data
-        event.end_date=form.end_date.data
-        event.start_time=form.start_time.data
-        event.end_time=form.end_time.data
+        event.name = form.name.data
+        event.description = form.description.data
+        event.category = form.category.data.lower()
+        event.is_online = form.is_online.data
+        event.venue = form.venue.data
+        event.start_date = form.start_date.data
+        event.end_date = form.end_date.data
+        event.start_time = form.start_time.data
+        event.end_time = form.end_time.data
         # TODO: Add a check to prevent the max capacity from being set to below the current capacity
-        event.max_capacity=form.max_capacity.data
-        event.ticket_price=form.ticket_price.data
-        event.redirect_link=form.redirect_link.data
-        event.additional_info=form.additional_info.data
+        event.max_capacity = form.max_capacity.data
+        event.ticket_price = form.ticket_price.data
+        event.redirect_link = form.redirect_link.data
+        event.additional_info = form.additional_info.data
         db.session.commit()
 
         # TODO: Update the event details to the index for elastic search
@@ -202,8 +197,6 @@ def edit_event(id):
 
         return redirect(url_for("events.show_event_admin", id=event.id))
 
-    organizer = current_user
-
     return render_template("create_event.html", form=form)
 
 @events.route("/events/delete_event/<int:id>", methods=["POST"])
@@ -212,7 +205,7 @@ def edit_event(id):
 def delete_event(id):
     logging.info("Loading edit event webpage for event ID: %d", id)
 
-    ## Get all the details for the event
+    # Get all the details for the event
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
@@ -220,16 +213,16 @@ def delete_event(id):
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, {
-            "type": "event_not_found", 
-            "caller": "delete_event", 
+            "type": "event_not_found",
+            "caller": "delete_event",
             "message": "Can not delete the event since the event does not exist"
         })
 
     if event.organizer != current_user.username:
         logging.info(f"Current Organizer ({current_user.username} doesn't match the event creator {event.organizer})")
         abort(401, {
-            "type": "unauthorized_organizer", 
-            "caller": "delete_event", 
+            "type": "unauthorized_organizer",
+            "caller": "delete_event",
             "message": "You are not authorized to delete this event"
         })
 
@@ -282,7 +275,7 @@ def register_for_event(event_id):
         logging.warning("Cannot register an organizer")
         return ("3")
 
-    #TODO: Check if event has enough seats left
+    # TODO: Check if event has enough seats left
 
     # Check if the user is already registered
     is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).first()
@@ -316,7 +309,7 @@ def register_for_event(event_id):
         logging.info("Key: %s", key)
         logging.info("Value: %s", val)
     return render_template("event.html", event=event.__dict__, is_registered=True)
-    
+
 def add_event_to_index(new_event):
     event_detail = {
         "id": new_event.id,
