@@ -63,7 +63,6 @@ def create_app(debug):
     from app.events import events
     from app.search import search
     from app.filter import filter
-    from app.register import register
 
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(user, url_prefix="/")
@@ -71,7 +70,6 @@ def create_app(debug):
     app.register_blueprint(events, url_prefix="/")
     app.register_blueprint(search, url_prefix="/")
     app.register_blueprint(filter, url_prefix="/")
-    app.register_blueprint(register, url_prefix="/")
 
     with app.app_context():
         db.create_all()

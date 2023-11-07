@@ -98,3 +98,17 @@ class EventRegistration(db.Model):
     # A sample data from this table will look like this
     def __repr__(self):
         return f"Attendee: {self.attendee_username}, Event ID: {self.event_id}"
+
+
+class UserDetails(db.Model):
+    __tablename__ = "user_details"
+
+    # Basic user details we will need for registration
+    username = db.Column(db.String(150), primary_key=True)
+    firstname = db.Column(db.String(250), nullable=False)
+    lastname = db.Column(db.String(250), nullable=True)
+    email = db.Column(db.String(250), nullable=False)
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return f"Username : {self.username}, First name: {self.firstname}, Email: {self.email}"

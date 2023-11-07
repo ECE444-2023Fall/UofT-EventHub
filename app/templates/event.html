@@ -35,7 +35,7 @@
 
 <div class="container">
     {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
+    <div class="alert alert-info" role="alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         {{ message }}
     </div>
@@ -46,40 +46,26 @@
             <h1>{{event.name}}</h1>
             <p>{{event.description}}</p>
             <p>Venue: {{event.venue}}</p>
-            <button type="button" id="register_btn" class="btn btn-primary">Register</button>
+
+            <form action="/events/register/{{event.id}}" method="post">
+                <input type="submit" id="register_btn" class="btn btn-primary" value="Register"></input>
+            </form>
         </div>
         <div>
           <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
         </div>
         <script type=text/javascript>
-            $(function() {
-              $('button#register_btn').on('click', function(e) {
-                e.preventDefault()
-                $.getJSON("/event_register/{{event.id}}",
-                    function(data) {                  
-                        // If successfully registered change the button color and text
-                        if (data == "0") {
-                            // Change button text and color
-                            $("button#register_btn").text("Registered");
-                            $("button#register_btn").css("background-color", "#808080");
-                            console.log("User is registered")
+            console.log("JS: Is running");
+            console.log("is_registered: {{is_registered}}");
 
-                            // TODO: Pop up to say you are now registered
-                        }
-
-                        // If the user is already registered
-                        if (data == "4") {
-                            // Change button text and color
-                            $("button#register_btn").text("Registered");
-                            $("button#register_btn").css("background-color", "#808080");
-
-                            // TODO: Pop up to say you are already registered
-                            console.log("User is already registered")
-                        }
-                });
-                return false;
-              });
-            });
+            if("{{is_registered}}" == "True") {
+                console.log("JS: User is already registered");
+                document.getElementById('register_btn').value = 'Cancel Registration';
+                document.getElementById('register_btn').style.background='#808080';
+            }
+            else {
+                console.log("JS: User is not registered");
+            }
     </script>
     {% endblock %}
 </div>
