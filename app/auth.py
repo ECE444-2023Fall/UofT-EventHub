@@ -21,6 +21,7 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
+        blahblah
         username = form.username.data
         password = form.password.data
 
