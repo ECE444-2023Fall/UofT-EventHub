@@ -1,7 +1,9 @@
 {% extends "bootstrap/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Organizer's Page{% endblock %}
+<!-- This is the general template for showcasing events -->
+
+{% block title %}Event's Page{% endblock %}
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
@@ -29,25 +31,29 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <div class="container">
     {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
+    <div class="alert alert-info" role="alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         {{ message }}
     </div>
     {% endfor %}
 
     {% block page_content %}
+        <form action="/events/edit_event/{{event.id}}" method="get">
+            <button type="submit" id="redirect_to_edit_event_btn" class="btn btn-primary">Edit Event</button>
+        </form>
         <div class="page-header">
-            <h1>MAIN ORGANIZER PAGE</h1>
+            <h1>{{event.name}}</h1>
+            <p>{{event.description}}</p>
+            <p>Venue: {{event.venue}}</p>
+            <p>No of Registrations: {{num_of_registrations}} / {{event.max_capacity}}</p>
         </div>
-        <p> Interested in adding an event? <a href="/events/create_event">Create Event Post!</a> </p>
-        <h2>My Events List</h2>
-        <ul>
-            {% for event_data in my_events_data %}
-            <li>{{ event_data }}</li>
-            {% endfor %}    
-        </ul>
-    {% endblock %}
+        <div>
+          <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
+        </div>
+{% endblock %}
 </div>
 {% endblock %}
