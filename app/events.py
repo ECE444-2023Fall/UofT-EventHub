@@ -33,7 +33,7 @@ def show_event(id):
         )
 
     # Check if the user registered for the event
-    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id()).first()
+    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=id).first()
 
     if is_registered is not None:
         flash("You are already registered for the event!", category="info")
@@ -89,7 +89,7 @@ def register_for_event(event_id):
     #TODO: Check if event has enough seats left
 
     # Check if the user is already registered
-    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id()).first()
+    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).first()
     if is_registered:
         logging.info("Cancelling user's registration")
 
