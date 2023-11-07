@@ -34,7 +34,7 @@ def show_event(id):
         )
 
     # Check if the user registered for the event
-    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id()).first()
+    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=id).first()
     is_past_event = past_event(id)
     logging.info("is it a past event: ",is_past_event)
 
@@ -92,7 +92,7 @@ def register_for_event(event_id):
     #TODO: Check if event has enough seats left
 
     # Check if the user is already registered
-    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id()).first()
+    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).first()
     if is_registered:
         logging.info("Cancelling user's registration")
 
