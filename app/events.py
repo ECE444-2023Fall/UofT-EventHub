@@ -35,11 +35,17 @@ def show_event(id):
     # Check if the user registered for the event
     is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id()).first()
 
+    event_dict = event.__dict__
+    
+    # Fix: Need to pass event ID as a string
+    str_id = str(event_dict["id"])
+    event_dict["id"] = str_id
+
     if is_registered is not None:
         flash("You are already registered for the event!", category="info")
-        return render_template("event.html", event=event.__dict__, is_registered=True)
+        return render_template("event.html", event=event_dict, is_registered=True)
     else:
-        return render_template("event.html", event=event.__dict__, is_registered=False)
+        return render_template("event.html", event=event_dict, is_registered=False)
 
 
 @events.route("/events/send_file/<filename>")
@@ -99,10 +105,13 @@ def register_for_event(event_id):
 
         flash("Cancelled registeration for the event!", category="success")
         event = EventDetails.query.filter_by(id=event_id).first()
-        for key, val in event.__dict__.items():
-            logging.info("Key: %s", key)
-            logging.info("Value: %s", val)
-        return render_template("event.html", event=event.__dict__, is_registered=False)
+
+        # Fix: Need to pass event ID as a string
+        event_dict = event.__dict__
+        str_id = str(event_dict["id"])
+        event_dict["id"] = str_id
+
+        return render_template("event.html", event=event_dict, is_registered=False)
 
     # Register the user
     new_registration = EventRegistration(
@@ -119,5 +128,11 @@ def register_for_event(event_id):
     for key, val in event.__dict__.items():
         logging.info("Key: %s", key)
         logging.info("Value: %s", val)
-    return render_template("event.html", event=event.__dict__, is_registered=True)
+
+    # Fix: Need to pass event ID as a string
+    event_dict = event.__dict__
+    str_id = str(event_dict["id"])
+    event_dict["id"] = str_id
+
+    return render_template("event.html", event=event_dict, is_registered=True)
     

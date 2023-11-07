@@ -60,7 +60,7 @@ def create_event():
 
         # Save the banner in assets/event-assets
         banner_file.save(
-            os.path.join(current_app.root_path, "assets", "event-assets", filename)
+            os.path.join(current_app.root_path, "static", "event-assets", filename)
         )
 
         # Store the path to the banner EventBanner

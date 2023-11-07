@@ -52,7 +52,7 @@
             </form>
         </div>
         <div>
-          <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
+          <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id + '.png')}}" class="img-rounded" alt="Event Banner">
         </div>
         <script type=text/javascript>
             console.log("JS: Is running");
