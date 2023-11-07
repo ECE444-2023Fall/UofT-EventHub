@@ -90,28 +90,6 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
         </form>
         <h2>My Events</h2>
-        <!-- <ul>
-            {% for event_data in events_data %}
-            <li>
-                {{ event_data }}
-                <form action="{{ url_for('user.submit_rating') }}" method="post">
-                    <input type="hidden" name="event_id" value="{{ event_data.id }}">
-                    <label for="rating">Rate this event:</label>
-                    <select name="rating" id="rating">
-                        <option value="1">1 (Poor)</option>
-                        <option value="2">2 (Fair)</option>
-                        <option value="3">3 (Good)</option>
-                        <option value="4">4 (Very Good)</option>
-                        <option value="5">5 (Excellent)</option>
-                    </select>
-                    <button type="submit">Submit Rating</button>
-                </form>
-            </li>
-            {% endfor %} -->
-            <!-- The for loop block below is only for testing to see if user inputs for ratings are actually being stored in the database  -->
-            <!-- {% for event_rating in events_ratings %}
-            <li>{{event_rating}}</li>
-            {% endfor %}   -->
 
         <ul class="results">
             {% for key, value in event_data.items() %}

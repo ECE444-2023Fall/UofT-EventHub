@@ -91,15 +91,15 @@ class EventRating(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     #username of the user who gave the rating:
-    #TODO: Will add this later
-    # user_id = db.Column(db.String(150), ForeignKey('credentials.username'))
+    attendee_username = db.Column(db.String(150), ForeignKey("credentials.username"))
     # Event on which the rating was given for:
     event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
     #the rating:
+    #TODO: Perhaps limit the range of integers from 1 to 5
     rating = db.Column(db.Integer)
 
     def __repr__(self):
-        return f"ID : {self.event_id}, Name: {self.rating}"
+        return f"Username: {self.attendee_username}, ID : {self.event_id}, Rating: {self.rating}"
 
 
 class EventRegistration(db.Model):

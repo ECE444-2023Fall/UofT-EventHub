@@ -74,6 +74,7 @@ def filter_events_on_event_ids_list(events, event_ids):
     }
 
 def filter_for_past_events(events):
+    #TODO: Compare to the exact time as well. Currently only filters by date.
     return { 
         event_id: events[event_id] 
         for event_id in events.keys() 
