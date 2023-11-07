@@ -1,7 +1,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "bootstrap/base.html" %}
 
-{% block title %}User's Page{% endblock %}
+{% block title %}User's Events Page{% endblock %}
 {% block navbar %}
 <nav class="navbar navbar-blue">
     <div class="container-fluid">
@@ -12,12 +12,11 @@
         </a>
       </div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
+        <li class="active"><a href="/">Home</a></li>
         <li><a href="/">Engineering</a></li>
         <li><a href="/">Arts & Science</a></li>
         <li><a href="/">Rotman</a></li>
         <li><a href="/">Cultural</a></li>
-        <li><a href="/myevents">My Events</a></li>
         <li><a href="/">Others</a></li>
       </ul>
       
@@ -90,7 +89,7 @@
             {% endfor %}
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
         </form>
-        <h2>All Events List</h2>
+        <h2>My Events</h2>
         <!-- <ul>
             {% for event_data in events_data %}
             <li>
@@ -113,39 +112,6 @@
             <!-- {% for event_rating in events_ratings %}
             <li>{{event_rating}}</li>
             {% endfor %}   -->
-
-        <div class="container m-4">
-          <div class="row row-cols-1 row-cols-md-2 
-                row-cols-lg-3 g-4">
-                <div class="col">
-                  <div class="card mb-3" style="max-width: 540px;">
-                    <div class="row g-0">
-                      <div class="col-md-6 text-center">
-                        <img src=
-          "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20190710102234/download3.png"
-                          class="img-fluid rounded-start"
-                          alt="...">
-                      </div>
-                      <div class="col-md-6">
-                        <div class="card-body">
-                          <h5 class="card-title">
-                            Data Structures
-                          </h5>
-                          <p class="card-text">
-                            A data structure is a storage that is used to store and organize data. 
-                          </p>
-                          <p class="card-text">
-                            <small class="text-muted">
-                              Last updated now
-                            </small>
-                          </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div> 
 
         <ul class="results">
             {% for key, value in event_data.items() %}
