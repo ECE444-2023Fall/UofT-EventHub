@@ -16,7 +16,7 @@ from app.globals import FILTERS
 from app.auth import login_required, user_required
 from app.database import Credentials, EventRegistration, EventDetails
 from app.search import get_eventids_matching_search_query
-from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list
+from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list, filter_for_past_events
 
 user_events = Blueprint("user_events", __name__)
 
@@ -40,6 +40,8 @@ def main(filter="all", search=None):
         dict_of_events_details = filter_for_free_events(events=dict_of_events_details)
     elif filter == "today":
         dict_of_events_details = filter_for_today_events(events=dict_of_events_details)
+    elif filter == "past events":
+        dict_of_events_details =  filter_for_past_events(events=dict_of_events_details)
     elif filter != "all":
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 

@@ -11,6 +11,7 @@ from flask import (
 from flask_login import login_required, current_user
 from sqlalchemy import delete
 import logging
+from datetime import date
 
 from app.main import db
 from app.globals import Role
@@ -34,12 +35,14 @@ def show_event(id):
 
     # Check if the user registered for the event
     is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id()).first()
+    is_past_event = past_event(id)
+    logging.info("is it a past event: ",is_past_event)
 
     if is_registered is not None:
         flash("You are already registered for the event!", category="info")
-        return render_template("event.html", event=event.__dict__, is_registered=True)
+        return render_template("event.html", event=event.__dict__, is_registered=True, is_past_event = is_past_event)
     else:
-        return render_template("event.html", event=event.__dict__, is_registered=False)
+        return render_template("event.html", event=event.__dict__, is_registered=False, is_past_event = is_past_event)
 
 
 @events.route("/events/send_file/<filename>")
@@ -120,4 +123,17 @@ def register_for_event(event_id):
         logging.info("Key: %s", key)
         logging.info("Value: %s", val)
     return render_template("event.html", event=event.__dict__, is_registered=True)
-    
+
+
+def past_event(event_id):
+    #Here we check to see if the event is a past event or not.
+    #Only if it is a past event will users be able to add a rating for it
+    event_detail = EventDetails.query.filter_by(id=event_id).first()
+    logging.info(date.today())
+    if event_detail.end_date < date.today():
+        return True
+    else:
+        return False
+
+
+#TODO Add function to check if previously rated and get rating value.
