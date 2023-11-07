@@ -7,6 +7,7 @@ from flask import (
     request,
     redirect,
     url_for,
+    abort,
 )
 from flask_login import login_required, current_user
 from sqlalchemy import delete
@@ -24,15 +25,21 @@ events = Blueprint("events", __name__)
 @events.route("/events/<int:id>", methods=["GET"])
 @login_required
 def show_event(id):
+    print("Loading webpage for event ID: %d", id)
     logging.info("Loading webpage for event ID: %d", id)
 
     ## Get all the details for the event
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        print(
+        logging.info(
             "Integrity Error: The event ID passed to show_event has no valid entry in the database"
         )
+        abort(404, {
+            "type": "event_not_found", 
+            "caller": "show_event", 
+            "message": "Can not show the event since the event does not exist"
+        })
 
     # Check if the user registered for the event
     is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=id).first()
@@ -53,9 +60,14 @@ def show_event_admin(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        print(
+        logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
+        abort(404, {
+            "type": "event_not_found", 
+            "caller": "show_event_admin", 
+            "message": "Can not show the event since the event does not exist"
+        })
 
     # Get some analytics data for this event
     registered_users = EventRegistration.query.filter_by(event_id=id).all()
@@ -124,9 +136,14 @@ def edit_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        print(
+        logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
+        abort(404, {
+            "type": "event_not_found", 
+            "caller": "edit_event", 
+            "message": "Can not edit the event since the event does not exist"
+        })
 
     # Recreate the Event Form with the default values set
     event_create_form_default = {}
@@ -188,6 +205,38 @@ def edit_event(id):
     organizer = current_user
 
     return render_template("create_event.html", form=form)
+
+@events.route("/events/delete_event/<int:id>", methods=["POST"])
+@login_required
+@organizer_required
+def delete_event(id):
+    logging.info("Loading edit event webpage for event ID: %d", id)
+
+    ## Get all the details for the event
+    event = EventDetails.query.filter_by(id=id).first()
+
+    if not event:
+        logging.info(
+            "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
+        )
+        abort(404, {
+            "type": "event_not_found", 
+            "caller": "delete_event", 
+            "message": "Can not delete the event since the event does not exist"
+        })
+
+    if event.organizer != current_user.username:
+        logging.info(f"Current Organizer ({current_user.username} doesn't match the event creator {event.organizer})")
+        abort(401, {
+            "type": "unauthorized_organizer", 
+            "caller": "delete_event", 
+            "message": "You are not authorized to delete this event"
+        })
+
+    db.session.delete(event)
+    db.session.commit()
+
+    return redirect(url_for("organizer.main"))
 
 @events.route("/events/send_file/<filename>")
 @events.route("/events/register/send_file/<filename>")

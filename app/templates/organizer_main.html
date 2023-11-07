@@ -45,7 +45,7 @@
         <h2>My Events List</h2>
         <ul>
             {% for event_data in my_events_data %}
-            <li>{{ event_data }}</li>
+            <li><a href = "/events/admin/{{ event_data.id }}">{{ event_data.name }}</a></li>
             {% endfor %}    
         </ul>
     {% endblock %}
