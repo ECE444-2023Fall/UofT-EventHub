@@ -78,7 +78,6 @@ def create_event():
         return redirect(url_for("organizer.main"))
 
     organizer = current_user
-    print(organizer)
 
     return render_template("create_event.html", form=form)
 

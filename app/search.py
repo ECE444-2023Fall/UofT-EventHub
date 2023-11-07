@@ -60,7 +60,7 @@ def search_events(filter="all"):
             del redirect_args["filter"]
     else:
         # Add the search query in the redirect link
-        print("User searched for:", request.form["query"])
+        logging.info("User searched for: %s", request.form["query"])
         query = request.form["query"]
         redirect_args["search"] = query
 
@@ -94,5 +94,4 @@ def get_eventids_matching_search_query(query):
     for result in resp["hits"]["hits"]:
         list_event_ids.append( int(result["_source"]["id"]) )
 
-    print("The relevant event list IDs are:", list_event_ids)
     return list_event_ids

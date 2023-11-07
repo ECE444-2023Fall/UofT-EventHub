@@ -22,7 +22,7 @@ events = Blueprint("events", __name__)
 @events.route("/events/<int:id>", methods=["GET"])
 @login_required
 def show_event(id):
-    print(f"Loading webpage for event ID: {id}")
+    logging.info("Loading webpage for event ID: %d", id)
 
     ## Get all the details for the event
     event = EventDetails.query.filter_by(id=id).first()
