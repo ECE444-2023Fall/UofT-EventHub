@@ -8,4 +8,4 @@ virtual-environment-snehNinja/
 .vscode/
 *.db
 instance/database.db
-app/assets/event-assets/
+app/static/event-assets/

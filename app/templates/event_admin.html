@@ -55,7 +55,7 @@
             <p>No of Registrations: {{num_of_registrations}} / {{event.max_capacity}}</p>
         </div>
         <div>
-          <img src="send_file/event_banner_{{event.id}}.png" class="img-rounded" alt="Event Banner">
+          <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id + '.png')}}" class="img-rounded" alt="Event Banner">
         </div>
         <script>
             function confirmDelete() {

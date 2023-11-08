@@ -13,19 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
+    - name: checkoutcode
+      uses: actions/checkout@v3
+
+    - name: Build docker with new method
+      uses: isbang/compose-action@v1.5.1
+      with:
+          compose-file: "docker-compose.yml"
+          down-flags: "--volumes"
+          services: |
+            elasticsearch
+            web
+
+    - name: Check the website status
       run: |
-        echo "Running docker compose build"
-        docker-compose up --build --no-cache
-        docker-compose up &
-        sleep 20
+        ls -a
+        echo "Sleeping for 60 seconds"
+        sleep 60
         docker ps -a
-        if curl -s http://localhost:5000/ | grep -o "500 Internal Server Error"
+        if curl -s http://localhost:5000/ | grep "Welcome Screen"
           then
-            echo "A 500 Internal server error was reported. Cannot allow PR to merge!"
-            exit 1
+            echo "Welcome message detected. PR can to merge!"
           else
-            echo "Website does not return a 500 error code."
+            echo "Welcome message not detected. PR can't merge!"
+            exit 1
         fi
 

@@ -1,3 +1,6 @@
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='user_main.css') }}">
+</head>
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "bootstrap/base.html" %}
 
@@ -91,45 +94,36 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
         </form>
         <h2>All Events List</h2>
-
-        <div class="container m-4">
-          <div class="row row-cols-1 row-cols-md-2 
-                row-cols-lg-3 g-4">
-                <div class="col">
-                  <div class="card mb-3" style="max-width: 540px;">
-                    <div class="row g-0">
-                      <div class="col-md-6 text-center">
-                        <img src=
-          "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20190710102234/download3.png"
-                          class="img-fluid rounded-start"
-                          alt="...">
-                      </div>
-                      <div class="col-md-6">
-                        <div class="card-body">
-                          <h5 class="card-title">
-                            Data Structures
-                          </h5>
-                          <p class="card-text">
-                            A data structure is a storage that is used to store and organize data. 
-                          </p>
-                          <p class="card-text">
-                            <small class="text-muted">
-                              Last updated now
-                            </small>
-                          </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div> 
-
-        <ul class="results">
-            {% for key, value in event_data.items() %}
-            <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
-            {% endfor %}
-        </ul>
     {% endblock %}
+    
+    <div class="content">
+      <div class="container">
+          <div class="row">
+            {% for key, value in event_data.items() %}
+              <div class="col-xs-12 col-sm-4">
+                <div class="card">
+                    <a class="img-card" href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html">
+                    <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
+                  </a>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <a href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html"> {{value.name}}
+                          </a>
+                        </h4>
+                        <p class="">
+                            {{value.description}}
+                        </p>
+                    </div>
+                    <div class="card-read-more">
+                        <a href="/events/{{ key }}" class="btn btn-link btn-block">
+                            Read More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+          </div>
+      </div>
+  </div>
 </div>
 {% endblock %}
