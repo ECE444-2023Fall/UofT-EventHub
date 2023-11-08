@@ -57,13 +57,16 @@ def register():
     form = RegForm()
     if form.validate_on_submit():
         role = int(form.role.data)
+        name = form.name.data
         username = form.username.data
         password1 = form.password1.data
         password2 = form.password2.data
 
         # Authenticate the entry and add it to the database
         user = Credentials.query.filter_by(username=username).first()
-        if user:
+        if len(name) < 1:
+            flash("Name must be greater than 1 character.", category="error")
+        elif user:
             flash("Username already exists.", category="error")
         elif len(username) < 4:
             flash("Username must be greater than 3 characters.", category="error")
@@ -74,12 +77,12 @@ def register():
         else:
             logging.info("Entered Data: (%s, %s, %s)", username, password1, role)
             new_user = Credentials(
+                name=name,
                 username=username,
                 password=generate_password_hash(password1, method="sha256"),
                 role=role,
             )
             
-
             db.session.add(new_user)
             db.session.commit()
 

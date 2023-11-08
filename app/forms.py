@@ -30,6 +30,7 @@ class RegForm(FlaskForm):
         choices=[(Role.USER.value, "User"), (Role.ORGANIZER.value, "Organizer")],
         validators=[DataRequired()],
     )
+    name = StringField("Name:", validators=[DataRequired()])
     username = StringField("Username:", validators=[DataRequired()])
     password1 = PasswordField("Password:", validators=[DataRequired()])
     password2 = PasswordField("Confirm Password:", validators=[DataRequired()])

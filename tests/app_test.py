@@ -1,9 +1,9 @@
 import pytest
-from app.main import app, db
 from pathlib import Path
 from unittest.mock import MagicMock
 from flask_login import current_user
-
+from app.main import app, db
+from app.user import get_active_organizers
 from app.database import EventDetails, Tag
 from app.events import create_google_calendar_event
 
@@ -22,7 +22,8 @@ def client():
     with app.app_context():
         db.create_all()
         yield app.test_client()
-        db.drop_all()
+        # Commenting out right now as all .db instances get deleted. This makes testing easier as we retain all created database info
+        #db.drop_all()
 
 
 # Test function written by Rahul
@@ -193,6 +194,7 @@ def test_organiser_add_events_endpoint(client):
     response = client.get("/organizer/create_event", content_type="html/text")
     assert response.status_code == 200
 
+
 def test_create_event_with_tags(client):
     # Create tags
     social_tag = Tag(name='social')
@@ -214,6 +216,7 @@ def test_create_event_with_tags(client):
     assert len(event.tags) == 3
     assert {"social", "cultural", "networking"} == {tag.name for tag in event.tags}
 
+
 # Mocking the necessary objects for testing
 class MockEvent:
     id = 1
@@ -232,3 +235,8 @@ def test_create_google_calendar_event(client, monkeypatch):
     result = create_google_calendar_event(1)
 
     assert "Event created:" in result
+
+
+def test_get_distinct_organizers(client):
+    organizer_usernames = get_active_organizers()
+    assert isinstance(organizer_usernames, list)

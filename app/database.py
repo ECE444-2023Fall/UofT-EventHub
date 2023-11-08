@@ -3,18 +3,18 @@ from sqlalchemy import ForeignKey
 
 from app.main import db
 
-
 class Credentials(db.Model, UserMixin):
     __tablename__ = "credentials"
 
     username = db.Column(db.String(150), primary_key=True)
     password = db.Column(db.String(150))
     role = db.Column(db.Integer)  # 0: User, 1: Organizer
+    name  = db.Column(db.String(150))
 
     # A sample data from this table will look like this
     def __repr__(self):
         return (
-            f"Username : {self.username}, Password: {self.password}, Role: {self.role}"
+            f"Username : {self.username}, Password: {self.password}, Role: {self.role}, Name: {self.name}"
         )
 
     def get_id(self):
