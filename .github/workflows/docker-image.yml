@@ -28,10 +28,8 @@ jobs:
     - name: Check the website status
       run: |
         ls -a
-        echo "Sleeping for 60 seconds"
-        sleep 60
         docker ps -a
-        if curl -s http://localhost:5000/ | grep "Welcome Screen"
+        if curl -s http://localhost:5000/ | grep "Welcome!"
           then
             echo "Welcome message detected. PR can to merge!"
           else
