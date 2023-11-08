@@ -1,4 +1,6 @@
 <head>
+  <script src="https://kit.fontawesome.com/f94828e930.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='user_main.css') }}">
 </head>
 {% import "bootstrap/wtf.html" as wtf %}
@@ -10,7 +12,6 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">
-          <!-- <img src="https://w1.pngwing.com/pngs/759/630/png-transparent-calendar-calendar-date-symbol-blue-text-line-area-rectangle.png" width="30" height="30" class="d-inline-block align-top navbar-left" alt=""> -->
           <big>UofT Event Hub</big>
         </a>
       </div>
@@ -42,7 +43,6 @@
 {% endblock %}
 
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
@@ -83,8 +83,8 @@
             <h1 style="color: #050151;">University of Toronto Events</h1>
         </div>
         <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
-            <input class="search-box" name="query" id="search-text">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <input class="search-box" name="query" id="search-text" autocomplete="off">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #ea453f;"></i></button>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button>
         </form>
         <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
