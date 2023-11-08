@@ -19,7 +19,7 @@ import logging
 import os.path
 import os
 
-from app.main import db # db is for database
+from app.main import db, es # db is for database
 from app.globals import Role
 from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating

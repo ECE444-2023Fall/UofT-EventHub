@@ -9,6 +9,21 @@ body {
   background: #FFF;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
+  text-align: center;
+}
+
+.page-header{
+  padding-bottom: 10vh;
+}
+
+.row{
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.form{
+  display: inline-block;
 }
  
 .wrapper {

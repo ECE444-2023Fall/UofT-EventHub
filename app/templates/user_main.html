@@ -1,13 +1,23 @@
+<head>
+  <link rel="stylesheet" href="{{ url_for ('static', filename='style.css')}}">
+</head>
+
 {% extends "base.html" %}
 {%block title %}User's Page{% endblock %} 
 
 {% block content %}
+<!-- For JS support -->
 <script
   src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
   integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
   crossorigin="anonymous"
   referrerpolicy="no-referrer"
 ></script>
+
+<!-- For cool icons -->
+<script src="https://kit.fontawesome.com/f94828e930.js" crossorigin="anonymous"></script>
+
+<!-- Container for search and sorting functionality -->
 <div class="container">
   {% for message in get_flashed_messages() %}
   <div class="alert alert-warning">
@@ -41,22 +51,28 @@
                       })
             }
         </script>
-
         <div class="page-header">
           <h1 style="color: #050151; font-family: Georgia, serif;">University of Toronto Events</h1>
         </div>
-        <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
-            <input class="search-box" name="query" id="search-text" autocomplete="off">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #ea453f;"></i></button>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button>
-        </form>
-        <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
-            {% for filter_tag in filter_tags %}
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
-            {% endfor %}
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
-        </form>
-        <h2>All Events List</h2>
+        <div class="container">
+          <div class="row" style="text-align: center;">
+            <div class="col-xs-12 col-sm-12" style="text-align: center;">
+              <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
+                  <input class="search-box" name="query" id="search-text" autocomplete="off" placeholder="Search all events...">
+                  <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #ea453f;"></i></button>
+                  <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
+              </form>
+            </div>
+            <div class="col-xs-12 col-sm-12" style="text-align: center;">
+              <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
+                  {% for filter_tag in filter_tags %}
+                  <button id="sort-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
+                  {% endfor %}
+                  <button id="sort-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
+              </form>
+            </div>
+          </div>
+        </div>
     {% endblock %}
     
     <div class="content">

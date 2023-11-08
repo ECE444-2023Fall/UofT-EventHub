@@ -2,7 +2,11 @@ h1{
     color: #050151;;
 }
 
-input[type=button], input[type=submit], input[type=reset] {
+.page-header{
+  padding-top: 50px;
+}
+
+/* input[type=button], input[type=submit], input[type=reset] {
   background-color: #04AA6D;
   border: black ;
   color: white;
@@ -10,7 +14,7 @@ input[type=button], input[type=submit], input[type=reset] {
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
-}
+} */
 
 .page-header{
     color:black;
@@ -43,6 +47,7 @@ ul.navbar-nav {
   background-color: #ffffff;
   font-family: Georgia, serif;
 }
+
 /* Below are styles for the stars for previous ratings */
 .filled-star {
   color: gold;
@@ -96,3 +101,35 @@ ul.navbar-nav {
 	color: gold;
 }
 /* ------------------------------------------------------------ */
+
+/* Below are the styles for user_main.html */
+
+.search-box{
+  width: 300px;
+  padding: 27px 39px;
+  height: 35px;
+  background: #fff;
+  margin: 100px auto 0;
+  border-radius: 5px;
+  border: 10px solid rgba(255,255,255,.5);
+  font-size: 20px;
+}
+
+button .fa-solid{
+  width: 25px;
+  font-size: 22px;
+}
+
+#search-btn{
+  width: 55px;
+  background-color: #ffc2c2;
+}
+
+#search-btn:hover{
+  background-color: #ffc2c2;
+}
+
+.btn-light:hover{
+  background-color: #ea453f; /* change to your desired color */
+  color: white; /* change to your desired color */
+}
