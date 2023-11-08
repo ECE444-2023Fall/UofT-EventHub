@@ -25,20 +25,17 @@ jobs:
             elasticsearch
             web
 
-    - name: Build the Docker image
+    - name: Check the website status
       run: |
         ls -a
-        echo "Running docker compose build"
-        docker-compose up --build --no-cache --force-recreate -d
-        sleep 20
+        echo "Sleeping for 60 seconds"
+        sleep 60
         docker ps -a
         if curl -s http://localhost:5000/ | grep -o "500 Internal Server Error"
           then
             echo "A 500 Internal server error was reported. Cannot allow PR to merge!"
-            docker-compose down
             exit 1
           else
             echo "Website does not return a 500 error code."
-            docker-compose down
         fi
 
