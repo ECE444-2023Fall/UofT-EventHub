@@ -61,10 +61,13 @@ def search_events(filter="all"):
     else:
         # Add the search query in the redirect link
         logging.info("User searched for: %s", request.form["query"])
-        query = request.form["query"]
-        redirect_args["search"] = query
 
-    #If the caller is the my events page then it should redirect there
+        # If user searches is not empty string
+        if (request.form["query"] != ""):
+            query = request.form["query"]
+            redirect_args["search"] = query
+
+    # If the caller is the my events page then it should redirect there
     if (request.referrer.find("/myevents/") != -1):
         return redirect(url_for("user_events.main", **redirect_args))
     else:

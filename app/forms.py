@@ -67,7 +67,8 @@ class EventCreateForm(FlaskForm):
         "Image:", validators=[FileAllowed(["png"], "PNG Images only!")]
     )
     additional_info = TextAreaField("Additional Information:")
-    submit = SubmitField("Submit")
-
+    
     # Tags
     tags = StringField('Tags (Comma-separated)')
+
+    submit = SubmitField("Submit")
