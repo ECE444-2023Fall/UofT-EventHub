@@ -54,8 +54,8 @@
         </div>
 
         <ul>
-            {% for organizer_username in organizer_usernames %}
-                <li><a href="/organizers/{{ organizer_username }}">{{ organizer_username }}</a></li>
+            {% for organizer_username, organizer_name in organizers %}
+                <li><a href="/organizers/{{ organizer_username }}">{{ organizer_name }}</a></li>
             {% endfor %}
         </ul>
     {% endblock %}
