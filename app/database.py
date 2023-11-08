@@ -18,8 +18,20 @@ class Credentials(db.Model, UserMixin):
         )
 
     def get_id(self):
-        return self.username
+        return (self.username)
+    
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
 
+    def __repr__(self):
+        return self.name
+
+event_tags = db.Table('event_tags',
+    db.Column('event_id', db.Integer, db.ForeignKey('event_details.id'), primary_key=True),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+)
 
 class EventDetails(db.Model):
     __tablename__ = "event_details"
@@ -29,6 +41,7 @@ class EventDetails(db.Model):
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(1000))
     category = db.Column(db.String(150))
+    organizer = db.Column(db.String(150), ForeignKey("credentials.username"))
 
     # Location and Time information
     is_online = db.Column(db.Integer)
@@ -49,9 +62,12 @@ class EventDetails(db.Model):
     redirect_link = db.Column(db.String(300))
     additional_info = db.Column(db.String(1000))
 
+    # Add a relationship to the tags
+    tags = db.relationship('Tag', secondary=event_tags, backref=db.backref('events', lazy='dynamic'))
+
     # A sample data from this table will look like this
     def __repr__(self):
-        return f"ID : {self.id}, Name: {self.name}"
+        return f"ID : {self.id}, Name: {self.name}, Organizer: {self.organizer}, Tags: {', '.join(tag.name for tag in self.tags)}"
 
     def get_id(self):
         return self.id
@@ -73,17 +89,20 @@ class EventBanner(db.Model):
     def get_id(self):
         return self.event_id
 
-
-class OrganizerEventDetails(db.Model):
-    __tablename__ = "organizer_event_relations"
-
+class EventRating(db.Model):
+    __tablename__ = 'event_ratings'
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    event_id = db.Column(db.Integer, ForeignKey("event_details.id"))
-    organizer_username = db.Column(db.String(150), ForeignKey("credentials.username"))
+    #username of the user who gave the rating:
+    attendee_username = db.Column(db.String(150), ForeignKey("credentials.username"))
+    # Event on which the rating was given for:
+    event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
+    #the rating:
+    #TODO: Perhaps limit the range of integers from 1 to 5
+    rating = db.Column(db.Integer)
 
-    # A sample data from this table will look like this
     def __repr__(self):
-        return f"Organizer: {self.organizer_name}, Event ID: {self.event_id}"
+        return f"Username: {self.attendee_username}, ID : {self.event_id}, Rating: {self.rating}"
 
 class EventRegistration(db.Model):
     __tablename__ = "event_registration"

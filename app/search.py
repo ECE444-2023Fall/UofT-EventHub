@@ -64,7 +64,11 @@ def search_events(filter="all"):
         query = request.form["query"]
         redirect_args["search"] = query
 
-    return redirect(url_for("user.main", **redirect_args))
+    #If the caller is the my events page then it should redirect there
+    if (request.referrer.find("/myevents/") != -1):
+        return redirect(url_for("user_events.main", **redirect_args))
+    else:
+        return redirect(url_for("user.main", **redirect_args))
 
 # Primary ElasticSearch retrival logic
 # Gets the events depending on the search query

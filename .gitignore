@@ -1,9 +1,10 @@
 flask_env/
 venv/
 app/instance/database.db
-app/__pycache__
-tests/__pycache__
+**/__pycache__
 virtual-environment-snehNinja/
+**/.DS_Store
+.pytest_cache
 .vscode/
 *.db
 instance/database.db
