@@ -41,6 +41,7 @@ class EventDetails(db.Model):
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(1000))
     category = db.Column(db.String(150))
+    organizer = db.Column(db.String(150), ForeignKey("credentials.username"))
 
     # Location and Time information
     is_online = db.Column(db.Integer)
@@ -66,8 +67,8 @@ class EventDetails(db.Model):
 
     # A sample data from this table will look like this
     def __repr__(self):
-        return f"ID : {self.id}, Name: {self.name}, Tags: {', '.join(tag.name for tag in self.tags)}"
-    
+        return f"ID : {self.id}, Name: {self.name}, Organizer: {self.organizer}, Tags: {', '.join(tag.name for tag in self.tags)}"
+
     def get_id(self):
         return self.id
 
@@ -88,19 +89,6 @@ class EventBanner(db.Model):
     def get_id(self):
         return self.event_id
 
-
-class OrganizerEventDetails(db.Model):
-    __tablename__ = "organizer_event_relations"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    event_id = db.Column(db.Integer, ForeignKey("event_details.id"))
-    organizer_username = db.Column(db.String(150), ForeignKey("credentials.username"))
-
-    # A sample data from this table will look like this
-    def __repr__(self):
-        return f"Organizer: {self.organizer_name}, Event ID: {self.event_id}"
-
-
 class EventRating(db.Model):
     __tablename__ = 'event_ratings'
     
@@ -115,7 +103,6 @@ class EventRating(db.Model):
 
     def __repr__(self):
         return f"Username: {self.attendee_username}, ID : {self.event_id}, Rating: {self.rating}"
-
 
 class EventRegistration(db.Model):
     __tablename__ = "event_registration"

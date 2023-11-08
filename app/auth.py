@@ -56,7 +56,7 @@ def logout():
 def register():
     form = RegForm()
     if form.validate_on_submit():
-        role = form.role.data
+        role = int(form.role.data)
         username = form.username.data
         password1 = form.password1.data
         password2 = form.password2.data
