@@ -64,8 +64,8 @@ def register():
 
         # Authenticate the entry and add it to the database
         user = Credentials.query.filter_by(username=username).first()
-        if len(name) < 4:
-            flash("Name must be greater than 3 characters.", category="error")
+        if len(name) < 1:
+            flash("Name must be greater than 1 character.", category="error")
         elif user:
             flash("Username already exists.", category="error")
         elif len(username) < 4:
