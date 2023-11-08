@@ -19,6 +19,7 @@ def client():
     with app.app_context():
         db.create_all()
         yield app.test_client()
+        # Commenting out right now as all .db instances get deleted. This makes testing easier as we retain all created database info
         #db.drop_all()
 
 

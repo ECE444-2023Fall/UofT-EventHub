@@ -54,7 +54,7 @@ def get_all_events_from_database():
     return dict_of_events_details
 
 
-@user.route("/user/organizers", methods=["GET"])
+"""@user.route("/user/organizers", methods=["GET"])
 @login_required
 @user_required
 def view_organizers():
@@ -65,7 +65,8 @@ def view_organizers():
     for username in organizer_usernames:
         organizer_headings += f"<h2>{username}</h2>"
     
-    return organizer_headings
+    ###return organizer_headings
+    return render_template("user_organizers.html")
 
 # Get all organizers that have/had upcoming/past events
 def get_organizers():
@@ -76,4 +77,26 @@ def get_organizers():
     # Extracting the usernames from the query results
     organizer_usernames = [organizer[0] for organizer in organizers]
     
+    return organizer_usernames"""
+
+from app.main import db
+
+@user.route("/user/organizers", methods=["GET"])
+@login_required
+@user_required
+def view_organizers():
+    organizer_usernames = get_distinct_organizers()
+    return render_template("user_organizers.html", organizer_usernames=organizer_usernames)
+
+def get_distinct_organizers():
+    # Join OrganizerEventDetails and EventDetails tables
+    query = (
+        db.session.query(OrganizerEventDetails.organizer_username)
+        .join(EventDetails, OrganizerEventDetails.event_id == EventDetails.id)
+        .distinct()
+    )
+
+    # Execute the query and get distinct organizer usernames
+    organizer_usernames = [result[0] for result in query.all()]
+
     return organizer_usernames
