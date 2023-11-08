@@ -97,11 +97,8 @@ def register_for_event(event_id):
         logging.warning("Cannot register an organizer")
         return ("3")
     
-    #We should also check if the event is a past event
-    #To test ratings feature, comment the if condition below(3 lines)
-    if is_past_event:
-        flash("Sorry, you cannot register to an event that has already taken place!")
-        return redirect(url_for('events.show_event', id=event_id))
+    #Check for past event is also needed and has been implemented on
+    #the event.html page where the register button is disabled once an event is over.
 
     #TODO: Check if event has enough seats left
 

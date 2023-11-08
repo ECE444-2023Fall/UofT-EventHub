@@ -57,8 +57,12 @@
         <script type=text/javascript>
             console.log("JS: Is running");
             console.log("is_registered: {{is_registered}}");
-
-            if("{{is_registered}}" == "True") {
+            //check below is for past events. If met, button is disabled and users cannot register
+            //Disable this check to be able to test the ratings function easily.
+            if("{{is_past_event}}" == "True") {
+                document.getElementById('register_btn').disabled = true;
+            }
+            else if("{{is_registered}}" == "True") {
                 console.log("JS: User is already registered");
                 document.getElementById('register_btn').value = 'Cancel Registration';
                 document.getElementById('register_btn').style.background='#808080';
@@ -68,6 +72,7 @@
             }
         </script>
 
+        <!-- This is a check to see if previous rating existed. If it does then those many stars will get filled up -->
         {% if prev_rating > 0 %}
             <div class="rating">
                 {% for i in range(1, 6) %}
@@ -79,7 +84,8 @@
                 {% endfor %}
             </div>
         {% endif %}
-
+        
+        <!-- This is a check to ensure user is registered and the event is already over. Only then would the option to rate the event appear -->
         {% if is_past_event and is_registered %}
             <div>
                 <form action="/events/submit_rating/{{event.id}}" method="post">
