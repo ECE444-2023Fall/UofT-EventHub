@@ -31,11 +31,11 @@ jobs:
         echo "Sleeping for 60 seconds"
         sleep 60
         docker ps -a
-        if curl -s http://localhost:5000/ | grep -o "500 Internal Server Error"
+        if curl -s http://localhost:5000/ | grep "Welcome Screen"
           then
-            echo "A 500 Internal server error was reported. Cannot allow PR to merge!"
-            exit 1
+            echo "Welcome message detected. PR can to merge!"
           else
-            echo "Website does not return a 500 error code."
+            echo "Welcome message not detected. PR can't merge!"
+            exit 1
         fi
 
