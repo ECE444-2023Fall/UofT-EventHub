@@ -8,6 +8,6 @@ class Role(Enum):
 EVENT_CATEGORIES = ["Music", "Nightlife", "Hobbies", "Personal Development", "Business"]
 # List of tags that can be used to sort the event data
 # NOTE: Do not add a tag named "clear", since it has a special functionality
-FILTERS = ["In-Person", "Today", "Free", *EVENT_CATEGORIES]
+FILTERS = ["In-Person", "Today", "Free", *EVENT_CATEGORIES, "Past Events"]
 
 DB_NAME = "database.db"

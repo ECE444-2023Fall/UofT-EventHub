@@ -5,6 +5,8 @@ from app.auth import login_required, user_required
 from app.database import EventDetails
 from app.search import get_eventids_matching_search_query
 from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list
+from app.main import db
+
 
 
 user = Blueprint("user", __name__)
