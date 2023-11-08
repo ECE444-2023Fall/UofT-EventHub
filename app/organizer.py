@@ -31,16 +31,24 @@ def create_event():
 
     if form.validate_on_submit():
         # Add the event details
-        new_event = EventDetails(name=form.name.data, 
-                                 description=form.description.data,  
-                                 type=form.type.data,  
-                                 venue=form.venue.data,  
-                                 start_date=form.start_date.data,  
-                                 end_date=form.end_date.data,  
-                                 start_time=form.start_time.data,  
-                                 end_time=form.end_time.data,  
-                                 link=form.link.data,  
-                                 additional_info=form.additional_info.data)
+
+        new_event = EventDetails(
+            name=form.name.data,
+            description=form.description.data,
+            category=form.category.data.lower(),
+            is_online=form.is_online.data,
+            venue=form.venue.data,
+            start_date=form.start_date.data,
+            end_date=form.end_date.data,
+            start_time=form.start_time.data,
+            end_time=form.end_time.data,
+            max_capacity=form.max_capacity.data,
+            current_capacity=0,
+            ticket_price=form.ticket_price.data,
+            redirect_link=form.redirect_link.data,
+            additional_info=form.additional_info.data,
+        )
+
         db.session.add(new_event)
         db.session.commit()
 
@@ -82,7 +90,6 @@ def create_event():
         return redirect(url_for("organizer.main"))
 
     organizer = current_user
-    print(organizer)
 
     return render_template("create_event.html", form=form)
 

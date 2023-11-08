@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from datetime import date
+import logging
 
 from app.auth import login_required
 
@@ -12,7 +13,9 @@ def filter_events(search=None):
     if request.method != "POST":
         return
     
-    print("User filtering for:", request.form["filter-tag"])
+    logging.info("The calling page is: %s", request.referrer)
+
+    logging.info("User filtering for: %s", request.form["filter-tag"])
     tag = request.form["filter-tag"]
 
     # Assemble the arguments for the redrect link based on 
@@ -28,7 +31,11 @@ def filter_events(search=None):
             # Add this filter tag to follow the route layout of user.main
             redirect_args["filter"] = "all"
 
-    return redirect(url_for("user.main", **redirect_args))
+    #If the caller is the my events page then it should redirect there
+    if (request.referrer.find("/myevents/") != -1):
+        return redirect(url_for("user_events.main", **redirect_args))
+    else:
+        return redirect(url_for("user.main", **redirect_args))
 
 def filter_for_today_events(events):
     return { 
@@ -64,4 +71,12 @@ def filter_events_on_event_ids_list(events, event_ids):
         event_id: events[event_id] 
         for event_id in event_ids 
         if event_id in events
+    }
+
+def filter_for_past_events(events):
+    #TODO: Compare to the exact time as well. Currently only filters by date.
+    return { 
+        event_id: events[event_id] 
+        for event_id in events.keys() 
+        if events[event_id]["end_date"] < date.today().strftime('%Y-%m-%d')
     }

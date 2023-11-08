@@ -50,6 +50,10 @@ class EventDetails(db.Model):
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
 
+    # Participant capacity information
+    max_capacity = db.Column(db.Integer)
+    current_capacity = db.Column(db.Integer)
+
     # Ticket Price Information
     ticket_price = db.Column(db.Float)
 
@@ -95,3 +99,48 @@ class OrganizerEventDetails(db.Model):
     # A sample data from this table will look like this
     def __repr__(self):
         return f"Organizer: {self.organizer_name}, Event ID: {self.event_id}"
+
+
+class EventRating(db.Model):
+    __tablename__ = 'event_ratings'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    #username of the user who gave the rating:
+    attendee_username = db.Column(db.String(150), ForeignKey("credentials.username"))
+    # Event on which the rating was given for:
+    event_id = db.Column(db.Integer, ForeignKey('event_details.id'))
+    #the rating:
+    #TODO: Perhaps limit the range of integers from 1 to 5
+    rating = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"Username: {self.attendee_username}, ID : {self.event_id}, Rating: {self.rating}"
+
+
+class EventRegistration(db.Model):
+    __tablename__ = "event_registration"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    event_id = db.Column(db.Integer, ForeignKey("event_details.id"), nullable=False)
+    attendee_username = db.Column(db.String(150), ForeignKey("credentials.username"), nullable=False)
+
+    # Unique constraint
+    __table_args__ = (db.UniqueConstraint("event_id", "attendee_username"),)
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return f"Attendee: {self.attendee_username}, Event ID: {self.event_id}"
+
+
+class UserDetails(db.Model):
+    __tablename__ = "user_details"
+
+    # Basic user details we will need for registration
+    username = db.Column(db.String(150), primary_key=True)
+    firstname = db.Column(db.String(250), nullable=False)
+    lastname = db.Column(db.String(250), nullable=True)
+    email = db.Column(db.String(250), nullable=False)
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return f"Username : {self.username}, First name: {self.firstname}, Email: {self.email}"
