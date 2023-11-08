@@ -19,7 +19,7 @@ from datetime import date
 import os.path
 import os
 
-from app.main import db, es  # db is for database and es for elastic search
+from app.main import db # db is for database
 from app.globals import Role
 from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
@@ -63,6 +63,7 @@ def show_event(id):
     else:
         return render_template("event.html", event=event.__dict__, is_registered=False, is_past_event = is_past_event, prev_rating=prev_rating)
 
+
 @events.route("/events/admin/<int:id>", methods=["GET"])
 @login_required
 @organizer_required
@@ -87,6 +88,7 @@ def show_event_admin(id):
     num_of_registrations = len(registered_users)
 
     return render_template("event_admin.html", event=event.__dict__, num_of_registrations=num_of_registrations)
+
 
 @events.route("/events/create_event", methods=["GET", "POST"])
 @login_required
@@ -136,6 +138,7 @@ def create_event():
         return redirect(url_for("events.show_event_admin", id=new_event.id))
 
     return render_template("create_event.html", form=form)
+
 
 @events.route("/events/edit_event/<int:id>", methods=["GET", "POST"])
 @login_required
@@ -215,6 +218,7 @@ def edit_event(id):
 
     return render_template("create_event.html", form=form)
 
+
 @events.route("/events/delete_event/<int:id>", methods=["POST"])
 @login_required
 @organizer_required
@@ -246,6 +250,7 @@ def delete_event(id):
     db.session.commit()
 
     return redirect(url_for("organizer.main"))
+
 
 @events.route("/events/send_file/<filename>")
 @events.route("/events/register/send_file/<filename>")
@@ -396,6 +401,7 @@ def submit_rating(event_id):
         flash('Failed to submit rating. Please try again.', 'error')
         
     return redirect(url_for('events.show_event', id=event_id))
+
 
 def create_google_calendar_event(id):
     # Get the event details from the database
