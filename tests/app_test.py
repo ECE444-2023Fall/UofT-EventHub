@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 from flask_login import current_user
 from app.main import app, db
-from app.user import get_distinct_organizers
+from app.user import get_active_organizers
 from app.database import EventDetails, Tag
 from app.events import create_google_calendar_event
 
@@ -238,6 +238,5 @@ def test_create_google_calendar_event(client, monkeypatch):
 
 
 def test_get_distinct_organizers(client):
-    organizer_usernames = get_distinct_organizers()
-    print("Organizer Usernames:", organizer_usernames)
+    organizer_usernames = get_active_organizers()
     assert isinstance(organizer_usernames, list)

@@ -56,7 +56,7 @@ def get_all_events_from_database():
 @user.route("/user/organizers", methods=["GET"])
 @login_required
 @user_required
-def view_organizers():
+def view_all_organizers():
     organizers = get_active_organizers()
     return render_template("user_organizers.html", organizers=organizers)
 
