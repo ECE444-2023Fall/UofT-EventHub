@@ -1,16 +1,16 @@
 h1{
-    color: blue;
+    color: #050151;;
 }
 
 input[type=button], input[type=submit], input[type=reset] {
-    background-color: #04AA6D;
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-  }
+  background-color: #04AA6D;
+  border: black ;
+  color: white;
+  padding: 10px 16px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 
 .page-header{
     color:black;
@@ -32,6 +32,17 @@ input[type=button], input[type=submit], input[type=reset] {
     color: #333333 !important;
 }
 
+.custom-navbar {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #000000;
+}
+
+ul.navbar-nav {
+  color: #cb1010 !important;
+  font-weight: 600;
+  background-color: #ffffff;
+  font-family: Georgia, serif;
+}
 /* Below are styles for the stars for previous ratings */
 .filled-star {
   color: gold;

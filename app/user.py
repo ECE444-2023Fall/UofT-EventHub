@@ -1,13 +1,12 @@
 from flask import Blueprint, render_template
+from sqlalchemy import distinct
 
 from app.globals import FILTERS
 from app.auth import login_required, user_required
-from app.database import EventDetails
+from app.database import EventDetails, Credentials
 from app.search import get_eventids_matching_search_query
 from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list
 from app.main import db
-
-
 
 user = Blueprint("user", __name__)
 
@@ -40,15 +39,34 @@ def main(filter="all", search=None):
 def get_all_events_from_database():
     events_data = EventDetails.query.all()
 
-    ## Make a dict for event details
+    # Make a dict for event details
     dict_of_events_details = {}
     for row in events_data:
         event_detail = {}
 
-        ## TODO: Ideally we should only be passing information that is required by the user_main.html
+        # TODO: Ideally we should only be passing information that is required by the user_main.html
         for column in row.__table__.columns:
             event_detail[column.name] = str(getattr(row, column.name))
 
         dict_of_events_details[row.id] = event_detail
 
     return dict_of_events_details
+
+
+@user.route("/user/organizers", methods=["GET"])
+@login_required
+@user_required
+def view_all_organizers():
+    organizers = get_active_organizers()
+    return render_template("user_organizers.html", organizers=organizers)
+
+# Get only the organizers that have upcoming events or had past events
+def get_active_organizers():
+
+    # Joining EventDetails and Credentials tables
+    # Selecting only distinct organizer usernames and names
+    organizers = db.session.query(Credentials.username, Credentials.name).join(
+        EventDetails, Credentials.username == EventDetails.organizer
+    ).distinct().all()
+
+    return organizers
