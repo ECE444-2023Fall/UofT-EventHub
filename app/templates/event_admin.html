@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+<!-- This is the general template for showcasing event descriptions on organiser side-->
+
+{% block title %}Event's Page{% endblock %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-info" role="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}
+        <form action="/events/edit_event/{{event.id}}" method="GET">
+            <button type="submit" class="btn btn-primary" name="update-action" value="update">Edit Event</button>
+        </form>
+        <form action="/events/delete_event/{{event.id}}" method="POST" onsubmit="return confirmDelete();">
+            <button type="submit" class="btn btn-danger" name="update-action" value="delete">Delete Event</button>
+        </form>
+        <div class="page-header">
+            <h1>{{event.name}}</h1>
+            <p>{{event.description}}</p>
+            <p>Venue: {{event.venue}}</p>
+            <p>No of Registrations: {{num_of_registrations}} / {{event.max_capacity}}</p>
+        </div>
+        <div>
+          <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id + '.png')}}" class="img-rounded" alt="Event Banner">
+        </div>
+        <script>
+            function confirmDelete() {
+                return confirm("Are you sure you want to delete this event?");
+            }
+        </script>
+        
+{% endblock %}
+</div>
+{% endblock %}

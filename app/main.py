@@ -48,7 +48,7 @@ def create_app(debug):
     app.config["SECRET_KEY"] = "4829jfnwurduh4293k"
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
     app.config["GRAPHIC_DIRECTORY"] = path = os.path.join(
-        app.root_path, "assets", "event-assets"
+        app.root_path, "static", "event-assets"
     )
     db.init_app(app)
     bootstrap = Bootstrap(app=app)
@@ -63,6 +63,7 @@ def create_app(debug):
     from app.events import events
     from app.search import search
     from app.filter import filter
+    from app.user_events import user_events
 
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(user, url_prefix="/")
@@ -70,6 +71,7 @@ def create_app(debug):
     app.register_blueprint(events, url_prefix="/")
     app.register_blueprint(search, url_prefix="/")
     app.register_blueprint(filter, url_prefix="/")
+    app.register_blueprint(user_events, url_prefix="/")
 
     with app.app_context():
         db.create_all()

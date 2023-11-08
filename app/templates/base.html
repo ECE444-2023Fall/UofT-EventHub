@@ -11,7 +11,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=SF+Pro+Display%3A600"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C600%2C700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A400%2C500%2C700"/>
-  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="{{ url_for ('static', filename='user_main.css')}}">
+  <link rel="stylesheet" href="{{ url_for ('static', filename='style.css')}}">
+
   {% import "bootstrap/wtf.html" as wtf %}
 </head>
  
@@ -19,7 +21,7 @@
         
     {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
-    <a class="navbar-brand" href="/"> <img src="../static/images/final_logo.png" alt="logo" width="175.6" height="46"></a>
+    <a class="navbar-brand" href="/"> <img src="{{ url_for ('static', filename='images/final_logo.png')}}" alt="logo" width="175.6" height="46"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>

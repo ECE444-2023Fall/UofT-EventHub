@@ -1,22 +1,20 @@
 {% extends "base.html" %}
-{%block title %}User's Page{% endblock %} 
+
+{% block title %}User's Events Page{% endblock %}
 
 {% block content %}
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-  integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="container">
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ message }}
-  </div>
-  {% endfor %} 
-  {% block page_content %}
-    <script>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}
+
+        <script>
             $(document).ready(function() {
                 console.log("Hello")
                 let debounce;
@@ -43,7 +41,7 @@
         </script>
 
         <div class="page-header">
-          <h1 style="color: #050151; font-family: Georgia, serif;">University of Toronto Events</h1>
+            <h1 style="color: #050151;">University of Toronto Events</h1>
         </div>
         <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
             <input class="search-box" name="query" id="search-text">
@@ -56,37 +54,13 @@
             {% endfor %}
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
         </form>
-        <h2>All Events List</h2>
-    {% endblock %}
-    
-    <div class="content">
-      <div class="container">
-          <div class="row">
+        <h2>My Events</h2>
+
+        <ul class="results">
             {% for key, value in event_data.items() %}
-              <div class="col-xs-12 col-sm-4">
-                <div class="card">
-                    <a class="img-card" href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html">
-                    <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
-                  </a>
-                    <div class="card-content">
-                        <h4 class="card-title">
-                            <a href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html"> {{value.name}}
-                          </a>
-                        </h4>
-                        <p class="">
-                            {{value.description}}
-                        </p>
-                    </div>
-                    <div class="card-read-more">
-                        <a href="/events/{{ key }}" class="btn btn-link btn-block">
-                            Read More
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
             {% endfor %}
-          </div>
-      </div>
-  </div>
+        </ul>
+    {% endblock %}
 </div>
 {% endblock %}

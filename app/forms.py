@@ -11,9 +11,10 @@ from wtforms import (
     TextAreaField,
     BooleanField,
     FloatField,
+    IntegerField,
 )
 from flask_wtf.file import FileAllowed
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange
 
 from app.globals import Role, EVENT_CATEGORIES
 
@@ -52,6 +53,10 @@ class EventCreateForm(FlaskForm):
     start_time = TimeField("Start Time:")
     end_time = TimeField("End Time:")
 
+    # Participant capacity information
+    max_capacity = IntegerField(
+        "Capacity of your event:", validators=[NumberRange(min=0)])
+
     # Ticket Price Information
     ticket_price = FloatField("Ticket Price:", default=0.0)
 
@@ -61,4 +66,8 @@ class EventCreateForm(FlaskForm):
         "Image:", validators=[FileAllowed(["png"], "PNG Images only!")]
     )
     additional_info = TextAreaField("Additional Information:")
+    
+    # Tags
+    tags = StringField('Tags (Comma-separated)')
+
     submit = SubmitField("Submit")
