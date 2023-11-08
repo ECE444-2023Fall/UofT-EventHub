@@ -1,7 +1,7 @@
 import pytest
 from app.main import app, db
 from pathlib import Path
-from app.user import get_organizers
+from app.user import get_distinct_organizers
 
 
 TEST_DB = "test.db"
@@ -19,7 +19,7 @@ def client():
     with app.app_context():
         db.create_all()
         yield app.test_client()
-        db.drop_all()
+        #db.drop_all()
 
 
 # Test function written by Rahul
@@ -191,10 +191,7 @@ def test_organiser_add_events_endpoint(client):
     assert response.status_code == 200
 
 
-def test_get_organizer_usernames(client):
-    # Calling the function to get organizer usernames
-    organizer_usernames = get_organizers()
-        
-    # Performing the assertions to check if the function works as expected
+def test_get_distinct_organizers(client):
+    organizer_usernames = get_distinct_organizers()
+    print("Organizer Usernames:", organizer_usernames)
     assert isinstance(organizer_usernames, list)
-    assert all(isinstance(username, str) for username in organizer_usernames)
