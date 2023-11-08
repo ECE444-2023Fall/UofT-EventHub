@@ -43,7 +43,7 @@ es = create_elasticsearch(elasticsearch_host)
 from app.globals import DB_NAME
 
 def create_app(debug):
-    app = Flask(__name__)
+    # app = Flask(__name__)
     app.debug = debug
     app.config["SECRET_KEY"] = "4829jfnwurduh4293k"
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
