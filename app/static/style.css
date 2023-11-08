@@ -2,6 +2,16 @@ h1{
     color: #050151;;
 }
 
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #04AA6D;
+  border: black ;
+  color: white;
+  padding: 10px 16px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 .page-header{
     color:black;
     font-family: Inter;
