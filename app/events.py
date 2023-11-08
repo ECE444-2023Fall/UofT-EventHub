@@ -57,11 +57,17 @@ def show_event(id):
     prev_rating = previous_rating(attendee_username=current_user.get_id(), event_id=id)
     logging.info("Prev Rating: ", prev_rating)
 
+    event_dict = event.__dict__
+    
+    # Fix: Need to pass event ID as a string
+    str_id = str(event_dict["id"])
+    event_dict["id"] = str_id
+
     if is_registered is not None:
         flash("You are already registered for the event!", category="info")
-        return render_template("event.html", event=event.__dict__, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
+        return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
     else:
-        return render_template("event.html", event=event.__dict__, is_registered=False, is_past_event = is_past_event, prev_rating=prev_rating)
+        return render_template("event.html", event=event_dict, is_registered=False, is_past_event = is_past_event, prev_rating=prev_rating)
 
 @events.route("/events/admin/<int:id>", methods=["GET"])
 @login_required
@@ -198,7 +204,7 @@ def edit_event(id):
 
         # Save the banner in assets/event-assets
         banner_file.save(
-            os.path.join(current_app.root_path, "assets", "event-assets", filename)
+            os.path.join(current_app.root_path, "static", "event-assets", filename)
         )
 
         # Store the path to the banner EventBanner
@@ -309,9 +315,7 @@ def register_for_event(event_id):
 
         flash("Cancelled registeration for the event!", category="success")
         event = EventDetails.query.filter_by(id=event_id).first()
-        for key, val in event.__dict__.items():
-            logging.info("Key: %s", key)
-            logging.info("Value: %s", val)
+
         return redirect(url_for('events.show_event', id=event_id))
 
     # Register the user
@@ -323,13 +327,8 @@ def register_for_event(event_id):
     db.session.add(new_registration)
     db.session.commit()
 
-    # Re-render the page showing user that registration is complete
     flash("Registered for the event!", category="success")
     event = EventDetails.query.filter_by(id=event_id).first()
-    for key, val in event.__dict__.items():
-        logging.info("Key: %s", key)
-        logging.info("Value: %s", val)
-        
     return redirect(url_for('events.show_event', id=event_id))
 
 def add_event_to_index(new_event):
