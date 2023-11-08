@@ -67,3 +67,6 @@ class EventCreateForm(FlaskForm):
     )
     additional_info = TextAreaField("Additional Information:")
     submit = SubmitField("Submit")
+
+    # Tags
+    tags = StringField('Tags (Comma-separated)')

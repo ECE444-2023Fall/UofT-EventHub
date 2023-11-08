@@ -1,6 +1,11 @@
 import pytest
 from app.main import app, db
 from pathlib import Path
+from unittest.mock import MagicMock
+from flask_login import current_user
+
+from app.database import EventDetails, Tag
+from app.events import create_google_calendar_event
 
 TEST_DB = "test.db"
 
@@ -187,3 +192,43 @@ def test_organiser_add_events_endpoint(client):
     assert response.status_code == 200
     response = client.get("/organizer/create_event", content_type="html/text")
     assert response.status_code == 200
+
+def test_create_event_with_tags(client):
+    # Create tags
+    social_tag = Tag(name='social')
+    cultural_tag = Tag(name='cultural')
+    networking_tag = Tag(name='networking')
+
+    # Create an event and associate tags
+    new_event = EventDetails(name="Sample Event", description="A test event", venue="Sample Venue")
+    new_event.tags.extend([social_tag, cultural_tag, networking_tag])
+
+    db.session.add(new_event)
+    db.session.commit()
+
+    # Query events with their associated tags
+    events = EventDetails.query.all()
+    assert len(events) == 1
+    event = events[0]
+    assert event.name == "Sample Event"
+    assert len(event.tags) == 3
+    assert {"social", "cultural", "networking"} == {tag.name for tag in event.tags}
+
+# Mocking the necessary objects for testing
+class MockEvent:
+    id = 1
+    name = "Test Event"
+    venue = "Test Venue"
+    start_date = "2023-12-25"
+    start_time = "09:00"
+    end_date = "2023-12-25"
+    end_time = "11:00"
+
+def test_create_google_calendar_event(client, monkeypatch):
+    # Mocking the EventDetails.query.get method to return the mock event created above
+    monkeypatch.setattr(EventDetails.query, 'get', MagicMock(return_value=MockEvent))
+
+    # Calling the function with the event id == 1
+    result = create_google_calendar_event(1)
+
+    assert "Event created:" in result

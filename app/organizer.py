@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 import logging
 
-from app.main import db
-from app.database import EventDetails, Credentials
+
+from app.main import db, es # db is for database and es for elastic search
+from app.database import EventDetails, EventBanner, Credentials
 from app.auth import organizer_required
 
 organizer = Blueprint("organizer", __name__)
