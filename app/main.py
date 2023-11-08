@@ -48,7 +48,7 @@ def create_app(debug):
     app.config["SECRET_KEY"] = "4829jfnwurduh4293k"
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
     app.config["GRAPHIC_DIRECTORY"] = path = os.path.join(
-        app.root_path, "assets", "event-assets"
+        app.root_path, "static", "event-assets"
     )
     db.init_app(app)
     bootstrap = Bootstrap(app=app)

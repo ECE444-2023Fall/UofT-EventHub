@@ -92,7 +92,12 @@ def show_event_admin(id):
     registered_users = EventRegistration.query.filter_by(event_id=id).all()
     num_of_registrations = len(registered_users)
 
-    return render_template("event_admin.html", event=event.__dict__, num_of_registrations=num_of_registrations)
+    # Fix: Need to pass event ID as a string
+    event_dict = event.__dict__
+    str_id = str(event_dict["id"])
+    event_dict["id"] = str_id
+
+    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations)
 
 @events.route("/events/create_event", methods=["GET", "POST"])
 @login_required
@@ -128,9 +133,9 @@ def create_event():
         banner_file = form.banner_image.data
         filename = "event_banner_" + str(new_event.id) + ".png"
 
-        # Save the banner in assets/event-assets
+        # Save the banner in static/event-assets
         banner_file.save(
-            os.path.join(current_app.root_path, "assets", "event-assets", filename)
+            os.path.join(current_app.root_path, "static", "event-assets", filename)
         )
 
         # Store the path to the banner EventBanner
@@ -202,7 +207,7 @@ def edit_event(id):
         banner_file = form.banner_image.data
         filename = "event_banner_" + str(event.id) + ".png"
 
-        # Save the banner in assets/event-assets
+        # Save the banner in static/event-assets
         banner_file.save(
             os.path.join(current_app.root_path, "static", "event-assets", filename)
         )

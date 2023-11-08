@@ -56,7 +56,7 @@ def create_event():
         banner_file = form.banner_image.data
         filename = "event_banner_" + str(new_event.id) + ".png"
 
-        # Save the banner in assets/event-assets
+        # Save the banner in static/event-assets
         banner_file.save(
             os.path.join(current_app.root_path, "static", "event-assets", filename)
         )
