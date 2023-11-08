@@ -18,8 +18,20 @@ class Credentials(db.Model, UserMixin):
         )
 
     def get_id(self):
-        return self.username
+        return (self.username)
+    
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
 
+    def __repr__(self):
+        return self.name
+
+event_tags = db.Table('event_tags',
+    db.Column('event_id', db.Integer, db.ForeignKey('event_details.id'), primary_key=True),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+)
 
 class EventDetails(db.Model):
     __tablename__ = "event_details"
@@ -49,10 +61,13 @@ class EventDetails(db.Model):
     redirect_link = db.Column(db.String(300))
     additional_info = db.Column(db.String(1000))
 
+    # Add a relationship to the tags
+    tags = db.relationship('Tag', secondary=event_tags, backref=db.backref('events', lazy='dynamic'))
+
     # A sample data from this table will look like this
     def __repr__(self):
-        return f"ID : {self.id}, Name: {self.name}"
-
+        return f"ID : {self.id}, Name: {self.name}, Tags: {', '.join(tag.name for tag in self.tags)}"
+    
     def get_id(self):
         return self.id
 

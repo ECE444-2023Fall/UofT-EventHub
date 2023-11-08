@@ -4,8 +4,7 @@ from flask import current_app
 import logging
 import os
 
-from app.main import db, es  # db is for database and es for elastic search
-from app.forms import EventCreateForm
+from app.main import db, es # db is for database and es for elastic search
 from app.database import EventDetails, OrganizerEventDetails, EventBanner
 from app.auth import organizer_required
 
@@ -32,6 +31,7 @@ def create_event():
 
     if form.validate_on_submit():
         # Add the event details
+
         new_event = EventDetails(
             name=form.name.data,
             description=form.description.data,
@@ -48,8 +48,22 @@ def create_event():
             redirect_link=form.redirect_link.data,
             additional_info=form.additional_info.data,
         )
+
         db.session.add(new_event)
         db.session.commit()
+
+        # Parse through tags and link associated tags
+        tags = form.tags.data.split(',')  # Splitting tags by comma
+        for tag_name in tags:
+            tag_name = tag_name.strip()  # Remove leading & trailing whitespace
+            if tag_name:
+                # Check if the tag already exists, otherwise create it
+                tag = Tag.query.filter_by(name=tag_name).first()
+                if not tag:
+                    tag = Tag(name=tag_name)
+                    db.session.add(tag)
+                    db.session.commit()
+                new_event.tags.append(tag)  # Associating tag with the event
 
         # Add the event details to the index for elastic search
         add_event_to_index(new_event)
@@ -69,9 +83,7 @@ def create_event():
         db.session.add(event_graphic)
         db.session.commit()
 
-        new_organizer_event_relation = OrganizerEventDetails(
-            event_id=new_event.id, organizer_username=current_user.username
-        )
+        new_organizer_event_relation = OrganizerEventDetails(event_id=new_event.id, organizer_username=current_user.username)
         db.session.add(new_organizer_event_relation)
         db.session.commit()
 
