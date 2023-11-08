@@ -42,12 +42,14 @@
     {% endfor %}
 
     {% block page_content %}
-        <form action="/events/edit_event/{{event.id}}" method="GET">
-            <button type="submit" class="btn btn-primary" name="update-action" value="update">Edit Event</button>
-        </form>
-        <form action="/events/delete_event/{{event.id}}" method="POST" onsubmit="return confirmDelete();">
-            <button type="submit" class="btn btn-danger" name="update-action" value="delete">Delete Event</button>
-        </form>
+        <div style="display: flex;">
+            <form action="/events/edit_event/{{event.id}}" method="GET">
+                <button type="submit" class="btn btn-primary" name="update-action" value="update">Edit Event</button>
+            </form>
+            <form action="/events/delete_event/{{event.id}}" method="POST" onsubmit="return confirmDelete();" style="margin-left: 50px;">
+                <button type="submit" class="btn btn-danger" name="update-action" value="delete">Delete Event</button>
+            </form>
+        </div>
         <div class="page-header">
             <h1>{{event.name}}</h1>
             <p>{{event.description}}</p>
