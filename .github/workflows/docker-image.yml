@@ -13,9 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: isbang/compose-action@v1.5.1
+    - name: checkoutcode
+      uses: actions/checkout@v3
+
     - name: Build docker with new method
+      uses: isbang/compose-action@v1.5.1
       with:
           compose-file: "docker-compose.yml"
           down-flags: "--volumes"
@@ -23,7 +25,6 @@ jobs:
             elasticsearch
             web
 
-    - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
         ls -a
