@@ -17,14 +17,16 @@ jobs:
     - name: Build the Docker image
       run: |
         echo "Running docker compose build"
-        docker-compose up --build --no-cache -d
+        docker-compose up --build --no-cache --force-recreate -d
         sleep 20
         docker ps -a
         if curl -s http://localhost:5000/ | grep -o "500 Internal Server Error"
           then
             echo "A 500 Internal server error was reported. Cannot allow PR to merge!"
+            docker-compose down
             exit 1
           else
             echo "Website does not return a 500 error code."
+            docker-compose down
         fi
 
