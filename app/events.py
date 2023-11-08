@@ -75,7 +75,7 @@ def register_for_event(event_id):
         2: If the username is invalid
         3: If username is valid but the role is organizer
         4: If the user is already registered for the event
-        5: If the event is a past event
+        redirect: If the event is a past event
     """
     # Check for valid event ID
     if event_id is None:
@@ -101,7 +101,7 @@ def register_for_event(event_id):
     #To test ratings feature, comment the if condition below(3 lines)
     if is_past_event:
         flash("Sorry, you cannot register to an event that has already taken place!")
-        return ("5")
+        return redirect(url_for('events.show_event', id=event_id))
 
     #TODO: Check if event has enough seats left
 
@@ -120,7 +120,6 @@ def register_for_event(event_id):
             logging.info("Key: %s", key)
             logging.info("Value: %s", val)
         return redirect(url_for('events.show_event', id=event_id))
-        # return render_template("event.html", event=event.__dict__, is_registered=False)
 
     # Register the user
     new_registration = EventRegistration(
@@ -137,7 +136,6 @@ def register_for_event(event_id):
     for key, val in event.__dict__.items():
         logging.info("Key: %s", key)
         logging.info("Value: %s", val)
-    # return render_template("event.html", event=event.__dict__, is_registered=True)
     return redirect(url_for('events.show_event', id=event_id))
 
 
