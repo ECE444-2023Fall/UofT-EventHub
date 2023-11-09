@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
+
 {% block title %}Organizer's Page{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container event-form">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -15,8 +16,47 @@
         <div class="page-header">
             <h1>Create Event</h1>
         </div>
-        {{ wtf.quick_form(form) }}
-        <br />
+        <form method="POST" class="form">
+            {{ wtf.quick_form(form) }}
+            <!--<div class="form-group">
+                <label for="exampleFormControlSelect1">Select Example</label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>-->
+        </form>
+        
+    <div class=container><br>
+        <div class="row align-items-center justify-content-center">
+        <div class="col-md-4">
+          <form  action="" method="post" role="form">
+            {{ form.csrf }}
+            <div class="form-group">
+    
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Name?">
+                <br>
+              <label for="surname">Surame:</label>
+              <input type="text" class="form-control" id="surname" name="surname" placeholder="Surname?">
+            <br>
+          <label for="email">Email:</label>
+          <input type="text" class="form-control" id="email" name="email" placeholder="Your email address.">
+            <br>
+          <label for="password">Password:</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter a password.">
+    
+         </div>
+            <br>													   
+    
+            <center>
+              <button type="submit" class="btn btn-success">Submit</button>
+            </center>
+          </form>
+    
         <p><a href="/organizer">Return to main.</a></p>
     {% endblock %}
 </div>
