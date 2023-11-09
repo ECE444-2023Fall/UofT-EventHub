@@ -1,36 +1,6 @@
 {% extends "base.html" %}
 {%block title %}User's Page{% endblock %} 
 
-{% block navbar %}
- <!-- this overrides the definition of the navbar in base.html-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
-<a class="navbar-brand" href="/"> <img src="{{ url_for ('static', filename='images/final_logo.png')}}" alt="logo" width="175.6" height="46"></a>
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-    <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
-    </li>
-    <!--<li class="nav-item">
-        <a class="nav-link" href="/">Engineering</a>
-    </li>-->
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Profile
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" href="/myevents">My Events</a>
-        <a class="dropdown-item" href="/">Settings</a>
-        <a class="dropdown-item" href="/logout">Logout</a>
-        </div>
-    </li>
-    </ul>
-</div>
-</nav>
-{% endblock %} 
-
 {% block content %}
 <!-- For JS support -->
 <script
@@ -52,7 +22,6 @@
     <script>
       // This script enhances a search box's functionality by providing an autocomplete feature.
             $(document).ready(function() {
-                console.log("Hello")
                 let debounce; // A variable to store the timer for delaying the autocomplete function.
                 // This event is triggered when a key is pressed in the search box.
                 $('.search-box').on('keydown', function (e) {
@@ -67,23 +36,25 @@
             // This function is responsible for obtaining autocomplete suggestions.
             function getAutoComplete() {
               const query = $('.search-box').val();
-              console.log(query)
+              console.log(`User search for ${query}`)
               fetch(`http://localhost:5000/search?search=${encodeURIComponent(query.trim())}`)
                 .then((resp) => resp.json())
                 .then((data) => {
-                        $('.results').empty();
+                        $('.autocomplete-drop-down').empty();
                         for (let i = 0; i < data.length; i++) {
-                                $('.results').append(`<li>${data[i]}</li>`) // Appends each suggestion to the results list.
+                                // Appends each suggestion to the autocomplete dropdown list.
+                                console.log(`Event name ${data[i][0]} -- ${data[i][1]}`)
+                                $('.autocomplete-drop-down').append(`<a class="dropdown-item autocomplete-item" href="/events/${data[i][1]}">${data[i][0]}</a>`) 
                         }
                       })
             }
         </script>
         <div class="page-header">
-          <h1 style="color: #050151; font-family: Georgia, serif;">University of Toronto Events</h1>
+          <h1>University of Toronto Events</h1>
         </div>
         <div class="container search-sort-container">
           <div class="row" style="text-align: center;">
-            <div class="col-xs-12 col-sm-12" style="text-align: center;">
+            <div class="col-xs-4 col-sm-4" style="text-align: center; margin: auto;">
               
               <!-- Generates a form with a search input field and a search button. -->
               <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
@@ -91,7 +62,17 @@
                   <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #ea453f;"></i></button>
                   <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
               </form>
+
+              <!-- <div class="col-xs-12 col-sm-12" style="text-align: center; display: block; position: relative;"> -->
+                <!-- The text box to display autocomplete suggestions -->
+                <div class="dropdown-menu autocomplete-drop-down"></div>
+              <!-- </div> -->
             </div>
+          </div>
+          <div class="row" style="text-align: center;">
+            
+          </div>
+          <div class="row" style="text-align: center;">
             <div class="col-xs-12 col-sm-12" style="text-align: center;">
               <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
                   {% for filter_tag in filter_tags %}
