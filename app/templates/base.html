@@ -49,7 +49,7 @@
     {% endblock %} 
 
       {% block content %}
-      <div class="container">
+      <div class="container welcome-card" style="margin: auto;">
           {% for message in get_flashed_messages() %}
           <div class="alert alert-warning">
               <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -58,14 +58,32 @@
           {% endfor %}
       
           {% block page_content %}
-              <div class="page-header">
-                  <h1>Welcome!</h1>
-                  <p class="para1">Sign in or create a new account</p>
-                  <img class="frame-15c" src="https://static.wixstatic.com/media/1d31d6_d726d86aa2c84afb8db3372c4236ae15~mv2.jpg/v1/crop/x_0,y_0,w_2000,h_1850/fill/w_880,h_814,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/2650152_edited.jpg">
+            <div class="container h-100">
+              <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="page-header">
+                        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login to UofT Event Hub</p>
+                      </div>
+                  <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                      <div class="row justify-content-center">
+                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1" style="margin: auto;">
+          
+                          {{ wtf.quick_form(form) }}
+                          <br />
+                          <p> No account? <a href="/register">Create one!</a> </p>          
+                        </div>
+                        <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+          
+                            <img class="frame-15c" src="https://static.wixstatic.com/media/1d31d6_d726d86aa2c84afb8db3372c4236ae15~mv2.jpg/v1/crop/x_0,y_0,w_2000,h_1850/fill/w_880,h_814,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/2650152_edited.jpg">
+          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              {{ wtf.quick_form(form) }}
-              <br />
-              <p> No account? <a href="/register">Create one!</a> </p>
+            </div>
           {% endblock %}
       </div>
 
