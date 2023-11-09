@@ -7,6 +7,7 @@
 
 {% block content %}
 <div class="container">
+  <!-- Validation check messages during user/organizer registration   -->
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
