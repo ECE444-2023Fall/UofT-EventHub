@@ -4,6 +4,7 @@ from flask import (
     send_from_directory,
     flash,
     current_app,
+    request,
     redirect,
     url_for,
     abort,
@@ -373,10 +374,10 @@ def previous_rating(attendee_username, event_id):
     #Else, it returns the value of the previous rating (1-5)
 
     prev_rating = EventRating.query.filter_by(attendee_username=attendee_username, event_id=event_id).first()
-    logging.info("Existing Rating: ", prev_rating)
     if prev_rating is None:
         return 0
     else:
+        logging.info("Existing Rating: ", prev_rating)
         return prev_rating.rating
 
 
@@ -392,10 +393,13 @@ def submit_rating(event_id):
         existing_rating = EventRating.query.filter_by(attendee_username=attendee_username, event_id=event_id).first()
         if existing_rating is not None:
             existing_rating.rating = rating
+            db.session.commit()
+            logging.info("Here is the updated rating: ", existing_rating)
             flash('Rating Updated successfully', 'success')
         else:
             # Create a new rating record
             new_rating = EventRating(attendee_username=attendee_username ,event_id=event_id, rating=rating)
+            logging.info("Here is the new submitted rating: ", new_rating)
             db.session.add(new_rating)
             
             db.session.commit()
