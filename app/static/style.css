@@ -74,10 +74,12 @@ ul.navbar-nav {
 
 /* Below are styles for the stars for previous ratings */
 .filled-star {
+  font-size: 180%;
   color: gold;
 }
 
 .empty-star {
+  font-size: 180%;
   color: #ccc;
 }
 /* ------------------------------------------------------------ */
