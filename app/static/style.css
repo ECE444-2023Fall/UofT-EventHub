@@ -1,16 +1,43 @@
 h1{
-    color: blue;
+    color: #050151;;
 }
 
-input[type=button], input[type=submit], input[type=reset] {
-    background-color: #b3f4ff;
-    border: none;
-    color: white;
-    ding: 10px 16px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-  }
+.page-header{
+  padding-top: 50px;
+}
+
+.page-header-create-event{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* overriding bootstrap default button to fit project theme*/
+.btn.btn-default{
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.btn.btn-default:hover{
+  background-color: #ea453f;
+  color: white;
+}
+
+.btn.btn-default:active {
+  background-color: #ea453f;
+  color: white;
+}
+
+/* input[type=submit], input[type=reset] {
+  background-color: #ea453f;
+  border: black ;
+  color: white;
+  padding: 10px 16px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+} */
 
 .page-header{
     color:black;
@@ -19,6 +46,7 @@ input[type=button], input[type=submit], input[type=reset] {
     text-align: center;
 }
 
+/* Spacing and alignment of the Login page */
 .frame-15c {
     width: 32.0605rem;
     height: 24.8924rem;
@@ -42,4 +70,205 @@ ul.navbar-nav {
   font-weight: 600;
   background-color: #ffffff;
   font-family: Georgia, serif;
+}
+
+/* Below are styles for the stars for previous ratings */
+.filled-star {
+  color: gold;
+}
+
+.empty-star {
+  color: #ccc;
+}
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for new ratings*/
+.rate-area {
+	float: left;
+	border-style: none;
+}
+
+.rate-area:not(:checked) > input {
+	position: absolute;
+	top: -9999px;
+	clip: rect(0, 0, 0, 0);
+}
+
+.rate-area:not(:checked) > label {
+	float: right;
+	width: 0.8em;
+	overflow: hidden;
+	white-space: nowrap;
+	cursor: pointer;
+	font-size: 180%;
+	color: lightgrey;
+}
+
+.rate-area:not(:checked) > label:before {
+	content: "★";
+}
+
+.rate-area > input:checked ~ label {
+	color: gold;
+}
+
+.rate-area:not(:checked) > label:hover,
+.rate-area:not(:checked) > label:hover ~ label {
+	color: gold;
+}
+
+.rate-area > input:checked + label:hover,
+.rate-area > input:checked + label:hover ~ label,
+.rate-area > input:checked ~ label:hover,
+.rate-area > input:checked ~ label:hover ~ label,
+.rate-area > label:hover ~ input:checked ~ label {
+	color: gold;
+}
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for user_main.html */
+
+.search-box{
+  width: 20vw;
+  padding: 2em 2em;
+  height: 3.5vh;
+  background: #fff;
+  margin: 100px auto 0;
+  border-radius: 5px;
+  border: 10px solid rgba(255,255,255,.5);
+  font-size: 23px;
+}
+
+.search-box:focus{
+  outline: none;
+}
+
+.event-list-container{
+  padding-top: 2.5vh;
+}
+
+.search-sort-container{
+  padding-bottom: 2.5vh;
+}
+
+button .fa-solid{
+  width: 2vw;
+  font-size: 1.5em;
+}
+
+#search-btn{
+  width: 3.5vw;
+  background-color: #ffc2c2;
+}
+
+#search-btn:hover{
+  background-color: #ffc2c2;
+}
+
+.btn-light:hover{
+  background-color: #ea453f;
+  color: white;
+}
+
+.row{
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.form{
+  display: inline-block;
+  width: 100%;
+  margin: 10px 0;
+}
+ 
+.form-group{
+  margin: 10px 0;
+}
+.wrapper {
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+
+.container-fostrap {
+  display: table-cell;
+  padding: 1em;
+  text-align: center;
+  vertical-align: middle;
+}
+.fostrap-logo {
+  width: 100px;
+  margin-bottom:15px
+}
+h1.heading {
+  color: #fff;
+  font-size: 1.15em;
+  font-weight: 900;
+  margin: 0 0 0.5em;
+  color: #505050;
+}
+@media (min-width: 450px) {
+  h1.heading {
+    font-size: 3.55em;
+  }
+}
+@media (min-width: 760px) {
+  h1.heading {
+    font-size: 3.05em;
+  }
+}
+@media (min-width: 900px) {
+  h1.heading {
+    font-size: 3.25em;
+    margin: 0 0 0.3em;
+  }
+}
+.card {
+  display: block; 
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); 
+    transition: box-shadow .25s; 
+}
+.card:hover {
+  box-shadow: 0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+.img-card {
+  width: 100%;
+  height:200px;
+  border-top-left-radius:2px;
+  border-top-right-radius:2px;
+  display:block;
+    overflow: hidden;
+}
+.img-card img{
+  width: 100%;
+  height: 200px;
+  object-fit:cover; 
+  transition: all .25s ease;
+} 
+.card-content {
+  padding:15px;
+  text-align:left;
+}
+.card-title {
+  margin-top:0px;
+  font-weight: 700;
+  font-size: 1.65em;
+}
+.card-title a {
+  color: #000;
+  text-decoration: none !important;
+}
+.card-read-more {
+  border-top: 1px solid #D4D4D4;
+}
+.card-read-more a {
+  text-decoration: none !important;
+  padding:10px;
+  font-weight:600;
+  text-transform: uppercase
 }

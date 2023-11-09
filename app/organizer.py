@@ -1,12 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from flask import current_app
-import logging
-import os
 
-from app.main import db, es  # db is for database and es for elastic search
-from app.forms import EventCreateForm
-from app.database import EventDetails, OrganizerEventDetails, EventBanner
+from app.main import db # db is for database
+from app.database import EventDetails, EventBanner, Credentials
 from app.auth import organizer_required
 
 organizer = Blueprint("organizer", __name__)
@@ -18,8 +14,8 @@ organizer = Blueprint("organizer", __name__)
 def main():
     my_events_data = (
         db.session.query(EventDetails)
-        .join(OrganizerEventDetails)
-        .filter(OrganizerEventDetails.organizer_username == current_user.username)
+        .join(Credentials)
+        .filter(EventDetails.organizer == current_user.username)
     )
     return render_template("organizer_main.html", my_events_data=my_events_data)
 
@@ -42,6 +38,8 @@ def create_event():
             end_date=form.end_date.data,
             start_time=form.start_time.data,
             end_time=form.end_time.data,
+            max_capacity=form.max_capacity.data,
+            current_capacity=0,
             ticket_price=form.ticket_price.data,
             redirect_link=form.redirect_link.data,
             additional_info=form.additional_info.data,
@@ -56,9 +54,9 @@ def create_event():
         banner_file = form.banner_image.data
         filename = "event_banner_" + str(new_event.id) + ".png"
 
-        # Save the banner in assets/event-assets
+        # Save the banner in static/event-assets
         banner_file.save(
-            os.path.join(current_app.root_path, "assets", "event-assets", filename)
+            os.path.join(current_app.root_path, "static", "event-assets", filename)
         )
 
         # Store the path to the banner EventBanner
@@ -76,11 +74,10 @@ def create_event():
         return redirect(url_for("organizer.main"))
 
     organizer = current_user
-    print(organizer)
 
     return render_template("create_event.html", form=form)
 
-
+#Adds it to the "index" which we use for searching events
 def add_event_to_index(new_event):
     event_detail = {
         "id": new_event.id,

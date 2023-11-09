@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+import logging
 
 from app.globals import Role
 from app.main import db
@@ -24,7 +25,7 @@ def login():
         password = form.password.data
 
         # Authenticate the entry
-        print(f"Entered Data: ({username}, {password})")
+        logging.info("Entered Data: (%s, %s)", username, password)
         user = Credentials.query.filter_by(username=username).first()
         if user:
             if check_password_hash(user.password, password):
@@ -55,14 +56,17 @@ def logout():
 def register():
     form = RegForm()
     if form.validate_on_submit():
-        role = form.role.data
+        role = int(form.role.data)
+        name = form.name.data
         username = form.username.data
         password1 = form.password1.data
         password2 = form.password2.data
 
-        # Authenticate the entry and add it to the database
+        # Authenticate the entry of a new user and add it to the database
         user = Credentials.query.filter_by(username=username).first()
-        if user:
+        if len(name) < 1:
+            flash("Name must be greater than 1 character.", category="error")
+        elif user:
             flash("Username already exists.", category="error")
         elif len(username) < 4:
             flash("Username must be greater than 3 characters.", category="error")
@@ -71,13 +75,14 @@ def register():
         elif len(password1) < 7:
             flash("Password must be at least 7 characters.", category="error")
         else:
-            print(f"Entered Data: ({username}, {password1}, {role})")
+            logging.info("Entered Data: (%s, %s, %s)", username, password1, role)
             new_user = Credentials(
+                name=name,
                 username=username,
                 password=generate_password_hash(password1, method="sha256"),
                 role=role,
             )
-
+            
             db.session.add(new_user)
             db.session.commit()
 
