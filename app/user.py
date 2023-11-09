@@ -76,6 +76,16 @@ def get_active_organizers():
 
     return organizers
 
+@user.route("/user/organizers/<organizer_username>", methods=["GET"])
+@login_required
+@user_required
+def view_organizer(organizer_username):
+    logging.info("Loading webpage for Organizer: %s", organizer_username)
+    
+    upcoming_events = get_organizer_upcoming_events(organizer_username)
+    past_events = get_organizer_past_events(organizer_username)
+
+    return render_template("user_organizer_main.html", upcoming_events=upcoming_events, past_events=past_events)
 
 # Get the upcoming events for an organizer
 def get_organizer_upcoming_events(organizer_username):
