@@ -105,14 +105,14 @@ ul.navbar-nav {
 /* Below are the styles for user_main.html */
 
 .search-box{
-  width: 300px;
-  padding: 27px 39px;
-  height: 35px;
+  width: 20vw;
+  padding: 2em 2em;
+  height: 3.5vh;
   background: #fff;
   margin: 100px auto 0;
   border-radius: 5px;
   border: 10px solid rgba(255,255,255,.5);
-  font-size: 20px;
+  font-size: 23px;
 }
 
 .search-box:focus{
@@ -120,20 +120,20 @@ ul.navbar-nav {
 }
 
 .event-list-container{
-  padding-top: 20px;
+  padding-top: 2.5vh;
 }
 
 .search-sort-container{
-  padding-bottom: 20px;
+  padding-bottom: 2.5vh;
 }
 
 button .fa-solid{
-  width: 25px;
-  font-size: 22px;
+  width: 2vw;
+  font-size: 1.5em;
 }
 
 #search-btn{
-  width: 55px;
+  width: 3.5vw;
   background-color: #ffc2c2;
 }
 
