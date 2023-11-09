@@ -29,7 +29,7 @@ jobs:
       run: |
         ls -a
         echo "Sleeping for 60 seconds"
-        sleep 60
+        sleep 45
         docker ps -a
         if curl -s http://localhost:5000/ | grep "Welcome!"
           then
@@ -43,6 +43,7 @@ jobs:
       run: |
          ls -a
          cd tests
+         pip install pytest==7.4.2
          echo "Running unit tests"
          python -m pytest
 
