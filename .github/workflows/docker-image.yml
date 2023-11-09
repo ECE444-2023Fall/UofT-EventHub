@@ -39,3 +39,10 @@ jobs:
             exit 1
         fi
 
+    - name: Check the unit tests status
+      run: |
+         ls -a
+         cd tests
+         echo "Running unit tests"
+         python -m pytest
+
