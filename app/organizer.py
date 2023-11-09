@@ -77,7 +77,7 @@ def create_event():
 
     return render_template("create_event.html", form=form)
 
-
+#Adds it to the "index" which we use for searching events
 def add_event_to_index(new_event):
     event_detail = {
         "id": new_event.id,
