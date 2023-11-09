@@ -272,3 +272,23 @@ h1.heading {
   font-weight:600;
   text-transform: uppercase
 }
+/* .icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  width: 100%;
+}
+.fa-users {
+  font-size: 150px;
+} */
+
+.icon-container {
+  text-align: center;
+  margin-top: 40px; /* Adjust the margin as needed */
+}
+
+.fa-users {
+  font-size: 150px; /* Adjust the font size as needed */
+  vertical-align: middle;
+}
