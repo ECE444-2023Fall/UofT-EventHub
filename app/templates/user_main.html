@@ -1,6 +1,36 @@
 {% extends "base.html" %}
 {%block title %}User's Page{% endblock %} 
 
+{% block navbar %}
+ <!-- this overrides the definition of the navbar in base.html-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
+<a class="navbar-brand" href="/"> <img src="{{ url_for ('static', filename='images/final_logo.png')}}" alt="logo" width="175.6" height="46"></a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+    <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+    </li>
+    <!--<li class="nav-item">
+        <a class="nav-link" href="/">Engineering</a>
+    </li>-->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Profile
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" href="/myevents">My Events</a>
+        <a class="dropdown-item" href="/">Settings</a>
+        <a class="dropdown-item" href="/logout">Logout</a>
+        </div>
+    </li>
+    </ul>
+</div>
+</nav>
+{% endblock %} 
+
 {% block content %}
 <!-- For JS support -->
 <script
@@ -74,12 +104,12 @@
             {% for key, value in event_data.items() %}
               <div class="col-xs-12 col-sm-4">
                 <div class="card">
-                    <a class="img-card" href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html">
+                    <a class="img-card" href="/events/{{ key }}">
                     <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
                   </a>
                     <div class="card-content">
                         <h4 class="card-title">
-                            <a href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html"> {{value.name}}
+                            <a href="/events/{{ key }}"> {{value.name}}
                           </a>
                         </h4>
                         <p class="">

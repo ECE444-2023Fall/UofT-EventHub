@@ -6,15 +6,15 @@ h1{
   padding-top: 50px;
 }
 
-/* input[type=button], input[type=submit], input[type=reset] {
-  background-color: #04AA6D;
+input[type=submit], input[type=reset] {
+  background-color: #ea453f;
   border: black ;
   color: white;
   padding: 10px 16px;
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
-} */
+}
 
 .page-header{
     color:black;
