@@ -6,15 +6,19 @@ h1{
   padding-top: 50px;
 }
 
-/* input[type=button], input[type=submit], input[type=reset] {
-  background-color: #04AA6D;
-  border: black ;
-  color: white;
+input[type=submit], input[type=reset] {
+  background-color: #ef6f6a;
+  border: black;
+  color: #d6d6d6;
   padding: 10px 16px;
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
-} */
+}
+
+input[type=submit]:hover, input[type=reset]:hover{
+  color: #fff;
+}
 
 .page-header{
     color:black;
