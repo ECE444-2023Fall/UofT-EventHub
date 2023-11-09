@@ -6,6 +6,29 @@ h1{
   padding-top: 50px;
 }
 
+.page-header-create-event{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* overriding bootstrap default button to fit project theme*/
+.btn.btn-default{
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.btn.btn-default:hover{
+  background-color: #ea453f;
+  color: white;
+}
+
+.btn.btn-default:active {
+  background-color: #ea453f;
+  color: white;
+}
+
 /* input[type=button], input[type=submit], input[type=reset] {
   background-color: #04AA6D;
   border: black ;
@@ -154,10 +177,13 @@ button .fa-solid{
 
 .form{
   display: inline-block;
-  height: 100%;
   width: 100%;
+  margin: 10px 0;
 }
  
+.form-group{
+  margin: 10px 0;
+}
 .wrapper {
   display: table;
   height: 100%;
