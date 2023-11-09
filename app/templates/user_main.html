@@ -1,6 +1,36 @@
 {% extends "base.html" %}
 {%block title %}User's Page{% endblock %} 
 
+{% block navbar %}
+ <!-- this overrides the definition of the navbar in base.html-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
+<a class="navbar-brand" href="/"> <img src="{{ url_for ('static', filename='images/final_logo.png')}}" alt="logo" width="175.6" height="46"></a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+    <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+    </li>
+    <!--<li class="nav-item">
+        <a class="nav-link" href="/">Engineering</a>
+    </li>-->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Profile
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" href="/myevents">My Events</a>
+        <a class="dropdown-item" href="/">Settings</a>
+        <a class="dropdown-item" href="/logout">Logout</a>
+        </div>
+    </li>
+    </ul>
+</div>
+</nav>
+{% endblock %} 
+
 {% block content %}
 <!-- For JS support -->
 <script
@@ -20,17 +50,21 @@
   {% endfor %}
   {% block page_content %}
     <script>
+      // This script enhances a search box's functionality by providing an autocomplete feature.
             $(document).ready(function() {
                 console.log("Hello")
-                let debounce;
+                let debounce; // A variable to store the timer for delaying the autocomplete function.
+                // This event is triggered when a key is pressed in the search box.
                 $('.search-box').on('keydown', function (e) {
                   clearTimeout(debounce)
+                  // Sets a new timeout after the key is pressed and waits for 300 milliseconds.
                   debounce = setTimeout(() => {
-                          getAutoComplete();  
+                          getAutoComplete(); // Calls the function to fetch autocomplete suggestions after the delay.
                   }, 300);
                 })
             })
 
+            // This function is responsible for obtaining autocomplete suggestions.
             function getAutoComplete() {
               const query = $('.search-box').val();
               console.log(query)
@@ -39,7 +73,7 @@
                 .then((data) => {
                         $('.results').empty();
                         for (let i = 0; i < data.length; i++) {
-                                $('.results').append(`<li>${data[i]}</li>`)
+                                $('.results').append(`<li>${data[i]}</li>`) // Appends each suggestion to the results list.
                         }
                       })
             }
@@ -50,6 +84,8 @@
         <div class="container search-sort-container">
           <div class="row" style="text-align: center;">
             <div class="col-xs-12 col-sm-12" style="text-align: center;">
+              
+              <!-- Generates a form with a search input field and a search button. -->
               <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
                   <input class="search-box" name="query" id="search-text" autocomplete="off" placeholder="Search all events...">
                   <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #ea453f;"></i></button>
@@ -71,15 +107,16 @@
     <div class="content">
       <div class="container event-list-container">
           <div class="row">
+            <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
             {% for key, value in event_data.items() %}
               <div class="col-xs-12 col-sm-4">
                 <div class="card">
-                    <a class="img-card" href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html">
+                    <a class="img-card" href="/events/{{ key }}">
                     <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
                   </a>
                     <div class="card-content">
                         <h4 class="card-title">
-                            <a href="http://www.fostrap.com/2016/03/bootstrap-3-carousel-fade-effect.html"> {{value.name}}
+                            <a href="/events/{{ key }}"> {{value.name}}
                           </a>
                         </h4>
                         <p class="">

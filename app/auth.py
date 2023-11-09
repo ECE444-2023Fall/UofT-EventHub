@@ -62,7 +62,7 @@ def register():
         password1 = form.password1.data
         password2 = form.password2.data
 
-        # Authenticate the entry and add it to the database
+        # Authenticate the entry of a new user and add it to the database
         user = Credentials.query.filter_by(username=username).first()
         if len(name) < 1:
             flash("Name must be greater than 1 character.", category="error")

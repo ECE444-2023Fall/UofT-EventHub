@@ -6,10 +6,33 @@ h1{
   padding-top: 50px;
 }
 
-input[type=submit], input[type=reset] {
-  background-color: #ef6f6a;
-  border: black;
-  color: #d6d6d6;
+.page-header-create-event{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* overriding bootstrap default button to fit project theme*/
+.btn.btn-default{
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.btn.btn-default:hover{
+  background-color: #ea453f;
+  color: white;
+}
+
+.btn.btn-default:active {
+  background-color: #ea453f;
+  color: white;
+}
+
+/* input[type=submit], input[type=reset] {
+  background-color: #ea453f;
+  border: black ;
+  color: white;
   padding: 10px 16px;
   text-decoration: none;
   margin: 4px 2px;
@@ -27,6 +50,7 @@ input[type=submit]:hover, input[type=reset]:hover{
     text-align: center;
 }
 
+/* Spacing and alignment of the Login page */
 .frame-15c {
     width: 32.0605rem;
     height: 24.8924rem;
@@ -158,8 +182,13 @@ button .fa-solid{
 
 .form{
   display: inline-block;
+  width: 100%;
+  margin: 10px 0;
 }
  
+.form-group{
+  margin: 10px 0;
+}
 .wrapper {
   display: table;
   height: 100%;
