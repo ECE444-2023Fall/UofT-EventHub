@@ -100,3 +100,27 @@ def get_organizer_upcoming_events(organizer_username):
     )
 
     return upcoming_events
+
+# Get the past events for an organizer
+def get_organizer_past_events(organizer_username):
+    # Get the current date and time to filter for past events
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+
+    # Querying events where the organizer is the specified username and the event has already started (past)
+    past_events = (
+        EventDetails.query
+        .filter_by(organizer=organizer_username)
+        .filter(
+            db.or_(
+                EventDetails.start_date < current_date,
+                db.and_(
+                    EventDetails.start_date == current_date,
+                    EventDetails.start_time < current_time
+                )
+            )
+        )
+        .all()
+    )
+
+    return past_events
