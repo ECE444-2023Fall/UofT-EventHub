@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template
 from sqlalchemy import distinct
+from datetime import datetime
+import logging
 
 from app.globals import FILTERS
 from app.auth import login_required, user_required
@@ -57,7 +59,10 @@ def get_all_events_from_database():
 @login_required
 @user_required
 def view_all_organizers():
+    logging.info("Loading webpage for Users to view Organizers")
+
     organizers = get_active_organizers()
+
     return render_template("user_organizers.html", organizers=organizers)
 
 # Get only the organizers that have upcoming events or had past events
@@ -70,3 +75,62 @@ def get_active_organizers():
     ).distinct().all()
 
     return organizers
+
+@user.route("/user/organizers/<organizer_username>", methods=["GET"])
+@login_required
+@user_required
+def view_organizer(organizer_username):
+    logging.info("Loading webpage for Organizer: %s", organizer_username)
+    
+    upcoming_events = get_organizer_upcoming_events(organizer_username)
+    past_events = get_organizer_past_events(organizer_username)
+
+    return render_template("user_organizer_main.html", upcoming_events=upcoming_events, past_events=past_events)
+
+# Get the upcoming events for an organizer
+def get_organizer_upcoming_events(organizer_username):
+    # Get the current date and time to filter for upcoming events
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+
+    # Querying events where the organizer is the specified username and the event is yet to start (upcoming)
+    upcoming_events = (
+        EventDetails.query
+        .filter_by(organizer=organizer_username)
+        .filter(
+            db.or_(
+                EventDetails.start_date > current_date,
+                db.and_(
+                    EventDetails.start_date == current_date,
+                    EventDetails.start_time > current_time
+                )
+            )
+        )
+        .all()
+    )
+
+    return upcoming_events
+
+# Get the past events for an organizer
+def get_organizer_past_events(organizer_username):
+    # Get the current date and time to filter for past events
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+
+    # Querying events where the organizer is the specified username and the event has already started (past)
+    past_events = (
+        EventDetails.query
+        .filter_by(organizer=organizer_username)
+        .filter(
+            db.or_(
+                EventDetails.start_date < current_date,
+                db.and_(
+                    EventDetails.start_date == current_date,
+                    EventDetails.start_time < current_time
+                )
+            )
+        )
+        .all()
+    )
+
+    return past_events
