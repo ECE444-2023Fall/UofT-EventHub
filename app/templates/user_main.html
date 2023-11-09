@@ -71,7 +71,7 @@
                         for (let i = 0; i < data.length; i++) {
                                 // Appends each suggestion to the autocomplete dropdown list.
                                 console.log(`Event name ${data[i][0]} -- ${data[i][1]}`)
-                                $('.autocomplete-drop-down').append(`<a class="dropdown-item" href="/events/${data[i][1]}">${data[i][0]}</a>`) 
+                                $('.autocomplete-drop-down').append(`<a class="dropdown-item autocomplete-item" href="/events/${data[i][1]}">${data[i][0]}</a>`) 
                         }
                       })
             }
@@ -81,7 +81,7 @@
         </div>
         <div class="container search-sort-container">
           <div class="row" style="text-align: center;">
-            <div class="col-xs-12 col-sm-12" style="text-align: center;">
+            <div class="col-xs-4 col-sm-4" style="text-align: center; margin: auto;">
               
               <!-- Generates a form with a search input field and a search button. -->
               <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
@@ -92,7 +92,7 @@
 
               <!-- <div class="col-xs-12 col-sm-12" style="text-align: center; display: block; position: relative;"> -->
                 <!-- The text box to display autocomplete suggestions -->
-                <div class="dropdown-menu autocomplete-drop-down" style="display: block; text-align: center; position: sticky; border: none;"></div>
+                <div class="dropdown-menu autocomplete-drop-down"></div>
               <!-- </div> -->
             </div>
           </div>

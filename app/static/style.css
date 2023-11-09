@@ -1,5 +1,10 @@
+/* The defualt font of our website, we can experiment with it */
+html {
+  font-family: inherit;
+}
+
 h1{
-    color: #050151;;
+    color: #050151;
 }
 
 .page-header{
@@ -27,27 +32,6 @@ h1{
 .btn.btn-default:active {
   background-color: #ea453f;
   color: white;
-}
-
-/* input[type=submit], input[type=reset] {
-  background-color: #ea453f;
-  border: black ;
-  color: white;
-  padding: 10px 16px;
-  text-decoration: none;
-  margin: 4px 2px;
-  cursor: pointer;
-}
-
-input[type=submit]:hover, input[type=reset]:hover{
-  color: #fff;
-}
-
-.page-header{
-    color:black;
-    font-family: Inter;
-    font-weight: 700px;
-    text-align: center;
 }
 
 /* Spacing and alignment of the Login page */
@@ -153,6 +137,24 @@ ul.navbar-nav {
 
 .search-sort-container{
   padding-bottom: 2.5vh;
+}
+
+.autocomplete-drop-down{
+  display: block; 
+  text-align: center;
+  position: sticky; 
+  border: none;
+}
+
+.autocomplete-drop-down{
+  display: block; 
+  text-align: center;
+  position: sticky; 
+  border: none;
+}
+
+.autocomplete-item:hover{
+  color: #ea453f;
 }
 
 button .fa-solid{
