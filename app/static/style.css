@@ -1,7 +1,7 @@
 h1{
-    color: #050151;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 60px;
+    font-weight: 900;
+    color: #1d293f;
+    font-size: 45px;
 }
 
 .page-header{
@@ -274,17 +274,8 @@ h1.heading {
   font-weight:600;
   text-transform: uppercase
 }
-/* .icon-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 250px;
-  width: 100%;
-}
-.fa-users {
-  font-size: 150px;
-} */
 
+/* Below are the styles for user_organizers_list.html */
 .icon-container {
   text-align: center;
   margin-top: 55px; /* Adjust the margin as needed */
