@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Organizer List for Users{% endblock %}
+
+{% block content %}
+    {% block page_content %}
+        <div class="page-header">
+            <h1>List of Organizers</h1>
+        </div>
+        <div class="content">
+            <div class="container event-list-container">
+                <div class="row">
+                    <!-- Displays the list of organizers in card view, each as a hyperlink with their respective pages for more information. -->
+                    {% for organizer_username, organizer_name in organizers %}
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card" style="min-height: 300px;"> <!-- Adjust the minimum height as needed -->
+                                <a class="img-card" href="/user/organizers/{{ organizer_username }}">
+                                    <div class="icon-container">
+                                        <!-- Added icons for organizers -->
+                                        <i class="fa-solid fa-users" style="color: #ea453f;"></i>
+                                    </div>
+                                </a>
+                                <div class="card-content">
+                                    <h4 class="card-title text-center">
+                                        <a href="/user/organizers/{{ organizer_username }}"> {{ organizer_name }}
+                                        </a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}
