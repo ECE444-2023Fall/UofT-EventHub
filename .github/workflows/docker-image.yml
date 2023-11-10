@@ -42,8 +42,8 @@ jobs:
     - name: Check the unit tests status
       run: |
          ls -a
+         pip install -r requirements.txt
          cd tests
-         pip install pytest==7.4.2
          echo "Running unit tests"
          python -m pytest
 
