@@ -23,15 +23,18 @@ def show_user_details():
     user_details = UserDetails.query.filter_by(username=current_username).first()
 
     if request.method == 'GET':
-        form.firstname.data = user_details.firstname
-        form.lastname.data = user_details.lastname
-        form.year.data = user_details.year
-        form.course_type.data = user_details.course_type
-        form.department.data = user_details.department
-        form.campus.data = user_details.campus
-        form.email.data = user_details.email
+        try:
+            form.firstname.data = user_details.firstname
+            form.lastname.data = user_details.lastname
+            form.year.data = user_details.year
+            form.course_type.data = user_details.course_type
+            form.department.data = user_details.department
+            form.campus.data = user_details.campus
+            form.email.data = user_details.email
+            logging.info("Rendering details form for %s", form.firstname.data)
+        except:
+            logging.warning("The user provided has not provided personal details yet")
 
-        logging.info("Rendering details form for %s", form.firstname.data)
         return render_template("my_account.html", form=form)
 
     # Upon submission update the database
@@ -56,7 +59,7 @@ def show_user_details():
 
         return render_template("my_account.html", form=form)
     
-    logging.info("Rendering details form")
+    logging.warning("func: show_user_details; We should never reach here as both GET and POST request are handled above")
     return render_template("my_account.html", form=form)
 
 

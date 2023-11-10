@@ -19,6 +19,11 @@ h1{
   justify-content: center;
 }
 
+.profile-icon{
+  font-size: 10em;
+  color: #f1827e;
+}
+
 /* overriding bootstrap default button to fit project theme*/
 .btn.btn-default{
   color: #000;
