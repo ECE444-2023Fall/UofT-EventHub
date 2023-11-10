@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 
+
 {% block title %}Organizer's Page{% endblock %}
 
+{% block navbar %}
+ <!-- this overrides the definition of the navbar in the -->
+{% endblock %} 
+
 {% block content %}
-<div class="container">
+
+<div class="container event-form">
+  <br>
+    <br>
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -12,12 +20,34 @@
     {% endfor %}
 
     {% block page_content %}
-        <div class="page-header">
-            <h1>Create Event</h1>
-        </div>
-        {{ wtf.quick_form(form) }}
-        <br />
-        <p><a href="/organizer">Return to main.</a></p>
+    
+          <section class="vh-85">
+            <div class="container h-100">
+              <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-10 col-xl-10">
+                  <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                      <div class="row align-items-center justify-content-center">
+                        <div class="col-12 col-md-8">
+                          <div class="page-header-create-event">
+                            <h1>Create Event</h1>
+                          </div>
+                            {{ wtf.quick_form(form) }}
+                            <!--for now cancel button is in next line, until then leaving it as hyperlink
+                              <a href="/organizer" class="btn btn-default">Cancel</a>
+                            -->
+                          <p><a href="/organizer">Return to main</a></p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
     {% endblock %}
 </div>
 {% endblock %}
+

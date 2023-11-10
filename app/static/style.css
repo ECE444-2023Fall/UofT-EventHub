@@ -1,21 +1,32 @@
 /* ------------------------------------------------------------ */
 
-/* Below are the styles for login */
-
-.welcome-card {
-  min-height: 100vh;
-
-  display: flex;
-  align-items: center;
+/* The defualt font of our website, we can experiment with it */
+html {
+  font-family: inherit;
 }
 
-/* ------------------------------------------------------------ */
 h1{
-    color: #050151;;
+    font-weight: 900;
+    color: #1d293f;
+    font-size: 45px;
 }
 
 .page-header{
   padding-top: 50px;
+  text-align: center;
+}
+
+.page-header-create-event{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* overriding bootstrap default button to fit project theme*/
+.btn.btn-default{
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
 }
 
 input[type=submit], input[type=reset] {
@@ -28,13 +39,17 @@ input[type=submit], input[type=reset] {
   cursor: pointer;
 }
 
-.page-header{
-    color:black;
-    font-family: Inter;
-    font-weight: 700px;
-    text-align: center;
+.btn.btn-default:hover{
+  background-color: #ea453f;
+  color: white;
 }
 
+.btn.btn-default:active {
+  background-color: #ea453f;
+  color: white;
+}
+
+/* Spacing and alignment of the Login page */
 .frame-15c {
     width: 32.0605rem;
     height: 24.8924rem;
@@ -44,13 +59,41 @@ input[type=submit], input[type=reset] {
     flex-shrink: 0;
   }
 
-.nav-link{
-    color: #333333 !important;
+/* Navbar CSS */
+.nav-logo{
+  padding-right: 30px;
+  padding-left: 80px;
+  padding-top: 7px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.hub{
+  color:#FF7F50;
+  font-weight:700;
+}
+
+.nav-link{
+    color: #333333 !important;
+    font-size:18px;
+}
+
+.nav-item::after {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 2px;
+  background: #FF7F50;
+  transition: 0.4s
+}
+
+.nav-item:hover::after {
+  width: 100%
+}
 .custom-navbar {
   background-color: #ffffff !important;
-  border-bottom: 1px solid #000000;
+  box-shadow: 0px 15px 10px -15px #111;    
+  border-radius: 0%;
+
 }
 
 ul.navbar-nav {
@@ -68,6 +111,24 @@ ul.navbar-nav {
 .empty-star {
   color: #ccc;
 }
+
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for login */
+
+.welcome-card {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.welcome-card-body {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 /* ------------------------------------------------------------ */
 
 /* Below are the styles for new ratings*/
@@ -118,7 +179,7 @@ ul.navbar-nav {
 
 .search-box{
   width: 20vw;
-  padding: 2em 2em;
+  padding: 1em 2em;
   height: 3.5vh;
   background: #fff;
   margin: 100px auto 0;
@@ -137,6 +198,17 @@ ul.navbar-nav {
 
 .search-sort-container{
   padding-bottom: 2.5vh;
+}
+
+.autocomplete-drop-down{
+  display: block; 
+  text-align: center;
+  position: sticky; 
+  border: none;
+}
+
+.autocomplete-item:hover{
+  color: #ea453f;
 }
 
 button .fa-solid{
@@ -169,10 +241,15 @@ button .fa-solid{
   padding: 10px 20px;
 }
 
-/* .form{
+.form{
   display: inline-block;
-} */
+  width: 100%;
+  margin: 10px 0;
+}
  
+.form-group{
+  margin: 10px 0;
+}
 .wrapper {
   display: table;
   height: 100%;
@@ -259,4 +336,15 @@ h1.heading {
   padding:10px;
   font-weight:600;
   text-transform: uppercase
+}
+
+/* Below are the styles for user_organizers_list.html */
+.icon-container {
+  text-align: center;
+  margin-top: 55px; /* Adjust the margin as needed */
+}
+
+.fa-users {
+  font-size: 130px; /* Adjust the font size as needed */
+  vertical-align: middle;
 }
