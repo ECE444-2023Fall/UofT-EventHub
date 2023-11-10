@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, url_for, redirect
+from flask import Blueprint, request, render_template, flash, url_for, redirect
 from flask_login import login_required, current_user
 import logging
 
@@ -19,18 +19,20 @@ def show_user_details():
     # Fetch username
     current_username = current_user.get_id()
 
-    # Get user details from database
+    # Generate a form with prefilled information
     user_details = UserDetails.query.filter_by(username=current_username).first()
 
-    # Generate a form with prefilled information
     if request.method == 'GET':
-        form.firstname = user_details.firstname
-        form.lastname = user_details.lastname
-        form.year = user_details.year
-        form.course_type = user_details.course_type
-        form.department = user_details.department
-        form.campus = user_details.campus
-        form.email = user_details.email
+        form.firstname.data = user_details.firstname
+        form.lastname.data = user_details.lastname
+        form.year.data = user_details.year
+        form.course_type.data = user_details.course_type
+        form.department.data = user_details.department
+        form.campus.data = user_details.campus
+        form.email.data = user_details.email
+
+        logging.info("Rendering details form for %s", form.firstname.data)
+        return render_template("my_account.html", form=form)
 
     # Upon submission update the database
     if form.validate_on_submit():
@@ -54,6 +56,7 @@ def show_user_details():
 
         return render_template("my_account.html", form=form)
     
+    logging.info("Rendering details form")
     return render_template("my_account.html", form=form)
 
 

@@ -133,4 +133,4 @@ class UserRegisterForm(FlaskForm):
     )
     email = EmailField('Email address', validators=[DataRequired(), Email()])
 
-    submit = SubmitField("Save")
+    submit = SubmitField("Submit")
