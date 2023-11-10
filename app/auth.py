@@ -29,7 +29,7 @@ def login():
         user = Credentials.query.filter_by(username=username).first()
         if user:
             if check_password_hash(user.password, password):
-                flash("Logged in successfully!", category="success")
+                flash("Logged in successfully!", category="primary")
                 login_user(user, remember=True)
 
                 # Redirection to the correct home page
@@ -38,9 +38,9 @@ def login():
                 else:
                     return redirect(url_for("organizer.main"))
             else:
-                flash("Incorrect password, try again.", category="error")
+                flash("Incorrect password, try again.", category="danger")
         else:
-            flash("Username does not exist.", category="error")
+            flash("Username does not exist.", category="danger")
 
     return render_template("login.html", form=form)
 
@@ -65,15 +65,15 @@ def register():
         # Authenticate the entry of a new user and add it to the database
         user = Credentials.query.filter_by(username=username).first()
         if len(name) < 1:
-            flash("Name must be greater than 1 character.", category="error")
+            flash("Name must be greater than 1 character.", category="warning")
         elif user:
-            flash("Username already exists.", category="error")
+            flash("Username already exists.", category="warning")
         elif len(username) < 4:
-            flash("Username must be greater than 3 characters.", category="error")
+            flash("Username must be greater than 3 characters.", category="warning")
         elif password1 != password2:
-            flash("Passwords don't match.", category="error")
+            flash("Passwords don't match.", category="danger")
         elif len(password1) < 7:
-            flash("Password must be at least 7 characters.", category="error")
+            flash("Password must be at least 7 characters.", category="danger")
         else:
             logging.info("Entered Data: (%s, %s, %s)", username, password1, role)
             new_user = Credentials(
@@ -88,7 +88,7 @@ def register():
 
             login_user(new_user, remember=True)
 
-            flash("Account created!", category="success")
+            flash("Account created!", category="primary")
             if role == Role.USER.value:
                 # Redirect the user to fill additional details
                 return redirect(url_for("account.add_user_details"))
@@ -103,7 +103,7 @@ def user_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if current_user.role != 0:
-            flash("You need to be a user to access this page.", "danger")
+            flash("You need to be a user to access this page.", "warning")
             return redirect(url_for("auth.login"), code=401)  # Redirect to login page
         return f(*args, **kwargs)
 
@@ -114,7 +114,7 @@ def organizer_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if current_user.role != 1:
-            flash("You need to be an organizer to access this page.", "danger")
+            flash("You need to be an organizer to access this page.", "warning")
             return redirect(url_for("auth.login"), code=401)  # Redirect to login page
         return f(*args, **kwargs)
 

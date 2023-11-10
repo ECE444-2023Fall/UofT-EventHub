@@ -7,12 +7,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <div class="container">
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-info" role="alert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+        <button type="button" class="btn-close" data-dismiss="alert"></button>
         {{ message }}
     </div>
     {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     {% block page_content %}
 <!-- Creates a structured view of an event, displaying its name, description, venue, and an image banner related to the event, -->
@@ -32,7 +36,7 @@
             console.log("JS: Is running");
             console.log("is_registered: {{is_registered}}");
             //check below is for past events. If met, button is disabled and users cannot register
-            // Disable this check to be able to test the ratings function easily.
+            //Disable this check to be able to test the ratings function easily.
             if("{{is_past_event}}" == "True") {
                 document.getElementById('register_btn').disabled = true;
             }
