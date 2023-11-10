@@ -6,7 +6,7 @@ import logging
 
 from app.globals import Role
 from app.main import db
-from app.forms import LoginForm, RegForm
+from app.forms import LoginForm, RegForm, UserRegisterForm
 from app.database import Credentials
 
 auth = Blueprint("auth", __name__)
@@ -90,8 +90,10 @@ def register():
 
             flash("Account created!", category="success")
             if role == Role.USER.value:
-                return redirect(url_for("user.main"))
+                # Redirect the user to fill additional details
+                return redirect(url_for("account.add_user_details"))
             else:
+                # Redirect the organizer to their landing page
                 return redirect(url_for("organizer.main"))
 
     return render_template("register.html", form=form)
