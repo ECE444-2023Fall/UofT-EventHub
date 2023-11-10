@@ -24,6 +24,7 @@
             $(document).ready(function() {
                 let debounce; // A variable to store the timer for delaying the autocomplete function.
                 // This event is triggered when a key is pressed in the search box.
+
                 $('.search-box').on('keydown', function (e) {
                   clearTimeout(debounce)
                   // Sets a new timeout after the key is pressed and waits for 300 milliseconds.
@@ -50,7 +51,8 @@
             }
         </script>
         <div class="page-header">
-          <h1>All Events</h1>
+
+        <h1>My Events</h1>
         </div>
         <div class="container search-sort-container">
           <div class="row" style="text-align: center;">

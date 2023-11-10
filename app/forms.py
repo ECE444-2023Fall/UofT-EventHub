@@ -12,11 +12,19 @@ from wtforms import (
     BooleanField,
     FloatField,
     IntegerField,
+    EmailField,
 )
 from flask_wtf.file import FileAllowed
-from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import DataRequired, NumberRange, Email
 
-from app.globals import Role, EVENT_CATEGORIES
+from app.globals import (
+    Role, 
+    EVENT_CATEGORIES, 
+    YEAR_CATEGORIES, 
+    COURSE_CATEGORIES,
+    DEPARTMENT_CATEGORIES,
+    CAMPUS_CATEGORIES
+)
 
 class LoginForm(FlaskForm):
     username = StringField("Username:", validators=[DataRequired()])
@@ -70,5 +78,59 @@ class EventCreateForm(FlaskForm):
     
     # Tags
     tags = StringField('Tags (Comma-separated)')
+
+    submit = SubmitField("Submit")
+
+class UserDetailsForm(FlaskForm):
+    firstname = StringField("First name:", validators=[DataRequired()])
+    lastname = StringField("Last name:", validators=[DataRequired()])
+    year = SelectField(
+        "Year:", 
+        choices=YEAR_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    course_type = SelectField(
+        "Affiliation:", 
+        choices=COURSE_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    department = SelectField(
+        "Department:", 
+        choices=DEPARTMENT_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    campus = SelectField(
+        "Campus:", 
+        choices=CAMPUS_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    email = EmailField('Email address', validators=[DataRequired(), Email()])
+
+    submit = SubmitField("Save")
+
+class UserRegisterForm(FlaskForm):
+    firstname = StringField("First name:", validators=[DataRequired()])
+    lastname = StringField("Last name:", validators=[DataRequired()])
+    year = SelectField(
+        "Year:", 
+        choices=YEAR_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    course_type = SelectField(
+        "Affiliation:", 
+        choices=COURSE_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    department = SelectField(
+        "Department:", 
+        choices=DEPARTMENT_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    campus = SelectField(
+        "Campus:", 
+        choices=CAMPUS_CATEGORIES, 
+        validators=[DataRequired()]
+    )
+    email = EmailField('Email address', validators=[DataRequired(), Email()])
 
     submit = SubmitField("Submit")
