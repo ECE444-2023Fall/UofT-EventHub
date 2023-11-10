@@ -315,3 +315,8 @@ h1.heading {
   font-size: 130px; /* Adjust the font size as needed */
   vertical-align: middle;
 }
+
+/* The style below is for the flash messages: */
+.alert {
+  border-radius: 20px;
+}

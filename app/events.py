@@ -342,7 +342,6 @@ def register_for_event(event_id):
     db.session.add(new_registration)
     db.session.commit()
 
-    # flash("Registered for the event!", category="success")
     event = EventDetails.query.filter_by(id=event_id).first()
     return redirect(url_for('events.show_event', id=event_id))
 
