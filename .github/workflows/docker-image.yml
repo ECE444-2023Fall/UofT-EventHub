@@ -31,11 +31,11 @@ jobs:
         echo "Sleeping for 60 seconds"
         sleep 60
         docker ps -a
-        if curl -s http://localhost:5000/ | grep "Welcome!"
+        if curl -s http://localhost:5000/ | grep "Login to UofT Event Hub"
           then
-            echo "Welcome message detected. PR can to merge!"
+            echo "Login page detected. PR can be merged!"
           else
-            echo "Welcome message not detected. PR can't merge!"
+            echo "Login page not detected. PR can't be allowed to merge!"
             exit 1
         fi
 
