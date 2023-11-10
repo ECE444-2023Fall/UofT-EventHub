@@ -41,9 +41,6 @@ jobs:
 
     - name: Check the unit tests status
       run: |
-         ls -a
-         pip install -r requirements.txt
-         cd tests
          echo "Running unit tests"
-         python -m pytest
+         docker exec -i web-server bash -c "cd /tests && python -m pytest"
 
