@@ -65,11 +65,11 @@ def show_event(id):
     event_dict["id"] = str_id
 
     if is_registered is not None:
-        if not past_event:
-            flash("You are registered for the event!", category="info")
+        if not is_past_event:
+            flash("You are registered for the event!", category="primary")
             return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
         else:
-            flash("This is a past event!", category="info")
+            flash("This is a past event!", category="primary")
             return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
     else:
         return render_template("event.html", event=event_dict, is_registered=False, is_past_event = is_past_event, prev_rating=prev_rating)
@@ -328,7 +328,7 @@ def register_for_event(event_id):
         EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).delete()
         db.session.commit()
 
-        flash("Cancelled registeration for the event!", category="success")
+        flash("Cancelled registeration for the event!", category="primary")
         event = EventDetails.query.filter_by(id=event_id).first()
 
         return redirect(url_for('events.show_event', id=event_id))
@@ -399,7 +399,7 @@ def submit_rating(event_id):
             existing_rating.rating = rating
             db.session.commit()
             logging.info("Here is the updated rating: ", existing_rating)
-            flash('Rating Updated successfully!', 'success')
+            flash('Rating Updated successfully!', 'warning')
         else:
             # Create a new rating record
             new_rating = EventRating(attendee_username=attendee_username ,event_id=event_id, rating=rating)
@@ -408,9 +408,9 @@ def submit_rating(event_id):
             
             db.session.commit()
 
-            flash('Rating submitted successfully!', 'success')
+            flash('Rating submitted successfully!', 'warning')
     else:
-        flash('Failed to submit rating. Please try again.', 'error')
+        flash('Failed to submit rating. Please try again.', 'danger')
         
     return redirect(url_for('events.show_event', id=event_id))
 
