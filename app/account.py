@@ -52,7 +52,7 @@ def show_user_details():
         current_user_details.email=form.email.data
 
         # Update the flash message
-        flash("Your details have been successfully updated!", "info")
+        flash("Your details have been successfully updated!", category="primary")
 
         # Save the updates
         db.session.commit()
@@ -89,7 +89,7 @@ def add_user_details():
         db.session.add(new_user_details)
         db.session.commit()
 
-        flash("Your details have been saved. You can always modify them from the 'My Account' tab", "info")
+        flash("Your details have been saved. You can always modify them from the 'My Account' section", category="primary")
         return redirect(url_for("user.main"))
 
     return render_template("user_register.html", form=form)
