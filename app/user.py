@@ -65,7 +65,7 @@ def view_all_organizers():
 
     organizers = get_active_organizers()
 
-    return render_template("user_organizers.html", organizers=organizers)
+    return render_template("user_organizers_list.html", organizers=organizers)
 
 # Get only the organizers that have upcoming events or had past events
 def get_active_organizers():
@@ -87,7 +87,7 @@ def view_organizer(organizer_username):
     upcoming_events = get_organizer_upcoming_events(organizer_username)
     past_events = get_organizer_past_events(organizer_username)
 
-    return render_template("user_organizer_main.html", upcoming_events=upcoming_events, past_events=past_events)
+    return render_template("user_organizer_page.html", upcoming_events=upcoming_events, past_events=past_events)
 
 # Get the upcoming events for an organizer
 def get_organizer_upcoming_events(organizer_username):

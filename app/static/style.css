@@ -1,5 +1,7 @@
 h1{
-    color: #050151;;
+    color: #050151;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 60px;
 }
 
 .page-header{
@@ -285,10 +287,10 @@ h1.heading {
 
 .icon-container {
   text-align: center;
-  margin-top: 40px; /* Adjust the margin as needed */
+  margin-top: 55px; /* Adjust the margin as needed */
 }
 
 .fa-users {
-  font-size: 150px; /* Adjust the font size as needed */
+  font-size: 130px; /* Adjust the font size as needed */
   vertical-align: middle;
 }
