@@ -91,7 +91,7 @@ def create_app(debug):
             event_detail = {
                 "id": str(getattr(row, "id")),
                 "name": str(getattr(row, "name")),
-                "description": str(getattr(row, "description")),
+                "description": str(getattr(row, "short_description")),
                 "category": str(getattr(row, "category")),
                 "venue": str(getattr(row, "venue")),
                 "additional_info": str(getattr(row, "additional_info")),
