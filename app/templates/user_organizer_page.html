@@ -5,24 +5,72 @@
 {% block content %}
     {% block page_content %}
     <div class="page-header">
-        <h2 style="color: #050151;">Upcoming Events</h2>
+        <h1>{{ organizer_name }} Main Page</h1>
     </div>
-
-    <ul>
-        {% for event in upcoming_events %}
-            <li><a href="/">{{ event.name }}</a></li>
-        {% endfor %}
-    </ul>
-
-        <div class="page-header">
-            <h2 style="color: #050151;">Past Events</h2>
+    <div class="page-header">
+        <h2>Upcoming Events</h2>
+    </div>
+    <div class="content">
+        <div class="container event-list-container">
+            <div class="row">
+              {% for event in upcoming_events %}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card" style="min-height: 300px;"> <!-- Can adjust the minimum height as needed -->
+                        <a class="img-card" href="/events/{{ event.id }}">
+                            <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id|string + '.png')}}"/>
+                        </a>
+                      <div class="card-content">
+                          <h4 class="card-title">
+                              <a href="/events/{{ event.id }}"> {{ event.name }}
+                            </a>
+                          </h4>
+                          <p class="">
+                              {{ event.description }}
+                          </p>
+                      </div>
+                      <div class="card-read-more">
+                          <a href="/events/{{ event.id }}" class="btn btn-link btn-block">
+                              Read More
+                          </a>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+            </div>
         </div>
-
-        <ul>
-            {% for event in past_events %}
-                <li><a href="/">{{ event.name }}</a></li>
-            {% endfor %}
-        </ul>
+    </div>
+    <div class="page-header">
+        <h2>Past Events</h2>
+    </div>
+    <div class="content">
+        <div class="container event-list-container">
+            <div class="row">
+              {% for event in past_events %}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card" style="min-height: 300px;"> <!-- Can adjust the minimum height as needed -->
+                        <a class="img-card" href="/events/{{ event.id }}">
+                            <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id|string + '.png')}}"/>
+                        </a>
+                        <div class="card-content">
+                          <h4 class="card-title">
+                              <a href="/events/{{ event.id }}"> {{ event.name }}
+                            </a>
+                          </h4>
+                          <p class="">
+                              {{ event.description }}
+                          </p>
+                      </div>
+                      <div class="card-read-more">
+                          <a href="/events/{{ event.id }}" class="btn btn-link btn-block">
+                              Read More
+                          </a>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+            </div>
+        </div>
+    </div>
+    
     {% endblock %}
-</div>
 {% endblock %}
