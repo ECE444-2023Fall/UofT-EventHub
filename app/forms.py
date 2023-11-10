@@ -46,8 +46,8 @@ class RegForm(FlaskForm):
 
 
 class EventCreateForm(FlaskForm):
-    name = StringField("Name:", validators=[DataRequired()])
-    short_description = StringField("Short Description (Max 90 characters):", validators=[DataRequired(), Length(max=90, message="Please keep the description under 80 characters")])
+    name = StringField("Name*:", validators=[DataRequired()])
+    short_description = StringField("Short Description* (Max 90 characters):", validators=[DataRequired(), Length(max=90, message="Please keep the description under 80 characters")])
     long_description = StringField("Long Description (Optional):")
     category = SelectField(
         "Category:", 
@@ -58,10 +58,10 @@ class EventCreateForm(FlaskForm):
     # Location and Time information
     is_online = BooleanField("Is this an online event?")
     venue = StringField("Venue:")
-    start_date = DateField("Start Date:")
-    end_date = DateField("End Date:")
-    start_time = TimeField("Start Time:")
-    end_time = TimeField("End Time:")
+    start_date = DateField("Start Date*:")
+    end_date = DateField("End Date*:")
+    start_time = TimeField("Start Time*:")
+    end_time = TimeField("End Time*:")
 
     # Participant capacity information
     max_capacity = IntegerField(
@@ -73,7 +73,7 @@ class EventCreateForm(FlaskForm):
     # Additional informations
     redirect_link = URLField("External Registration Link (Optional) :")
     banner_image = FileField(
-        "Image:", validators=[FileAllowed(["png", "jpg"], "Please upload a PNG or JPG image.")]
+        "Image:", validators=[FileAllowed(["png"], "Please upload a PNG image.")]
     )
     additional_info = TextAreaField("Additional Information:")
     
