@@ -32,7 +32,7 @@ def search_autocomplete():
         }
     }
 
-    resp = es.search(index="events", query=payload, size=10)
+    resp = es.search(index="events", query=payload, size=5)
 
     # Return a list of event name and id ordered by the most relevant on top
     return [
@@ -78,7 +78,9 @@ def search_events(filter="all"):
 def get_eventids_matching_search_query(query):
     tokens = query.split(" ")
 
-    # Make a JSON query to elastic search to get the list of relevant events
+# This block creates a list of clauses, each specifying a fuzzy matching criterion for a token in the 'tokens' list.
+# Each clause is configured to perform a fuzzy match on the 'name' field of the Elasticsearch documents.
+# Make a JSON query to elastic search to get the list of relevant events
     clauses = [
         {
             "span_multi": {
@@ -88,12 +90,14 @@ def get_eventids_matching_search_query(query):
         for i in tokens
     ]
 
+# Constructing the search query parameters.
+# This operation looks for proximity matches of the clauses with zero distance and not necessarily in order.
     payload = {
         "bool": {
             "must": [{"span_near": {"clauses": clauses, "slop": 0, "in_order": False}}]
         }
     }
-
+# It searches the 'events' index and retrieves a maximum of 10 matching results.
     resp = es.search(index="events", query=payload, size=10)
 
     ## Make a dict for relevant event details

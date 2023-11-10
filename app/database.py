@@ -71,6 +71,11 @@ class EventDetails(db.Model):
 
     def get_id(self):
         return self.id
+    
+    # Method to get the Organizer's name without having to directly access Credentials table otherwise
+    def get_organizer_name_from_username(organizer_username):
+        organizer = Credentials.query.filter_by(username=organizer_username).first()
+        return organizer.name if organizer else None
 
 
 class EventBanner(db.Model):

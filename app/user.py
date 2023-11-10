@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template
 from sqlalchemy import distinct
+from datetime import datetime
+import logging
 
 from app.globals import FILTERS
 from app.auth import login_required, user_required
 from app.database import EventDetails, Credentials
 from app.search import get_eventids_matching_search_query
-from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list
+from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list, filter_for_past_events
 from app.main import db
 
 user = Blueprint("user", __name__)
@@ -31,6 +33,8 @@ def main(filter="all", search=None):
         dict_of_events_details = filter_for_free_events(events=dict_of_events_details)
     elif filter == "today":
         dict_of_events_details = filter_for_today_events(events=dict_of_events_details)
+    elif filter == "past events":
+        dict_of_events_details =  filter_for_past_events(events=dict_of_events_details)
     elif filter != "all":
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
@@ -57,10 +61,13 @@ def get_all_events_from_database():
 @login_required
 @user_required
 def view_all_organizers():
-    organizers = get_active_organizers()
-    return render_template("user_organizers.html", organizers=organizers)
+    logging.info("Loading webpage for Users to view all Organizers")
 
-# Get only the organizers that have upcoming events or had past events
+    organizers = get_active_organizers()
+
+    return render_template("user_organizers_list.html", organizers=organizers)
+
+# Get only the organizers that have upcoming events or had events in the past
 def get_active_organizers():
 
     # Joining EventDetails and Credentials tables
@@ -70,3 +77,64 @@ def get_active_organizers():
     ).distinct().all()
 
     return organizers
+
+@user.route("/user/organizers/<organizer_username>", methods=["GET"])
+@login_required
+@user_required
+def view_organizer(organizer_username):
+    logging.info("Loading webpage for Organizer: %s", organizer_username)
+
+    organizer_name = EventDetails.get_organizer_name_from_username(organizer_username)
+    
+    upcoming_events = get_organizer_upcoming_events(organizer_username)
+    past_events = get_organizer_past_events(organizer_username)
+
+    return render_template("user_organizer_page.html", organizer_name=organizer_name, upcoming_events=upcoming_events, past_events=past_events)
+
+# Get the upcoming events for an organizer
+def get_organizer_upcoming_events(organizer_username):
+    # Get the current date and time to filter for upcoming events
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+
+    # Querying events where the organizer is the specified username and the event is yet to start (upcoming)
+    upcoming_events = (
+        EventDetails.query
+        .filter_by(organizer=organizer_username)
+        .filter(
+            db.or_(
+                EventDetails.start_date > current_date,
+                db.and_(
+                    EventDetails.start_date == current_date,
+                    EventDetails.start_time > current_time
+                )
+            )
+        )
+        .all()
+    )
+
+    return upcoming_events
+
+# Get the past events for an organizer
+def get_organizer_past_events(organizer_username):
+    # Get the current date and time to filter for past events
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+
+    # Querying events where the organizer is the specified username and the event has already started (past)
+    past_events = (
+        EventDetails.query
+        .filter_by(organizer=organizer_username)
+        .filter(
+            db.or_(
+                EventDetails.start_date < current_date,
+                db.and_(
+                    EventDetails.start_date == current_date,
+                    EventDetails.start_time < current_time
+                )
+            )
+        )
+        .all()
+    )
+
+    return past_events

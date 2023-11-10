@@ -15,6 +15,7 @@
     {% endfor %}
 
     {% block page_content %}
+<!-- Creates a structured view of an event, displaying its name, description, venue, and an image banner related to the event, -->
         <div class="page-header">
             <h1>{{event.name}}</h1>
             <p>{{event.description}}</p>
@@ -31,7 +32,7 @@
             console.log("JS: Is running");
             console.log("is_registered: {{is_registered}}");
             //check below is for past events. If met, button is disabled and users cannot register
-            //Disable this check to be able to test the ratings function easily.
+            // Disable this check to be able to test the ratings function easily.
             if("{{is_past_event}}" == "True") {
                 document.getElementById('register_btn').disabled = true;
             }
@@ -47,33 +48,34 @@
 
         <!-- This is a check to see if previous rating existed. If it does then those many stars will get filled up -->
         {% if prev_rating > 0 %}
-            <div class="rating">
-                {% for i in range(1, 6) %}
-                    {% if prev_rating >= i %}
-                        <span class="filled-star">★</span>
-                    {% else %}
-                        <span class="empty-star">★</span>
-                    {% endif %}
-                {% endfor %}
-            </div>
+        <h6>You previously rated this event:</h6>
+        <div class="previous_rating">
+            {% for i in range(1, 6) %}
+                {% if prev_rating >= i %}
+                    <span class="filled-star">★</span>
+                {% else %}
+                    <span class="empty-star">★</span>
+                {% endif %}
+            {% endfor %}
+        </div>
         {% endif %}
         
         <!-- This is a check to ensure user is registered and the event is already over. Only then would the option to rate the event appear -->
         {% if is_past_event and is_registered %}
-            <div>
-                <form action="/events/submit_rating/{{event.id}}" method="post">
-                    <input type="hidden" name="event_id" value="{{ event.id }}">
-                    <label for="rating">Rate this event:</label>
-                    <ul class="rate-area">
-                        <input type="radio" id="5-star" name="rating" value="5" /><label for="5-star" title="Amazing">5 stars</label>
-                        <input type="radio" id="4-star" name="rating" value="4" /><label for="4-star" title="Good">4 stars</label>
-                        <input type="radio" id="3-star" name="rating" value="3" /><label for="3-star" title="Average">3 stars</label>
-                        <input type="radio" id="2-star" name="rating" value="2" /><label for="2-star" title="Not Good">2 stars</label>
-                        <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star" title="Bad">1 star</label>
-                    </ul>
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit Rating</button>
-                </form>
-            </div>
+        <div>
+            <h5>Rate this event:</h5>
+            <form action="/events/submit_rating/{{event.id}}" method="post">
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                <ul class="rate-area">
+                    <input type="radio" id="5-star" name="rating" value="5" /><label for="5-star" title="Amazing">5 stars</label>
+                    <input type="radio" id="4-star" name="rating" value="4" /><label for="4-star" title="Good">4 stars</label>
+                    <input type="radio" id="3-star" name="rating" value="3" /><label for="3-star" title="Average">3 stars</label>
+                    <input type="radio" id="2-star" name="rating" value="2" /><label for="2-star" title="Not Good">2 stars</label>
+                    <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star" title="Bad">1 star</label>
+                </ul>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="display: block;">Submit Rating</button>
+            </form>
+        </div>
         {% endif %}
     {% endblock %}
 </div>
