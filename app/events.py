@@ -112,7 +112,8 @@ def create_event():
         # Add the event details
         new_event = EventDetails(
             name=form.name.data,
-            description=form.description.data,
+            short_description=form.short_description.data,
+            long_description=form.long_description.data,
             category=form.category.data.lower(),
             organizer=current_user.username,
             is_online=form.is_online.data,
@@ -190,7 +191,8 @@ def edit_event(id):
         logging.info(f"Edited Event Entries: {form.name.data}, {form.category.data}")
         # Add the event details
         event.name = form.name.data
-        event.description = form.description.data
+        event.short_description = form.short_description.data
+        event.long_description = form.long_description.data
         event.category = form.category.data.lower()
         event.is_online = form.is_online.data
         event.venue = form.venue.data
@@ -346,7 +348,7 @@ def add_event_to_index(new_event):
     event_detail = {
         "id": new_event.id,
         "name": new_event.name,
-        "description": new_event.description,
+        "short_description": new_event.short_description,
         "category": new_event.category,
         "venue": new_event.venue,
         "additional_info": new_event.additional_info,

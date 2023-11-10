@@ -18,7 +18,8 @@
 <!-- Creates a structured view of an event, displaying its name, description, venue, and an image banner related to the event, -->
         <div class="page-header">
             <h1>{{event.name}}</h1>
-            <p>{{event.description}}</p>
+            <h3>{{event.short_description}}</h3>
+            <p>{{event.long_description}}</p>
             <p>Venue: {{event.venue}}</p>
 
             <form action="/events/register/{{event.id}}" method="post">

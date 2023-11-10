@@ -30,7 +30,8 @@ def create_event():
         # Add the event details
         new_event = EventDetails(
             name=form.name.data,
-            description=form.description.data,
+            short_description=form.short_description.data,
+            long_description=form.long_description.data,
             category=form.category.data.lower(),
             is_online=form.is_online.data,
             venue=form.venue.data,
