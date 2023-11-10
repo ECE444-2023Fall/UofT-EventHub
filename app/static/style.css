@@ -4,8 +4,9 @@ html {
 }
 
 h1{
-  font-weight: 900;
-  color: #1d293f;
+    font-weight: 900;
+    color: #1d293f;
+    font-size: 45px;
 }
 
 .page-header{
@@ -302,4 +303,15 @@ h1.heading {
   padding:10px;
   font-weight:600;
   text-transform: uppercase
+}
+
+/* Below are the styles for user_organizers_list.html */
+.icon-container {
+  text-align: center;
+  margin-top: 55px; /* Adjust the margin as needed */
+}
+
+.fa-users {
+  font-size: 130px; /* Adjust the font size as needed */
+  vertical-align: middle;
 }
