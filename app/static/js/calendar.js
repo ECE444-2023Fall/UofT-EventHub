@@ -1,49 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
+    var eventData = JSON.parse(event_data_json.innerText);
+        console.log(eventData);
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth', 
+        initialView: 'dayGridMonth',  // Default view is set to list
 
         views: {
-            week: { 
+            dayGridMonth: {
+                buttonText: 'Month'
+            },
+            dayGridWeek: { 
                 type: 'dayGridWeek',
                 duration: { weeks: 1 },
                 buttonText: 'Week'
             },
-                list: { 
-                type: 'listMonth',
-                buttonText: 'List'
+            list: { 
+                type: 'listMonth', // This will give you a list view with a monthly format
+                buttonText: 'Day'
             }
         },
 
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,dayGridWeek,listDay' 
+            right: 'dayGridMonth,dayGridWeek,listMonth'
         },
 
-        events: [
-        {
-            title: 'Meeting',
-            start: '2023-11-15T10:00:00',
-            end: '2023-11-15T12:00:00',
-            backgroundColor: '#007bff',
-            borderColor: '#007bff'
-        },
-        {
-            title: 'Lunch',
-            start: '2023-11-16T12:30:00',
-            end: '2023-11-16T13:30:00',
-            backgroundColor: '#28a745',
-            borderColor: '#28a745'
-        },
-        {
-            title: 'Workshop',
-            start: '2023-11-17T14:00:00',
-            end: '2023-11-17T16:00:00',
-            backgroundColor: '#dc3545',
-            borderColor: '#dc3545'
-        }
-         ]
+        events: eventData,
     });
 
     calendar.render();

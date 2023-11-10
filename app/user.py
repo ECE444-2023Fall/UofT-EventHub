@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, jsonify, render_template
 from sqlalchemy import distinct
 from datetime import datetime
 import logging
@@ -9,6 +9,7 @@ from app.database import EventDetails, Credentials
 from app.search import get_eventids_matching_search_query
 from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list, filter_for_past_events
 from app.main import db
+import json
 
 user = Blueprint("user", __name__)
 
@@ -38,7 +39,9 @@ def main(filter="all", search=None):
     elif filter != "all":
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
-    return render_template("user_main.html", event_data=dict_of_events_details, search=search, filter=filter, filter_tags=FILTERS)
+    event_data_json = convert_dictionary_to_JSON(dict_of_events_details)
+    
+    return render_template("user_main.html", event_data=dict_of_events_details, event_data_json=event_data_json, search=search, filter=filter, filter_tags=FILTERS)
 
 def get_all_events_from_database():
     events_data = EventDetails.query.all()
@@ -56,6 +59,40 @@ def get_all_events_from_database():
 
     return dict_of_events_details
 
+import random
+
+def convert_dictionary_to_JSON(events):
+    event_list = []
+    colors = ['#dc3545', '#007bff', '#28a745', '#ffc107', '#17a2b8']
+    #right now set to random initialisation, we will modify this to colour dependent on events
+
+    for event_id, event_data in events.items():
+        name = event_data['name']
+        start_date = event_data['start_date']
+        end_date = event_data['end_date']
+        start_time = event_data['start_time']
+        end_time = event_data['end_time']
+        
+        # Randomly select a background color from the list
+        background_color = random.choice(colors)
+        border_color = background_color
+    
+        event_info = {
+            'title': name,
+            'start': f'{start_date}T{start_time}',
+            'end': f'{end_date}T{end_time}',
+            'backgroundColor': background_color,
+            'borderColor': border_color
+        }
+        
+        event_list.append(event_info)
+
+    # Convert the list to JSON
+    event_data_json = json.dumps(event_list)
+
+    # Print the JSON
+    logging.info(event_data_json)
+    return event_data_json
 
 @user.route("/user/organizers", methods=["GET"])
 @login_required

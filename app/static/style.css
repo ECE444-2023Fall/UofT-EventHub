@@ -272,3 +272,20 @@ h1.heading {
   font-weight:600;
   text-transform: uppercase
 }
+
+.event_data_hide {
+  display: none;
+}
+/* Default styles for calendar buttons 
+.fc-button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+  .fc-button {
+      font-size: 14px;
+      padding: 8px 16px;
+  }
+}
+*/
