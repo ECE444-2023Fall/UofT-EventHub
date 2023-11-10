@@ -15,7 +15,7 @@ from wtforms import (
     EmailField,
 )
 from flask_wtf.file import FileAllowed
-from wtforms.validators import DataRequired, NumberRange, Email
+from wtforms.validators import DataRequired, NumberRange, Email, Length
 
 from app.globals import (
     Role, 
@@ -46,8 +46,9 @@ class RegForm(FlaskForm):
 
 
 class EventCreateForm(FlaskForm):
-    name = StringField("Name:", validators=[DataRequired()])
-    description = StringField("Description:")
+    name = StringField("Name*:", validators=[DataRequired()])
+    short_description = StringField("Short Description* (Max 90 characters):", validators=[DataRequired(), Length(max=90, message="Please keep the description under 90 characters")])
+    long_description = StringField("Long Description (Optional):")
     category = SelectField(
         "Category:", 
         choices=EVENT_CATEGORIES, 
@@ -57,22 +58,22 @@ class EventCreateForm(FlaskForm):
     # Location and Time information
     is_online = BooleanField("Is this an online event?")
     venue = StringField("Venue:")
-    start_date = DateField("Start Date:")
-    end_date = DateField("End Date:")
-    start_time = TimeField("Start Time:")
-    end_time = TimeField("End Time:")
+    start_date = DateField("Start Date*:")
+    end_date = DateField("End Date*:")
+    start_time = TimeField("Start Time*:")
+    end_time = TimeField("End Time*:")
 
     # Participant capacity information
     max_capacity = IntegerField(
-        "Capacity of your event:", validators=[NumberRange(min=0)])
+        "Capacity of the event:", validators=[NumberRange(min=0)])
 
     # Ticket Price Information
-    ticket_price = FloatField("Ticket Price:", default=0.0)
+    ticket_price = FloatField("Ticket Price:", default=0.0, validators=[NumberRange(min=0.0)])
 
     # Additional informations
-    redirect_link = URLField("Registration Redirect Link:")
+    redirect_link = URLField("External Registration Link (Optional) :")
     banner_image = FileField(
-        "Image:", validators=[FileAllowed(["png"], "PNG Images only!")]
+        "Image:", validators=[FileAllowed(["png"], "Please upload a PNG image.")]
     )
     additional_info = TextAreaField("Additional Information:")
     
