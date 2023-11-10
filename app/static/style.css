@@ -324,5 +324,6 @@ h1.heading {
 
 /* The style below is for the flash messages: */
 .alert {
+  margin-top: 20px;
   border-radius: 20px;
 }
