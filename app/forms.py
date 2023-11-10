@@ -47,7 +47,7 @@ class RegForm(FlaskForm):
 
 class EventCreateForm(FlaskForm):
     name = StringField("Name*:", validators=[DataRequired()])
-    short_description = StringField("Short Description* (Max 90 characters):", validators=[DataRequired(), Length(max=90, message="Please keep the description under 80 characters")])
+    short_description = StringField("Short Description* (Max 90 characters):", validators=[DataRequired(), Length(max=90, message="Please keep the description under 90 characters")])
     long_description = StringField("Long Description (Optional):")
     category = SelectField(
         "Category:", 
