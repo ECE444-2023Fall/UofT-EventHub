@@ -1,9 +1,16 @@
 {% extends "base.html" %}
-
-{% block title %}User's Events Page{% endblock %}
+{%block title %}Myevents page{% endblock %} 
 
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- For JS support -->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+  integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<!-- Container for search and sorting functionality -->
 <div class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -16,54 +23,104 @@
     {% endif %}
     {% endwith %}
 
-    {% block page_content %}
-
-        <script>
+  {% block page_content %}
+    <script>
+      // This script enhances a search box's functionality by providing an autocomplete feature.
             $(document).ready(function() {
-                let debounce;
+                let debounce; // A variable to store the timer for delaying the autocomplete function.
+                // This event is triggered when a key is pressed in the search box.
+
                 $('.search-box').on('keydown', function (e) {
                   clearTimeout(debounce)
+                  // Sets a new timeout after the key is pressed and waits for 300 milliseconds.
                   debounce = setTimeout(() => {
-                          getAutoComplete();  
+                          getAutoComplete(); // Calls the function to fetch autocomplete suggestions after the delay.
                   }, 300);
                 })
             })
 
+            // This function is responsible for obtaining autocomplete suggestions.
             function getAutoComplete() {
               const query = $('.search-box').val();
-              console.log(query)
+              console.log(`User search for ${query}`)
               fetch(`http://localhost:5000/search?search=${encodeURIComponent(query.trim())}`)
                 .then((resp) => resp.json())
                 .then((data) => {
-                        $('.results').empty();
+                        $('.autocomplete-drop-down').empty();
                         for (let i = 0; i < data.length; i++) {
-                                $('.results').append(`<li>${data[i]}</li>`)
+                                // Appends each suggestion to the autocomplete dropdown list.
+                                console.log(`Event name ${data[i][0]} -- ${data[i][1]}`)
+                                $('.autocomplete-drop-down').append(`<a class="dropdown-item autocomplete-item" href="/events/${data[i][1]}">${data[i][0]}</a>`) 
                         }
                       })
             }
         </script>
-
         <div class="page-header">
-            <h1>My Events</h1>
-        </div>
-        <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
-            <input class="search-box" name="query" id="search-text">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button>
-        </form>
-        <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
-            {% for filter_tag in filter_tags %}
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
-            {% endfor %}
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
-        </form>
-        <h2>My Events</h2>
 
-        <ul class="results">
-            {% for key, value in event_data.items() %}
-            <li><a href = "/events/{{ key }}">{{ value.name }}</a></li>
-            {% endfor %}
-        </ul>
+        <h1>My Events</h1>
+        </div>
+        <div class="container search-sort-container">
+          <div class="row" style="text-align: center;">
+            <div class="col-xs-4 col-sm-4" style="text-align: center; margin: auto;">
+              
+              <!-- Generates a form with a search input field and a search button. -->
+              <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
+                  <input class="search-box" name="query" id="search-text" autocomplete="off" placeholder="Search all events...">
+                  <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #ea453f;"></i></button>
+                  <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
+              </form>
+
+              <!-- <div class="col-xs-12 col-sm-12" style="text-align: center; display: block; position: relative;"> -->
+                <!-- The text box to display autocomplete suggestions -->
+                <div class="dropdown-menu autocomplete-drop-down"></div>
+              <!-- </div> -->
+            </div>
+          </div>
+          <div class="row" style="text-align: center;">
+            
+          </div>
+          <div class="row" style="text-align: center;">
+            <div class="col-xs-12 col-sm-12" style="text-align: center;">
+              <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
+                  {% for filter_tag in filter_tags %}
+                  <button id="sort-key-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
+                  {% endfor %}
+                  <button id="sort-clear-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
+              </form>
+            </div>
+          </div>
+        </div>
     {% endblock %}
+    
+    <div class="content">
+      <div class="container event-list-container">
+          <div class="row">
+            <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
+            {% for key, value in event_data.items() %}
+              <div class="col-xs-12 col-sm-4">
+                <div class="card">
+                    <a class="img-card" href="/events/{{ key }}">
+                    <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
+                  </a>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <a href="/events/{{ key }}"> {{value.name}}
+                          </a>
+                        </h4>
+                        <p class="">
+                            {{value.description}}
+                        </p>
+                    </div>
+                    <div class="card-read-more">
+                        <a href="/events/{{ key }}" class="btn btn-link btn-block">
+                            Read More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+          </div>
+      </div>
+  </div>
 </div>
 {% endblock %}
