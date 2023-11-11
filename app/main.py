@@ -64,6 +64,7 @@ def create_app(debug):
     from app.search import search
     from app.filter import filter
     from app.user_events import user_events
+    from app.account import account
 
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(user, url_prefix="/")
@@ -72,6 +73,7 @@ def create_app(debug):
     app.register_blueprint(search, url_prefix="/")
     app.register_blueprint(filter, url_prefix="/")
     app.register_blueprint(user_events, url_prefix="/")
+    app.register_blueprint(account, url_prefix="/")
 
     with app.app_context():
         db.create_all()
@@ -89,7 +91,7 @@ def create_app(debug):
             event_detail = {
                 "id": str(getattr(row, "id")),
                 "name": str(getattr(row, "name")),
-                "description": str(getattr(row, "description")),
+                "description": str(getattr(row, "short_description")),
                 "category": str(getattr(row, "category")),
                 "venue": str(getattr(row, "venue")),
                 "additional_info": str(getattr(row, "additional_info")),

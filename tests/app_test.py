@@ -202,7 +202,7 @@ def test_create_event_with_tags(client):
     networking_tag = Tag(name='networking')
 
     # Create an event and associate tags
-    new_event = EventDetails(name="Sample Event", description="A test event", venue="Sample Venue")
+    new_event = EventDetails(name="Sample Event", short_description="A test event", venue="Sample Venue")
     new_event.tags.extend([social_tag, cultural_tag, networking_tag])
 
     db.session.add(new_event)

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Register Page{% endblock %}
+{% block title %}User Register Page{% endblock %}
 {% block navbar %}
  <!-- this overrides the definition of the navbar in the -->
 {% endblock %} 
@@ -21,8 +21,7 @@
 
     {% block page_content %}
         <div class="page-header">
-            <!-- <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Register to UofT Event Hub</p> -->
-            <h1>Register to UofT Event Hub</h1>
+            <h1>Fill out your personal information</h1>
         </div>
         <section class="vh-85">
             <div class="container h-100">
@@ -31,17 +30,13 @@
                   <div class="card text-black" style="border-radius: 25px;">
                     <div class="card-body p-md-5">
                       <div class="row justify-content-center">
-                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-          
-                          {{ wtf.quick_form(form) }}
-                          <p> Already have an account? <a href="/">Log in!</a> </p>
-          
+                        <div class="col-lg text-center">
+                          <i class="fa-solid fa-user profile-icon"></i>
                         </div>
-                        <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-          
-                          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                            class="img-fluid">
-          
+                      </div>
+                      <div class="row justify-content-center">
+                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                          {{ wtf.quick_form(form) }}
                         </div>
                       </div>
                     </div>
@@ -49,8 +44,6 @@
                 </div>
               </div>
             </div>
-  
-
     </section>
     {% endblock %}
 
