@@ -5,10 +5,6 @@ html {
   font-family: inherit;
 }
 
-body {
-  padding-bottom: 4vw;
-}
-
 h1{
     font-weight: 900;
     color: #1d293f;
@@ -495,7 +491,12 @@ div.error-msg {
 }
 
 /* The style below is for the Organizer Main Page */
+.organizer-dashboard-section {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
 .create-new-event-btn {
   margin-top: 2vw; 
-  margin-bottom: 3vw;
+  margin-bottom: 2vw;
 }

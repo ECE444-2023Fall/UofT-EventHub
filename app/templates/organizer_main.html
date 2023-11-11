@@ -55,55 +55,58 @@
     {% endblock %}
 
     <div class="content">
-        <h2>My Events List</h2>
-        {% if my_events_data|length == 0 %}
-        <p>You don't have any events yet.</p>
-
-        {% else %}
-        <div class="container event-list-container">
-            <div class="row">
-              <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
-              {% for key, value in my_events_data.items() %}
-                <div class="col-xs-12 col-sm-4">
-                  <div class="card">
-                      <a class="img-card" href="/events/admin/{{ key }}">
-                      <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
-                    </a>
-                      <div class="card-content"> <!-- Ensure all cards displayed are the same size -->
-                          <h4 class="card-title">
-                              <a href="/events/admin/{{ key }}"> {{value.name}}
-                            </a>
-                          </h4>
-                          <p class="">
-                              {{value.short_description}}
-                          </p>
-                      </div>
-                      <div class="card-read-more">
-                          <a href="/events/admin/{{ key }}" class="btn btn-link btn-block">
-                              Read More
-                          </a>
+        <div class="organizer-dashboard-section">
+            <h2>My Events List</h2>
+            {% if my_events_data|length == 0 %}
+            <p>You don't have any events yet.</p>
+    
+            {% else %}
+            <div class="container event-list-container">
+                <div class="row">
+                  <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
+                  {% for key, value in my_events_data.items() %}
+                    <div class="col-xs-12 col-sm-4">
+                      <div class="card">
+                          <a class="img-card" href="/events/admin/{{ key }}">
+                          <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
+                        </a>
+                          <div class="card-content"> <!-- Ensure all cards displayed are the same size -->
+                              <h4 class="card-title">
+                                  <a href="/events/admin/{{ key }}"> {{value.name}}
+                                </a>
+                              </h4>
+                              <p class="">
+                                  {{value.short_description}}
+                              </p>
+                          </div>
+                          <div class="card-read-more">
+                              <a href="/events/admin/{{ key }}" class="btn btn-link btn-block">
+                                  Read More
+                              </a>
+                          </div>
                       </div>
                   </div>
-              </div>
-              {% endfor %}
+                  {% endfor %}
+                </div>
             </div>
+            {% endif %}    
         </div>
-        {% endif %}
-
-        <h2>My Ratings</h2>
-        {% if my_avg_rating == -1 %}
-        <p>You don't have any ratings yet.</p>
-        {% else %}
-        <div class="previous_rating">
-            {% for i in range(1, 6) %}
-                {% if my_avg_rating >= i %}
-                    <span class="filled-star">★</span>
-                {% else %}
-                    <span class="empty-star">★</span>
-                {% endif %}
-            {% endfor %}
+        <div class="organizer-dashboard-section">
+            <h2>My Ratings</h2>
+            {% if my_avg_rating == -1 %}
+            <p>You don't have any ratings yet.</p>
+            {% else %}
+            <div class="previous_rating">
+                {% for i in range(1, 6) %}
+                    {% if my_avg_rating >= i %}
+                        <span class="filled-star">★</span>
+                    {% else %}
+                        <span class="empty-star">★</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}    
         </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
