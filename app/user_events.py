@@ -7,12 +7,13 @@ from flask import (
     request,
     redirect,
     url_for,
+    abort,
 )
 from flask_login import login_required, current_user
 import logging
 
 from app.main import db
-from app.globals import FILTERS
+from app.globals import FILTERS, EVENT_CATEGORIES
 from app.auth import login_required, user_required
 from app.database import Credentials, EventRegistration, EventDetails
 from app.search import get_eventids_matching_search_query
@@ -43,6 +44,12 @@ def main(filter="all", search=None):
     elif filter == "past events":
         dict_of_events_details =  filter_for_past_events(events=dict_of_events_details)
     elif filter != "all":
+        if filter not in EVENT_CATEGORIES:
+            abort(404, description = {
+                "type": "invalid_filter",
+                "caller": "user.main",
+                "message": f"Invalid filter category {filter}"
+            })
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
     return render_template("user_events.html", event_data=dict_of_events_details, search=search, filter=filter, filter_tags=FILTERS)
