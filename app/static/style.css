@@ -84,13 +84,14 @@ h2{
 
 .hub{
   color:#FF7F50;
-  font-weight:700;
+  font-weight: 700;
 }
 
 .nav-link{
     color: #333333 !important;
-    font-size:18px;
+    font-size: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
 }
 
 .nav-dropdown{
@@ -366,7 +367,13 @@ h1.heading {
   height: 200px;
   object-fit:cover; 
   transition: all .25s ease;
-} 
+}
+
+.card-content-organizer-list {
+  padding:15px;
+  text-align:left;
+}
+
 /* Default height for small screens */
 .card-content {
   padding:15px;
@@ -407,6 +414,47 @@ h1.heading {
     height: 130px;
   }
 }
+/* Default height for small screens */
+.card-content-organizer-event {
+  padding:15px;
+  text-align:left;
+  height: 120px;
+}
+/* Adjust height for small screens and above */
+@media screen and (min-width: 575px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 160px;
+  }
+}
+
+/* Adjust height for medium screens and above */
+@media screen and (min-width: 768px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 180px;
+  }
+}
+
+/* Adjust height for large screens and above */
+@media screen and (min-width: 992px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 170px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 150px;
+  }
+}
+
 .card-title {
   margin-top:0px;
   font-weight: 700;
@@ -429,7 +477,7 @@ h1.heading {
 /* Below are the styles for user_organizers_list.html */
 .icon-container {
   text-align: center;
-  margin-top: 55px; /* Adjust the margin as needed */
+  margin-top: 50px; /* Adjust the margin as needed */
 }
 
 .fa-users {
