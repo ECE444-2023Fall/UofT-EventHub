@@ -123,9 +123,11 @@ navbar %}
             class="btn btn-light my-2 my-sm-0"
             type="submit"
           >
+
             <i class="fa-solid fa-magnifying-glass" style="color: #ea453f"></i>
           </button>
           <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
+          <button type="button" id="toggleViewButton" class="btn btn-primary">Toggle View</button>
         </form>
       </div>
       <div class="col-xs-12 col-sm-12" style="text-align: center">
@@ -158,43 +160,62 @@ navbar %}
     </div>
   </div>
   {% endblock %}
-
-  <div class="content">
-    <div class="container event-list-container">
-      <div class="row">
-        <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
-        {% for key, value in event_data.items() %}
-        <div class="col-xs-12 col-sm-4">
-          <div class="card">
-            <a class="img-card" href="/events/{{ key }}">
-              <img
-                src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}"
-              />
-            </a>
-            <div class="card-content">
-              <h4 class="card-title">
-                <a href="/events/{{ key }}"> {{value.name}} </a>
-              </h4>
-              <p class="">{{value.description}}</p>
-            </div>
-            <div class="card-read-more">
-              <a href="/events/{{ key }}" class="btn btn-link btn-block">
-                Read More
-              </a>
+        <div id="cardView" style="display: none;">
+          <div class="content">
+            <div class="container event-list-container">
+              <div class="row">
+                <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
+                {% for key, value in event_data.items() %}
+                  <div class="col-xs-12 col-sm-4">
+                    <div class="card">
+                      <a class="img-card" href="/events/{{ key }}">
+                        <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}"/>
+                      </a>
+                      <div class="card-content">
+                        <h4 class="card-title">
+                          <a href="/events/{{ key }}"> {{value.name}} </a>
+                        </h4>
+                        <p class="">{{value.description}}</p>
+                      </div>
+                      <div class="card-read-more">
+                        <a href="/events/{{ key }}" class="btn btn-link btn-block">
+                          Read More
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
             </div>
           </div>
         </div>
-        {% endfor %}
-      </div>
-      <div class="event_data_hide" id="event_data_json">{{event_data_json}}</div>
-      <script src="{{ url_for ('static', filename='js/calendar.js')}}"></script>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <div id="calendar"></div>
-          </div>
+        <div id="calendarView"  style="display: block;">
+          <div class="event_data_hide" id="event_data_json">{{event_data_json}}</div>
+          <script src="{{ url_for ('static', filename='js/calendar.js')}}"></script>
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <div id="calendar"></div>
+                </div>
+              </div>
+            </div>
         </div>
-      </div>
+        <script> //script to toggle between the card view and calendar view
+        document.getElementById("toggleViewButton").addEventListener("click", function () {
+            const cardView = document.getElementById("cardView");
+            const calendarView = document.getElementById("calendarView");
+    
+            if (cardView.style.display === "none" || calendarView.style.display === "block") {
+                cardView.style.display = "block";
+                calendarView.style.display = "none";
+            } 
+            else {
+                cardView.style.display = "none";
+                calendarView.style.display = "block";
+            }
+        });
+    </script>
+    
     </div>
   </div>
 </div>
