@@ -96,7 +96,7 @@
             {% if my_avg_rating == -1 %}
             <p>You don't have any ratings yet.</p>
             {% else %}
-            <div class="previous_rating">
+            <div class="organizer-avg-rating">
                 {% for i in range(1, 6) %}
                     {% if my_avg_rating >= i %}
                         <span class="filled-star">★</span>

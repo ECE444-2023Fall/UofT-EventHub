@@ -500,3 +500,20 @@ div.error-msg {
   margin-top: 2vw; 
   margin-bottom: 2vw;
 }
+
+.organizer-dashboard-section .organizer-avg-rating {
+  padding: 0px 20px;
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .filled-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: gold;
+}
+
+.organizer-dashboard-section .empty-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: #ccc;
+}
