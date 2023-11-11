@@ -99,7 +99,7 @@
                     <a class="img-card" href="/events/{{ key }}">
                     <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
                   </a>
-                    <div class="card-content">
+                    <div class="card-content" style="height: 130px;"> <!-- Ensure all cards displayed are the same size -->
                         <h4 class="card-title">
                             <a href="/events/{{ key }}"> {{value.name}}
                           </a>
