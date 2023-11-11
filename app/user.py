@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-from flask import Blueprint, jsonify, render_template
-=======
 from flask import Blueprint, render_template, abort
->>>>>>> bbabc40ec24fe600eb34d76c0aa52c494b03cb03
 from sqlalchemy import distinct
 from datetime import datetime
 import logging
