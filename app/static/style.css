@@ -1,3 +1,5 @@
+/* ------------------------------------------------------------ */
+
 /* The defualt font of our website, we can experiment with it */
 html {
   font-family: inherit;
@@ -42,6 +44,16 @@ h2{
   border-color: #f8f9fa;
 }
 
+/* input[type=submit], input[type=reset] {
+  background-color: #04AA6D;
+  border: black ;
+  color: white;
+  padding: 10px 16px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+} */
+
 .btn.btn-default:hover{
   background-color: #ea453f;
   color: white;
@@ -53,7 +65,7 @@ h2{
 }
 
 /* Spacing and alignment of the Login page */
-.frame-15c {
+.welcome-image {
     width: 32.0605rem;
     height: 24.8924rem;
     position: relative;
@@ -78,6 +90,16 @@ h2{
 .nav-link{
     color: #333333 !important;
     font-size:18px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.nav-dropdown{
+  color: #333333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.nav-item-left {
+  margin-right: auto;
 }
 
 .nav-item::after {
@@ -93,16 +115,17 @@ h2{
   width: 100%
 }
 .custom-navbar {
-  background-color: #ffffff !important;
-  box-shadow: 0px 15px 10px -15px #111;    
+  background-color: #fff7eb !important;
+  box-shadow: none;    
   border-radius: 0%;
-
+  box-shadow: 0px 10px 10px -15px #000000;
+  height: 80px;
 }
 
 ul.navbar-nav {
   color: #cb1010 !important;
   font-weight: 600;
-  background-color: #ffffff;
+  background-color: #fff7eb;
   font-family: Georgia, serif;
 }
 
@@ -119,10 +142,30 @@ ul.navbar-nav {
 
 /* ------------------------------------------------------------ */
 
+/* Below are the styles for login */
+
+.welcome-card {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  margin: auto;
+}
+
+.welcome-card-body {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* ------------------------------------------------------------ */
+
 /* Below are the styles for new ratings*/
 .rate-area {
 	float: left;
 	border-style: none;
+  padding-left: 0px;
+  padding-right: 3em;
 }
 
 .rate-area:not(:checked) > input {
@@ -234,8 +277,13 @@ button .fa-solid{
   background-color: #ffc2c2;
 }
 
+.btn-light{
+  background-color: #fff;
+  border-color: #fff;
+}
+
 .btn-light:hover{
-  background-color: #ea453f;
+  background-color: #f59692;
   color: white;
 }
 
@@ -320,9 +368,45 @@ h1.heading {
   object-fit:cover; 
   transition: all .25s ease;
 } 
+/* Default height for small screens */
 .card-content {
   padding:15px;
   text-align:left;
+  height: 120px;
+}
+/* Adjust height for small screens and above */
+@media screen and (min-width: 575px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 265px;
+  }
+}
+
+/* Adjust height for medium screens and above */
+@media screen and (min-width: 768px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 180px;
+  }
+}
+
+/* Adjust height for large screens and above */
+@media screen and (min-width: 992px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 160px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 130px;
+  }
 }
 .card-title {
   margin-top:0px;
@@ -375,6 +459,35 @@ h1.heading {
 .alert {
   margin-top: 20px;
   border-radius: 20px;
+  align-content: center;
+  display: flex;
+}
+
+.btn-close{
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+
+.user-analytics-container {
+  padding: 0vw;
+}
+
+.user-analytics-container .row {
+  padding: 0vw;
+  align-items: start;
+}
+
+.user-analytics-object {
+  display: block; 
+  padding: 2vw;
+}
+
+.user-analytics-object img{
+  width: 100%;
+  object-fit:cover; 
+  transition: all .25s ease;
 }
 
 /* The style below is for Error Pages */
@@ -384,15 +497,43 @@ div.error-container {
 }
 
 div.error-code {
-  font-size: 22vw;
-  font-family: 'Aclonica', sans-serif;
-  color: #ea453f;
-  margin-left: -5vw;
+  font-size: 10vw;
+  font-weight: 900;
+  color: #FF7F50;
+  margin-left: -.5vw;
 }
 
 div.error-msg {
-  font-size: 4vw;
+  font-size: 3vw;
   font-family: 'ADLaM Display', sans-serif;
-  color: #333333;
-  margin-top: -6vw;
+  color: #333;
+  margin-top: -1vw;
+}
+
+/* The style below is for the Organizer Main Page */
+.organizer-dashboard-section {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.create-new-event-btn {
+  margin-top: 2vw; 
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .organizer-avg-rating {
+  padding: 0px 20px;
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .filled-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: gold;
+}
+
+.organizer-dashboard-section .empty-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: #ccc;
 }

@@ -39,7 +39,7 @@ def main(filter="all", search=None, toggle=0):
     elif filter == "past events":
         dict_of_events_details =  filter_for_past_events(events=dict_of_events_details)
     elif filter != "all":
-        if filter not in EVENT_CATEGORIES:
+        if filter.capitalize() not in EVENT_CATEGORIES:
             abort(404, description = {
                 "type": "invalid_filter",
                 "caller": "user.main",
