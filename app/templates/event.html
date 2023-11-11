@@ -19,19 +19,72 @@
     {% endwith %}
 
     {% block page_content %}
-<!-- Creates a structured view of an event, displaying its name, description, venue, and an image banner related to the event, -->
-        <div class="page-header">
-            <h1>{{event.name}}</h1>
-            <h3>{{event.short_description}}</h3>
-            <p>{{event.long_description}}</p>
-            <p>Venue: {{event.venue}}</p>
-
-            <form action="/events/register/{{event.id}}" method="post">
-                <input type="submit" id="register_btn" class="btn btn-primary" value="Register"></input>
-            </form>
+        <!-- Creates a structured view of an event, displaying its name, description, venue, and an image banner related to the event, -->
+        <div class="row">
+            <div class="page-header">
+                <div style="text-align: center;">
+                    <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id + '.png')}}" class="event-banner" alt="Event Banner">
+                </div>
+            </div>
         </div>
-        <div>
-          <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id + '.png')}}" class="img-rounded" alt="Event Banner">
+        <div class="row">
+            <div>
+                <p style="font-weight: 500; font-size: 1.5em;">{{event.start_date}}</p>
+                <h1>{{event.name}}</h1>
+                <p>{{event.short_description}}</p>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Date and Time</h4>
+                    <p>Starts on: {{event.start_date}}</p>
+                    <p>Ends on: {{event.end_date}}</p>
+                    <p>From: {{event.start_time}} to {{event.end_time}} EST</p>
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Location</h4>
+                    <p>Venue: {{event.venue}}</p>
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">About this event</h4>
+                    {% if event.additional_info != ""%}
+                    <p>{{event.long_description}}</p>
+                    {% else %}
+                    <p>The organizer did not provide detailed information about the event.</p>
+                    {% endif %}
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Ticket Price</h4>
+                    {% if event.ticket_price == 0.0 %}
+                        <p>Tickets cost: Free</p>
+                    {% else %}
+                        <p>Tickets cost (per person): {{event.ticket_price}} CAD</p>
+                    {% endif %}
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Location</h4>
+                    <p>Venue: {{event.venue}}</p>
+                </div>
+
+                <div class="event-section">
+                    {% if event.additional_info != "" %}
+                    <h4 class="event-section-header">Additional Information</h4>
+                    <p>Venue: {{event.additional_info}}</p>
+                    {% endif %}
+                </div>
+
+                <div class="event-section">
+                    {% if event.redirect_link != "" %}
+                        <button type="button" class="btn btn-light" href="{{event.redirect_link}}">Register</button>
+                    {% else %}
+                    <form action="/events/register/{{event.id}}" method="post"> 
+                        <input type="submit" id="register_btn" class="btn btn-primary" value="Register"></input>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
         </div>
         <script type=text/javascript>
             console.log("JS: Is running");
