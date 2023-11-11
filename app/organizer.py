@@ -7,7 +7,7 @@ import base64
 import logging
 
 from app.main import db # db is for database
-from app.database import EventDetails, Credentials, UserDetails, EventRegistration
+from app.database import EventDetails, Credentials, UserDetails, EventRegistration, EventRating
 from app.auth import organizer_required
 
 organizer = Blueprint("organizer", __name__)
@@ -17,12 +17,47 @@ organizer = Blueprint("organizer", __name__)
 @login_required
 @organizer_required
 def main():
-    my_events_data = (
+    my_events_data = get_my_events_from_database()
+    my_avg_rating = get_avg_rating_from_database()
+
+    return render_template("organizer_main.html", my_events_data=my_events_data, my_avg_rating=my_avg_rating)
+
+def get_my_events_from_database():
+    events_data = (
         db.session.query(EventDetails)
         .join(Credentials)
         .filter(EventDetails.organizer == current_user.username)
+        .all()
     )
-    return render_template("organizer_main.html", my_events_data=my_events_data)
+
+    # Make a dict for event details
+    dict_of_events_details = {}
+    for row in events_data:
+        event_detail = {}
+
+        # TODO: Ideally we should only be passing information that is required by the user_main.html
+        for column in row.__table__.columns:
+            event_detail[column.name] = str(getattr(row, column.name))
+
+        dict_of_events_details[row.id] = event_detail
+
+    return dict_of_events_details
+
+def get_avg_rating_from_database():
+    user_rating = (
+        db.session.query(func.avg(EventRating.rating).label('avg_rating'))
+        .join(EventDetails)
+        .filter(EventDetails.organizer == current_user.username)
+        .first()
+    )
+
+    if not hasattr(user_rating, 'avg_rating'):
+        logging.warn("Query does not have an attribute names avg_rating")
+        return -1
+    avg_rating = getattr(user_rating, 'avg_rating')
+    if avg_rating is None:
+        return -1
+    return avg_rating
 
 def get_user_analytics(event_id):
     # Define a function that generates an analytic chart
@@ -30,9 +65,13 @@ def get_user_analytics(event_id):
     # returns a pie chart (with a title and legend)
     # NOTE: If the function does not find any analytics data then it returns None
     def get_analytic_chart_given_column(event_id, user_detail_column, title):
-        analytics_data = db.session.query(user_detail_column, func.count(UserDetails.username).label('order_count')).\
-            join(EventRegistration, UserDetails.username == EventRegistration.attendee_username).\
-            filter(EventRegistration.event_id == event_id).group_by(user_detail_column).all()
+        analytics_data = (
+            db.session.query(user_detail_column, func.count(UserDetails.username).label('order_count'))
+            .join(EventRegistration, UserDetails.username == EventRegistration.attendee_username)
+            .filter(EventRegistration.event_id == event_id)
+            .group_by(user_detail_column)
+            .all()
+        )
 
         # No analytics data found
         if len(analytics_data) == 0:
