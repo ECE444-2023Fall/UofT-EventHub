@@ -160,6 +160,7 @@ navbar %}
     </div>
   </div>
   {% endblock %}
+      {% if toggle == 0%}
         <div id="cardView" style="display: none;">
           <div class="content">
             <div class="container event-list-container">
@@ -189,6 +190,7 @@ navbar %}
             </div>
           </div>
         </div>
+        { % else % }
         <div id="calendarView"  style="display: block;">
           <div class="event_data_hide" id="event_data_json">{{event_data_json}}</div>
           <script src="{{ url_for ('static', filename='js/calendar.js')}}"></script>
@@ -200,6 +202,7 @@ navbar %}
               </div>
             </div>
         </div>
+        {% endif %}
         <script> //script to toggle between the card view and calendar view
         document.getElementById("toggleViewButton").addEventListener("click", function () {
             const cardView = document.getElementById("cardView");
@@ -214,7 +217,9 @@ navbar %}
                 calendarView.style.display = "block";
             }
         });
-    </script>
+        var toggle = "{{ toggle }}";
+        
+      </script>
     
     </div>
   </div>

@@ -19,8 +19,9 @@ user = Blueprint("user", __name__)
 @user.route("/user/<filter>/<search>", methods=["GET"])
 @login_required
 @user_required
-def main(filter="all", search=None):
+def main(filter="all", search=None, toggle=0):
     dict_of_events_details = get_all_events_from_database()
+    #0 - Card view and 1 - Calendar view
 
     # Filter the events list based on the search query
     if search != None:
@@ -41,7 +42,8 @@ def main(filter="all", search=None):
 
     event_data_json = convert_dictionary_to_JSON(dict_of_events_details)
     
-    return render_template("user_main.html", event_data=dict_of_events_details, event_data_json=event_data_json, search=search, filter=filter, filter_tags=FILTERS)
+    return render_template("user_main.html", event_data=dict_of_events_details, event_data_json=event_data_json, 
+                           search=search, filter=filter, filter_tags=FILTERS, toggle=toggle)
 
 def get_all_events_from_database():
     events_data = EventDetails.query.all()
@@ -59,6 +61,7 @@ def get_all_events_from_database():
 
     return dict_of_events_details
 
+#shift this up
 import random
 
 def convert_dictionary_to_JSON(events):
