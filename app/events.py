@@ -25,6 +25,7 @@ from app.globals import Role
 from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
 from app.forms import EventCreateForm
+from app.organizer import get_user_analytics
 
 events = Blueprint("events", __name__)
 
@@ -98,12 +99,14 @@ def show_event_admin(id):
     registered_users = EventRegistration.query.filter_by(event_id=id).all()
     num_of_registrations = len(registered_users)
 
+    user_analytic_charts = get_user_analytics(event_id=id)
+
     # Fix: Need to pass event ID as a string
     event_dict = event.__dict__
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
-    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations)
+    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations, user_analytic_charts=user_analytic_charts)
 
 
 @events.route("/events/create_event", methods=["GET", "POST"])
