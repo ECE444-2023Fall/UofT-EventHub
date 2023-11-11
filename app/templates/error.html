@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{%block title %}Error{% endblock %} 
+
+{% block content %}
+<!-- For JS support -->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+  integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+        <button type="button" class="btn-close" data-dismiss="alert"></button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block page_content %}
+        <div class="container error-container">
+            <div class="error-code">{{ error_code }}</div>
+            <div class="error-msg">{{ error_msg }}</div>
+        </div>
+    {% endblock %}
+</div>
+{% endblock %}
