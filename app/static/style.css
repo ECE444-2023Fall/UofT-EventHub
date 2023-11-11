@@ -100,8 +100,9 @@ h2{
 }
 .custom-navbar {
   background-color: #fff7eb !important;
-  box-shadow: 0px 15px 10px -15px #111;    
+  box-shadow: none;    
   border-radius: 0%;
+  height: 80px;
 }
 
 ul.navbar-nav {
