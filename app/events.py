@@ -11,7 +11,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
+from google.oauth2.credentials import Credentials as AppCredentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -20,11 +20,12 @@ import logging
 import os.path
 import os
 
-from app.main import db, es # db is for database
+from app.main import db, es # db is for database and es is for elasticsearch
 from app.globals import Role
 from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
 from app.forms import EventCreateForm
+from app.organizer import get_user_analytics
 
 events = Blueprint("events", __name__)
 
@@ -52,11 +53,11 @@ def show_event(id):
 
     #Check for past event. Users will only be able to rate if this is met. 
     is_past_event = past_event(id)
-    logging.info("is it a past event: ",is_past_event)
+    logging.info("is it a past event: %s",is_past_event)
 
     #get existing user rating
     prev_rating = previous_rating(attendee_username=current_user.get_id(), event_id=id)
-    logging.info("Prev Rating: ", prev_rating)
+    logging.info("Prev Rating: %s", prev_rating)
 
     event_dict = event.__dict__
     
@@ -64,15 +65,39 @@ def show_event(id):
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
+    # Get the day of the event
+    logging.info("The start date of the event is: %s - %s - %s", event_dict["start_date"].weekday(), event_dict["start_date"].month, event_dict["start_date"].day)
+
     if is_registered is not None:
         if not is_past_event:
             flash("You are registered for the event!", category="primary")
-            return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
+            return render_template("event.html", 
+            event=event_dict, 
+            is_registered=True, 
+            is_past_event = is_past_event, 
+            prev_rating=prev_rating, 
+            event_dayofweek=event_dict["start_date"].weekday(), 
+            event_day=event_dict["start_date"].day,
+            event_month=event_dict["start_date"].strftime("%B"))
         else:
             flash("This is a past event!", category="primary")
-            return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
+            return render_template("event.html", 
+            event=event_dict, 
+            is_registered=True, 
+            is_past_event = is_past_event, 
+            prev_rating=prev_rating,
+            event_dayofweek=event_dict["start_date"].weekday(), 
+            event_day=event_dict["start_date"].day,
+            event_month=event_dict["start_date"].strftime("%B"))
     else:
-        return render_template("event.html", event=event_dict, is_registered=False, is_past_event = is_past_event, prev_rating=prev_rating)
+        return render_template("event.html", 
+        event=event_dict, 
+        is_registered=False, 
+        is_past_event = is_past_event, 
+        prev_rating=prev_rating,
+        event_dayofweek=event_dict["start_date"].weekday(), 
+        event_day=event_dict["start_date"].day,
+        event_month=event_dict["start_date"].strftime("%B"))
 
 
 @events.route("/events/admin/<int:id>", methods=["GET"])
@@ -98,12 +123,14 @@ def show_event_admin(id):
     registered_users = EventRegistration.query.filter_by(event_id=id).all()
     num_of_registrations = len(registered_users)
 
+    user_analytic_charts = get_user_analytics(event_id=id)
+
     # Fix: Need to pass event ID as a string
     event_dict = event.__dict__
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
-    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations)
+    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations, user_analytic_charts=user_analytic_charts)
 
 
 @events.route("/events/create_event", methods=["GET", "POST"])
@@ -286,7 +313,7 @@ def send_file(filename):
 def register_for_event(event_id):
     """
     Description: Responsible for registering the user for an event.
-                 Upon succesfull registeration it re-renders the template
+                 Upon succesfull registration it re-renders the template
 
     Returns:
         0: On successful registration
@@ -326,11 +353,11 @@ def register_for_event(event_id):
     if is_registered:
         logging.info("Cancelling user's registration")
 
-        # Delete the registeration
+        # Delete the registration
         EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).delete()
         db.session.commit()
 
-        flash("Cancelled registeration for the event!", category="primary")
+        flash("Cancelled registration for the event!", category="primary")
         event = EventDetails.query.filter_by(id=event_id).first()
 
         return redirect(url_for('events.show_event', id=event_id))
@@ -416,12 +443,14 @@ def submit_rating(event_id):
     return redirect(url_for('events.show_event', id=event_id))
 
 
+@events.route("/events/<int:id>/calendar_invite", methods=["GET"])
+@login_required
 def create_google_calendar_event(id):
     # Get the event details from the database
-    event = EventDetails.query.filter_by(id=id).all()
+    event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        print("Error! The event id passed to create_google_calendar_event() does not exit in the database")
+        logging.info("Error! The event id passed to create_google_calendar_event() does not exit in the database")
 
     SCOPES = ['https://www.googleapis.com/auth/calendar']
     creds = None
@@ -430,7 +459,7 @@ def create_google_calendar_event(id):
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        creds = AppCredentials.from_authorized_user_file('token.json', SCOPES)
     
     # If there are no (valid) credentials available, let the user log in
     if not creds or not creds.valid:
@@ -451,17 +480,18 @@ def create_google_calendar_event(id):
             "location": event.venue,
             "colorId": 6,
             "start": {
-                "dateTime": f"{event.start_date}T{event.start_time}:00",
+                "dateTime": f"{event.start_date}T{event.start_time}",
                 "timeZone": "Canada/Eastern"
             },
             "end": {
-                "dateTime": f"{event.end_date}T{event.end_time}:00",
+                "dateTime": f"{event.end_date}T{event.end_time}",
                 "timeZone": "Canada/Eastern"
             }
         }
 
-        event = service.events().insert(calendarId="primary", body=event_data).execute()
-        print(f'Event created: {event.get("htmlLink")}')
+        event_calendar = service.events().insert(calendarId="primary", body=event_data).execute()
+        logging.info(f'Event created: {event_calendar.get("htmlLink")}')
+        return redirect(url_for("events.show_event", id=event.id))
 
     except HttpError as error:
-        print("An error occurred:", error)
+        logging.error("An error occurred: %s", error)
