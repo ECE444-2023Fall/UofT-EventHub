@@ -164,6 +164,8 @@ ul.navbar-nav {
 .rate-area {
 	float: left;
 	border-style: none;
+  padding-left: 0px;
+  padding-right: 3em;
 }
 
 .rate-area:not(:checked) > input {

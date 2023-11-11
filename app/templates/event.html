@@ -29,7 +29,29 @@
         </div>
         <div class="row">
             <div>
-                <p style="font-weight: 500; font-size: 1.5em;">{{event.start_date}}</p>
+                {% if event.event_dayofweek == 0 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Monday, {{event_month}} {{event_day}}</p>
+                
+                {% elif event.event_dayofweek == 1 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Tuesday, {{event_month}} {{event_day}}</p>
+                
+                {% elif event.event_dayofweek == 2 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Wednesday, {{event_month}} {{event_day}}</p>
+
+                {% elif event.event_dayofweek == 3 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Thursday, {{event_month}} {{event_day}}</p>
+
+                {% elif event.event_dayofweek == 4 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Friday, {{event_month}} {{event_day}}</p>
+
+                {% elif event.event_dayofweek == 5 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Saturday, {{event_month}} {{event_day}}</p>
+                
+                {% else %}
+                <p style="font-weight: 600; font-size: 1.125em;">Sunday, {{event_month}} {{event_day}}</p>     
+                
+                {% endif %}
+                
                 <h1>{{event.name}}</h1>
                 <p>{{event.short_description}}</p>
 
@@ -65,30 +87,65 @@
 
                 <div class="event-section">
                     <h4 class="event-section-header">Location</h4>
+                    {% if event.is_online == 1 %}
+                    <p>Venue: The event is online. The organizer will reach out to you on your registered email ID.</p>
+                    {% else %}
                     <p>Venue: {{event.venue}}</p>
+                    {% endif %}
                 </div>
 
+                {% if event.additional_info != "" %}
                 <div class="event-section">
-                    {% if event.additional_info != "" %}
                     <h4 class="event-section-header">Additional Information</h4>
                     <p>Venue: {{event.additional_info}}</p>
-                    {% endif %}
                 </div>
+                {% endif %}
 
+                {% if event.redirect_link != "" %}
+                    <button type="button" class="btn btn-light" href="{{event.redirect_link}}">Register</button>
+                {% else %}
+                <form action="/events/register/{{event.id}}" method="post"> 
+                    <input type="submit" id="register_btn" class="btn btn-primary" value="Register"></input>
+                </form>
+                {% endif %}
+
+                <br>
+                <br>
+
+                <!-- This is a check to ensure user is registered and the event is already over. Only then would the option to rate the event appear -->
+                {% if is_past_event and is_registered %}
                 <div class="event-section">
-                    {% if event.redirect_link != "" %}
-                        <button type="button" class="btn btn-light" href="{{event.redirect_link}}">Register</button>
-                    {% else %}
-                        <div class="d-flex">
-                            <form action="/events/register/{{event.id}}" method="post" class="me-3"> 
-                                <input type="submit" id="register_btn" class="btn btn-primary btn-lg" value="Register">
-                            </form>
-                            <form action="/events/{{event.id}}/calendar_invite" method="get"> 
-                                <input type="submit" id="add_calendar_btn" class="btn btn-primary btn-lg" value="Add to Google Calendar">
-                            </form>
-                        </div>
+                    <h4 class="event-section-header"> You previously rated this event: </h4>
+                    <!-- This is a check to see if previous rating existed. If it does then those many stars will get filled up -->
+                    {% if prev_rating > 0 %}
+                    <div class="previous_rating">
+                        {% for i in range(1, 6) %}
+                            {% if prev_rating >= i %}
+                                <span class="filled-star">★</span>
+                            {% else %}
+                                <span class="empty-star">★</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                     {% endif %}
+
+                    <br>
+                    <br>
+
+                    <h4 class="event-section-header">Rate this event:</h4>
+                    <form action="/events/submit_rating/{{event.id}}" method="post">
+                        <input type="hidden" name="event_id" value="{{ event.id }}">
+                        <ul class="rate-area">
+                            <input type="radio" id="5-star" name="rating" value="5" /><label for="5-star" title="Amazing">5 stars</label>
+                            <input type="radio" id="4-star" name="rating" value="4" /><label for="4-star" title="Good">4 stars</label>
+                            <input type="radio" id="3-star" name="rating" value="3" /><label for="3-star" title="Average">3 stars</label>
+                            <input type="radio" id="2-star" name="rating" value="2" /><label for="2-star" title="Not Good">2 stars</label>
+                            <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star" title="Bad">1 star</label>
+                        </ul>
+                        <button class="btn btn-light my-2 my-sm-0" type="submit" style="display: block;">Submit Rating</button>
+                    </form>
                 </div>
+                {% endif %}
             </div>
         </div>
         <script type=text/javascript>
@@ -111,38 +168,6 @@
                 
             }
         </script>
-
-        <!-- This is a check to see if previous rating existed. If it does then those many stars will get filled up -->
-        {% if prev_rating > 0 %}
-        <h6>You previously rated this event:</h6>
-        <div class="previous_rating">
-            {% for i in range(1, 6) %}
-                {% if prev_rating >= i %}
-                    <span class="filled-star">★</span>
-                {% else %}
-                    <span class="empty-star">★</span>
-                {% endif %}
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        <!-- This is a check to ensure user is registered and the event is already over. Only then would the option to rate the event appear -->
-        {% if is_past_event and is_registered %}
-        <div>
-            <h5>Rate this event:</h5>
-            <form action="/events/submit_rating/{{event.id}}" method="post">
-                <input type="hidden" name="event_id" value="{{ event.id }}">
-                <ul class="rate-area">
-                    <input type="radio" id="5-star" name="rating" value="5" /><label for="5-star" title="Amazing">5 stars</label>
-                    <input type="radio" id="4-star" name="rating" value="4" /><label for="4-star" title="Good">4 stars</label>
-                    <input type="radio" id="3-star" name="rating" value="3" /><label for="3-star" title="Average">3 stars</label>
-                    <input type="radio" id="2-star" name="rating" value="2" /><label for="2-star" title="Not Good">2 stars</label>
-                    <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star" title="Bad">1 star</label>
-                </ul>
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="display: block;">Submit Rating</button>
-            </form>
-        </div>
-        {% endif %}
     {% endblock %}
 </div>
 {% endblock %}
