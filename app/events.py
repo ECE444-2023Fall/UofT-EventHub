@@ -11,7 +11,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
+from google.oauth2.credentials import Credentials as AppCredentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -20,7 +20,7 @@ import logging
 import os.path
 import os
 
-from app.main import db, es # db is for database
+from app.main import db, es # db is for database and es is for elasticsearch
 from app.globals import Role
 from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
@@ -416,12 +416,14 @@ def submit_rating(event_id):
     return redirect(url_for('events.show_event', id=event_id))
 
 
+@events.route("/events/<int:id>/calendar_invite", methods=["GET"])
+@login_required
 def create_google_calendar_event(id):
     # Get the event details from the database
-    event = EventDetails.query.filter_by(id=id).all()
+    event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        print("Error! The event id passed to create_google_calendar_event() does not exit in the database")
+        logging.info("Error! The event id passed to create_google_calendar_event() does not exit in the database")
 
     SCOPES = ['https://www.googleapis.com/auth/calendar']
     creds = None
@@ -430,7 +432,7 @@ def create_google_calendar_event(id):
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        creds = AppCredentials.from_authorized_user_file('token.json', SCOPES)
     
     # If there are no (valid) credentials available, let the user log in
     if not creds or not creds.valid:
@@ -451,17 +453,18 @@ def create_google_calendar_event(id):
             "location": event.venue,
             "colorId": 6,
             "start": {
-                "dateTime": f"{event.start_date}T{event.start_time}:00",
+                "dateTime": f"{event.start_date}T{event.start_time}",
                 "timeZone": "Canada/Eastern"
             },
             "end": {
-                "dateTime": f"{event.end_date}T{event.end_time}:00",
+                "dateTime": f"{event.end_date}T{event.end_time}",
                 "timeZone": "Canada/Eastern"
             }
         }
 
-        event = service.events().insert(calendarId="primary", body=event_data).execute()
-        print(f'Event created: {event.get("htmlLink")}')
+        event_calendar = service.events().insert(calendarId="primary", body=event_data).execute()
+        logging.info(f'Event created: {event_calendar.get("htmlLink")}')
+        return redirect(url_for("events.show_event", id=event.id))
 
     except HttpError as error:
-        print("An error occurred:", error)
+        logging.error("An error occurred: %s", error)
