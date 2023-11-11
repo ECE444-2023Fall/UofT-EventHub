@@ -53,11 +53,11 @@ def show_event(id):
 
     #Check for past event. Users will only be able to rate if this is met. 
     is_past_event = past_event(id)
-    logging.info("is it a past event: ",is_past_event)
+    logging.info("is it a past event: %s",is_past_event)
 
     #get existing user rating
     prev_rating = previous_rating(attendee_username=current_user.get_id(), event_id=id)
-    logging.info("Prev Rating: ", prev_rating)
+    logging.info("Prev Rating: %s", prev_rating)
 
     event_dict = event.__dict__
     
@@ -65,15 +65,39 @@ def show_event(id):
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
+    # Get the day of the event
+    logging.info("The start date of the event is: %s - %s - %s", event_dict["start_date"].weekday(), event_dict["start_date"].month, event_dict["start_date"].day)
+
     if is_registered is not None:
         if not is_past_event:
             flash("You are registered for the event!", category="primary")
-            return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
+            return render_template("event.html", 
+            event=event_dict, 
+            is_registered=True, 
+            is_past_event = is_past_event, 
+            prev_rating=prev_rating, 
+            event_dayofweek=event_dict["start_date"].weekday(), 
+            event_day=event_dict["start_date"].day,
+            event_month=event_dict["start_date"].strftime("%B"))
         else:
             flash("This is a past event!", category="primary")
-            return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
+            return render_template("event.html", 
+            event=event_dict, 
+            is_registered=True, 
+            is_past_event = is_past_event, 
+            prev_rating=prev_rating,
+            event_dayofweek=event_dict["start_date"].weekday(), 
+            event_day=event_dict["start_date"].day,
+            event_month=event_dict["start_date"].strftime("%B"))
     else:
-        return render_template("event.html", event=event_dict, is_registered=False, is_past_event = is_past_event, prev_rating=prev_rating)
+        return render_template("event.html", 
+        event=event_dict, 
+        is_registered=False, 
+        is_past_event = is_past_event, 
+        prev_rating=prev_rating,
+        event_dayofweek=event_dict["start_date"].weekday(), 
+        event_day=event_dict["start_date"].day,
+        event_month=event_dict["start_date"].strftime("%B"))
 
 
 @events.route("/events/admin/<int:id>", methods=["GET"])

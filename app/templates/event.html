@@ -29,7 +29,29 @@
         </div>
         <div class="row">
             <div>
-                <p style="font-weight: 500; font-size: 1.5em;">{{event.start_date}}</p>
+                {% if event.event_dayofweek == 0 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Monday, {{event_month}} {{event_day}}</p>
+                
+                {% elif event.event_dayofweek == 1 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Tuesday, {{event_month}} {{event_day}}</p>
+                
+                {% elif event.event_dayofweek == 2 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Wednesday, {{event_month}} {{event_day}}</p>
+
+                {% elif event.event_dayofweek == 3 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Thursday, {{event_month}} {{event_day}}</p>
+
+                {% elif event.event_dayofweek == 4 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Friday, {{event_month}} {{event_day}}</p>
+
+                {% elif event.event_dayofweek == 5 %}
+                <p style="font-weight: 600; font-size: 1.125em;">Saturday, {{event_month}} {{event_day}}</p>
+                
+                {% else %}
+                <p style="font-weight: 600; font-size: 1.125em;">Sunday, {{event_month}} {{event_day}}</p>     
+                
+                {% endif %}
+                
                 <h1>{{event.name}}</h1>
                 <p>{{event.short_description}}</p>
 
@@ -65,7 +87,11 @@
 
                 <div class="event-section">
                     <h4 class="event-section-header">Location</h4>
+                    {% if event.is_online == 1 %}
+                    <p>Venue: The event is online. The organizer will reach out to you on your registered email ID.</p>
+                    {% else %}
                     <p>Venue: {{event.venue}}</p>
+                    {% endif %}
                 </div>
 
                 {% if event.additional_info != "" %}
