@@ -153,6 +153,8 @@ ul.navbar-nav {
 .rate-area {
 	float: left;
 	border-style: none;
+  padding-left: 0px;
+  padding-right: 3em;
 }
 
 .rate-area:not(:checked) > input {
@@ -457,6 +459,7 @@ h1.heading {
   width: 100%;
   object-fit:cover; 
   transition: all .25s ease;
+}
 
 /* The style below is for Error Pages */
 div.error-container {
