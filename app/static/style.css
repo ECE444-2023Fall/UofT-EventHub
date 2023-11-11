@@ -44,7 +44,7 @@ h2{
   border-color: #f8f9fa;
 }
 
-input[type=submit], input[type=reset] {
+/* input[type=submit], input[type=reset] {
   background-color: #04AA6D;
   border: black ;
   color: white;
@@ -52,7 +52,7 @@ input[type=submit], input[type=reset] {
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
-}
+} */
 
 .btn.btn-default:hover{
   background-color: #ea453f;
@@ -65,7 +65,7 @@ input[type=submit], input[type=reset] {
 }
 
 /* Spacing and alignment of the Login page */
-.frame-15c {
+.welcome-image {
     width: 32.0605rem;
     height: 24.8924rem;
     position: relative;
@@ -137,6 +137,7 @@ ul.navbar-nav {
   min-height: 100vh;
   display: flex;
   align-items: center;
+  margin: auto;
 }
 
 .welcome-card-body {
@@ -427,6 +428,15 @@ h1.heading {
 .alert {
   margin-top: 20px;
   border-radius: 20px;
+  align-content: center;
+  display: flex;
+}
+
+.btn-close{
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-right: 5px;
 }
 
 .user-analytics-container {
