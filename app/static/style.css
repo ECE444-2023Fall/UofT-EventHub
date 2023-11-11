@@ -1,3 +1,5 @@
+/* ------------------------------------------------------------ */
+
 /* The defualt font of our website, we can experiment with it */
 html {
   font-family: inherit;
@@ -42,6 +44,16 @@ h2{
   border-color: #f8f9fa;
 }
 
+/* input[type=submit], input[type=reset] {
+  background-color: #04AA6D;
+  border: black ;
+  color: white;
+  padding: 10px 16px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+} */
+
 .btn.btn-default:hover{
   background-color: #ea453f;
   color: white;
@@ -53,7 +65,7 @@ h2{
 }
 
 /* Spacing and alignment of the Login page */
-.frame-15c {
+.welcome-image {
     width: 32.0605rem;
     height: 24.8924rem;
     position: relative;
@@ -115,6 +127,24 @@ ul.navbar-nav {
 .empty-star {
   font-size: 180%;
   color: #ccc;
+}
+
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for login */
+
+.welcome-card {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  margin: auto;
+}
+
+.welcome-card-body {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 /* ------------------------------------------------------------ */
@@ -234,8 +264,13 @@ button .fa-solid{
   background-color: #ffc2c2;
 }
 
+.btn-light{
+  background-color: #fff;
+  border-color: #fff;
+}
+
 .btn-light:hover{
-  background-color: #ea453f;
+  background-color: #f59692;
   color: white;
 }
 
@@ -393,6 +428,15 @@ h1.heading {
 .alert {
   margin-top: 20px;
   border-radius: 20px;
+  align-content: center;
+  display: flex;
+}
+
+.btn-close{
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-right: 5px;
 }
 
 .user-analytics-container {
