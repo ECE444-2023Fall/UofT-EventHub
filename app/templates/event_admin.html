@@ -118,7 +118,7 @@
                     </form>
                 </div>
 
-                {% if user_analytic_charts.length != 0 %}
+                {% if user_analytic_charts is defined and user_analytic_charts|length > 0 %}
                 <div class="event-section" style="margin-top: 2vw;">
                     <h2 class="event-section-header">User Analytics</h2>
                     <div class="container user-analytics-container">

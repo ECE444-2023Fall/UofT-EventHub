@@ -165,6 +165,8 @@ ul.navbar-nav {
 .rate-area {
 	float: left;
 	border-style: none;
+  padding-left: 0px;
+  padding-right: 3em;
 }
 
 .rate-area:not(:checked) > input {
@@ -516,6 +518,7 @@ h1.heading {
   width: 100%;
   object-fit:cover; 
   transition: all .25s ease;
+}
 
 /* The style below is for Error Pages */
 div.error-container {
@@ -524,15 +527,43 @@ div.error-container {
 }
 
 div.error-code {
-  font-size: 22vw;
-  font-family: 'Aclonica', sans-serif;
-  color: #ea453f;
-  margin-left: -5vw;
+  font-size: 10vw;
+  font-weight: 900;
+  color: #FF7F50;
+  margin-left: -.5vw;
 }
 
 div.error-msg {
-  font-size: 4vw;
+  font-size: 3vw;
   font-family: 'ADLaM Display', sans-serif;
-  color: #333333;
-  margin-top: -6vw;
+  color: #333;
+  margin-top: -1vw;
+}
+
+/* The style below is for the Organizer Main Page */
+.organizer-dashboard-section {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.create-new-event-btn {
+  margin-top: 2vw; 
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .organizer-avg-rating {
+  padding: 0px 20px;
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .filled-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: gold;
+}
+
+.organizer-dashboard-section .empty-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: #ccc;
 }
