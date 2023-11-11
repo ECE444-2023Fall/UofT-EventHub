@@ -1,25 +1,71 @@
-h1{
-    color: blue;
+/* ------------------------------------------------------------ */
+
+/* The defualt font of our website, we can experiment with it */
+html {
+  font-family: inherit;
 }
 
-input[type=button], input[type=submit], input[type=reset] {
-    background-color: #04AA6D;
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-  }
+h1{
+    font-weight: 900;
+    color: #1d293f;
+    font-size: 45px;
+}
+
+p{
+  color: #1d293f;
+}
+
+h2{
+  font-weight: 900;
+  color: #1d293f;
+  font-size: 35px;
+}
 
 .page-header{
-    color:black;
-    font-family: Inter;
-    font-weight: 700px;
-    text-align: center;
+  padding-top: 50px;
+  text-align: center;
 }
 
-.frame-15c {
+.page-header-create-event{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-icon{
+  font-size: 10em;
+  color: #f1827e;
+}
+
+/* overriding bootstrap default button to fit project theme*/
+.btn.btn-default{
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+/* input[type=submit], input[type=reset] {
+  background-color: #04AA6D;
+  border: black ;
+  color: white;
+  padding: 10px 16px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+} */
+
+.btn.btn-default:hover{
+  background-color: #ea453f;
+  color: white;
+}
+
+.btn.btn-default:active {
+  background-color: #ea453f;
+  color: white;
+}
+
+/* Spacing and alignment of the Login page */
+.welcome-image {
     width: 32.0605rem;
     height: 24.8924rem;
     position: relative;
@@ -28,6 +74,448 @@ input[type=button], input[type=submit], input[type=reset] {
     flex-shrink: 0;
   }
 
+/* Navbar CSS */
+.nav-logo{
+  padding-right: 30px;
+  padding-left: 80px;
+  padding-top: 7px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hub{
+  color:#FF7F50;
+  font-weight:700;
+}
+
 .nav-link{
     color: #333333 !important;
+    font-size:18px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.nav-dropdown{
+  color: #333333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.nav-item-left {
+  margin-right: auto;
+}
+
+.nav-item::after {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 2px;
+  background: #FF7F50;
+  transition: 0.4s
+}
+
+.nav-item:hover::after {
+  width: 100%
+}
+.custom-navbar {
+  background-color: #fff7eb !important;
+  box-shadow: none;    
+  border-radius: 0%;
+  box-shadow: 0px 10px 10px -15px #000000;
+  height: 80px;
+}
+
+ul.navbar-nav {
+  color: #cb1010 !important;
+  font-weight: 600;
+  background-color: #fff7eb;
+  font-family: Georgia, serif;
+}
+
+/* Below are styles for the stars for previous ratings */
+.filled-star {
+  font-size: 180%;
+  color: gold;
+}
+
+.empty-star {
+  font-size: 180%;
+  color: #ccc;
+}
+
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for login */
+
+.welcome-card {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  margin: auto;
+}
+
+.welcome-card-body {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for new ratings*/
+.rate-area {
+	float: left;
+	border-style: none;
+  padding-left: 0px;
+  padding-right: 3em;
+}
+
+.rate-area:not(:checked) > input {
+	position: absolute;
+	top: -9999px;
+	clip: rect(0, 0, 0, 0);
+}
+
+.rate-area:not(:checked) > label {
+	float: right;
+	width: 0.8em;
+	overflow: hidden;
+	white-space: nowrap;
+	cursor: pointer;
+	font-size: 180%;
+	color: lightgrey;
+}
+
+.rate-area:not(:checked) > label:before {
+	content: "★";
+}
+
+.rate-area > input:checked ~ label {
+	color: gold;
+}
+
+.rate-area:not(:checked) > label:hover,
+.rate-area:not(:checked) > label:hover ~ label {
+	color: gold;
+}
+
+.rate-area > input:checked + label:hover,
+.rate-area > input:checked + label:hover ~ label,
+.rate-area > input:checked ~ label:hover,
+.rate-area > input:checked ~ label:hover ~ label,
+.rate-area > label:hover ~ input:checked ~ label {
+	color: gold;
+}
+/* ------------------------------------------------------------ */
+
+/* The defualt font of our website, we can experiment with it */
+
+.event-banner{
+  margin: auto;
+  border-radius: 1rem;
+  width: 100%;
+  height: 60vh;
+}
+
+.event-section{
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.event-section-header{
+  font-weight: 700;
+  color: #1d293f;
+}
+
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for user_main.html */
+
+.search-box{
+  width: 20vw;
+  padding: 1em 2em;
+  height: 3.5vh;
+  background: #fff;
+  margin: 100px auto 0;
+  border-radius: 5px;
+  border: 10px solid rgba(255,255,255,.5);
+  font-size: 23px;
+}
+
+.search-box:focus{
+  outline: none;
+}
+
+.event-list-container{
+  padding-top: 2.5vh;
+}
+
+.search-sort-container{
+  padding-bottom: 2.5vh;
+}
+
+.autocomplete-drop-down{
+  display: block; 
+  text-align: center;
+  position: sticky; 
+  border: none;
+}
+
+.autocomplete-item:hover{
+  color: #ea453f;
+}
+
+button .fa-solid{
+  width: 2vw;
+  font-size: 1.5em;
+}
+
+#search-btn{
+  width: 3.5vw;
+  background-color: #ffc2c2;
+}
+
+#search-btn:hover{
+  background-color: #ffc2c2;
+}
+
+.btn-light{
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.btn-light:hover{
+  background-color: #f59692;
+  color: white;
+}
+
+.row{
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.form{
+  display: inline-block;
+  width: 100%;
+  margin: 10px 0;
+}
+ 
+.form-group{
+  margin: 10px 0;
+}
+.wrapper {
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+
+.container-fostrap {
+  display: table-cell;
+  padding: 1em;
+  text-align: center;
+  vertical-align: middle;
+}
+.fostrap-logo {
+  width: 100px;
+  margin-bottom:15px
+}
+h1.heading {
+  color: #fff;
+  font-size: 1.15em;
+  font-weight: 900;
+  margin: 0 0 0.5em;
+  color: #505050;
+}
+@media (min-width: 450px) {
+  h1.heading {
+    font-size: 3.55em;
+  }
+}
+@media (min-width: 760px) {
+  h1.heading {
+    font-size: 3.05em;
+  }
+}
+@media (min-width: 900px) {
+  h1.heading {
+    font-size: 3.25em;
+    margin: 0 0 0.3em;
+  }
+}
+.card {
+  display: block; 
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); 
+    transition: box-shadow .25s; 
+}
+.card:hover {
+  box-shadow: 0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+.img-card {
+  width: 100%;
+  height:200px;
+  border-top-left-radius:2px;
+  border-top-right-radius:2px;
+  display:block;
+    overflow: hidden;
+}
+.img-card img{
+  width: 100%;
+  height: 200px;
+  object-fit:cover; 
+  transition: all .25s ease;
+} 
+/* Default height for small screens */
+.card-content {
+  padding:15px;
+  text-align:left;
+  height: 120px;
+}
+/* Adjust height for small screens and above */
+@media screen and (min-width: 575px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 265px;
+  }
+}
+
+/* Adjust height for medium screens and above */
+@media screen and (min-width: 768px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 180px;
+  }
+}
+
+/* Adjust height for large screens and above */
+@media screen and (min-width: 992px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 160px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 130px;
+  }
+}
+.card-title {
+  margin-top:0px;
+  font-weight: 700;
+  font-size: 1.65em;
+}
+.card-title a {
+  color: #000;
+  text-decoration: none !important;
+}
+.card-read-more {
+  border-top: 1px solid #D4D4D4;
+}
+.card-read-more a {
+  text-decoration: none !important;
+  padding:10px;
+  font-weight:600;
+  text-transform: uppercase
+}
+
+/* Below are the styles for user_organizers_list.html */
+.icon-container {
+  text-align: center;
+  margin-top: 55px; /* Adjust the margin as needed */
+}
+
+.fa-users {
+  font-size: 130px; /* Adjust the font size as needed */
+  vertical-align: middle;
+}
+
+/* The style below is for the flash messages: */
+.alert {
+  margin-top: 20px;
+  border-radius: 20px;
+  align-content: center;
+  display: flex;
+}
+
+.btn-close{
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+
+.user-analytics-container {
+  padding: 0vw;
+}
+
+.user-analytics-container .row {
+  padding: 0vw;
+  align-items: start;
+}
+
+.user-analytics-object {
+  display: block; 
+  padding: 2vw;
+}
+
+.user-analytics-object img{
+  width: 100%;
+  object-fit:cover; 
+  transition: all .25s ease;
+}
+
+/* The style below is for Error Pages */
+div.error-container {
+  text-align: center;
+  justify-content: center;
+}
+
+div.error-code {
+  font-size: 10vw;
+  font-weight: 900;
+  color: #FF7F50;
+  margin-left: -.5vw;
+}
+
+div.error-msg {
+  font-size: 3vw;
+  font-family: 'ADLaM Display', sans-serif;
+  color: #333;
+  margin-top: -1vw;
+}
+
+/* The style below is for the Organizer Main Page */
+.organizer-dashboard-section {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.create-new-event-btn {
+  margin-top: 2vw; 
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .organizer-avg-rating {
+  padding: 0px 20px;
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .filled-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: gold;
+}
+
+.organizer-dashboard-section .empty-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: #ccc;
 }

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+<!-- This is the general template for showcasing event descriptions on organiser side-->
+
+{% block title %}Event's Page{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
+        <a class="navbar-brand" href="/">
+          <h3 class="nav-logo"> UofT Event<span class="hub">Hub</span>  </h3>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mb-2 mb-lg-0" style="padding-right: 5vw;">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="padding-right: 5vw;" >
+        
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Profile
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item nav-dropdown" href="/logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %} 
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+        <button type="button" class="btn-close" data-dismiss="alert"></button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block page_content %}
+        <!-- Creates a structured view of an event, displaying its name, description, venue, and an image banner related to the event, -->
+        <div class="row">
+            <div class="page-header">
+                <div style="text-align: center;">
+                    <img src="{{ url_for ('static', filename='event-assets/event_banner_' + event.id + '.png')}}" class="event-banner" alt="Event Banner">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <p style="font-weight: 500; font-size: 1.5em;">{{event.start_date}}</p>
+                <h1>{{event.name}}</h1>
+                <p>{{event.short_description}}</p>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Number of Registrations</h4>
+                    <p>{{num_of_registrations}} <b>/ {{event.max_capacity}}</b></p>
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Date and Time</h4>
+                    <p>Starts on: {{event.start_date}}</p>
+                    <p>Ends on: {{event.end_date}}</p>
+                    <p>From: {{event.start_time}} to {{event.end_time}} EST</p>
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Location</h4>
+                    <p>Venue: {{event.venue}}</p>
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">About this event</h4>
+                    {% if event.additional_info != ""%}
+                    <p>{{event.long_description}}</p>
+                    {% else %}
+                    <p>The organizer did not provide detailed information about the event.</p>
+                    {% endif %}
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Ticket Price</h4>
+                    {% if event.ticket_price == 0.0 %}
+                        <p>Tickets cost: Free</p>
+                    {% else %}
+                        <p>Tickets cost (per person): {{event.ticket_price}} CAD</p>
+                    {% endif %}
+                </div>
+
+                <div class="event-section">
+                    <h4 class="event-section-header">Location</h4>
+                    <p>Venue: {{event.venue}}</p>
+                </div>
+
+                {% if event.additional_info != "" %}
+                <div class="event-section">
+                    <h4 class="event-section-header">Additional Information</h4>
+                    <p>Venue: {{event.additional_info}}</p>
+                </div>
+                {% endif %}
+    
+                <div class="event-section" style="display: flex;">
+                    <form action="/events/edit_event/{{event.id}}" method="GET">
+                        <button type="submit" class="btn btn-primary" name="update-action" value="update">Edit Event</button>
+                    </form>
+                    <form action="/events/delete_event/{{event.id}}" method="POST" onsubmit="return confirmDelete();" style="margin-left: 50px;">
+                        <button type="submit" class="btn btn-danger" name="update-action" value="delete">Delete Event</button>
+                    </form>
+                </div>
+
+                {% if user_analytic_charts is defined and user_analytic_charts|length > 0 %}
+                <div class="event-section" style="margin-top: 2vw;">
+                    <h2 class="event-section-header">User Analytics</h2>
+                    <div class="container user-analytics-container">
+                        <div class="row">
+                            {% for chart in user_analytic_charts  %}
+                            <div class="col-md-12 col-lg-6">
+                                <div class="user-analytics-object">
+                                    <img src="data:image/png;base64,{{ chart }}" alt="User Analytic Pie Chart">
+                                </div>
+                            </div>
+                            {% endfor %}            
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <script>
+            function confirmDelete() {
+                return confirm("Are you sure you want to delete this event?");
+            }
+        </script>
+        
+{% endblock %}
+</div>
+{% endblock %}

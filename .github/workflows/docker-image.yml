@@ -13,18 +13,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
+    - name: checkoutcode
+      uses: actions/checkout@v3
+
+    - name: Build docker with new method
+      uses: isbang/compose-action@v1.5.1
+      with:
+          compose-file: "docker-compose.yml"
+          down-flags: "--volumes"
+          services: |
+            elasticsearch
+            web
+
+    - name: Check the website status
       run: |
-        docker build . -t python-docker
-        docker run -d -p 5000:5000 python-docker
-        sleep 5
+        ls -a
+        echo "Sleeping for 60 seconds"
+        sleep 45
         docker ps -a
-        if curl -s http://localhost:5000/ | grep -o "500 Internal Server Error"
+        if curl -s http://localhost:5000/ | grep "Login to UofT Event Hub"
           then
-            echo "A 500 Internal server error was reported. Cannot allow PR to merge!"
-            exit 1
+            echo "Login page detected. PR can be merged!"
           else
-            echo "Website does not return a 500 error code."
+            echo "Login page not detected. PR can't be allowed to merge!"
+            exit 1
         fi
+
+    - name: Check the unit tests status
+      run: |
+         echo "Running unit tests"
+         docker exec -i web-server bash -c "cd /tests && python -m pytest"
 

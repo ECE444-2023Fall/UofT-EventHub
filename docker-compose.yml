@@ -2,7 +2,7 @@ version: '3'
 
 services:
   web:
-    container_name: web
+    container_name: web-server
     restart: always
     build:
       context: .
@@ -16,6 +16,8 @@ services:
       - elasticsearch
     networks:
       - elk
+    volumes:
+      - ./app:/app # mounting local directory with container directory to reflect changes to flask application. 
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0

@@ -1,49 +1,56 @@
-{% extends "bootstrap/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
 
 {% block title %}Organizer's Page{% endblock %}
+
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Event Planner</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-            </ul>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/logout">Log out</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-{% endblock %}
+ <!-- this overrides the definition of the navbar in the -->
+{% endblock %} 
 
 {% block content %}
-<div class="container">
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+
+<div class="container event-form">
+  <br>
+    <br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+        <button type="button" class="btn-close" data-dismiss="alert"></button>
         {{ message }}
     </div>
     {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     {% block page_content %}
-        <div class="page-header">
-            <h1>Create Event</h1>
-        </div>
-        {{ wtf.quick_form(form) }}
-        <br />
-        <p><a href="/organizer">Return to main.</a></p>
+    
+          <section class="vh-85">
+            <div class="container h-100">
+              <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-10 col-xl-10">
+                  <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                      <div class="row align-items-center justify-content-center">
+                        <div class="col-12 col-md-8">
+                          <div class="page-header-create-event">
+                            <h1>Create Event</h1>
+                          </div>
+                            {{ wtf.quick_form(form) }}
+                            <!--for now cancel button is in next line, until then leaving it as hyperlink
+                              <a href="/organizer" class="btn btn-default">Cancel</a>
+                            -->
+                          <p><a href="/organizer">Return to main</a></p>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
     {% endblock %}
 </div>
 {% endblock %}
+
