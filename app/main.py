@@ -128,6 +128,14 @@ def create_app(debug):
 
         return render_template('error.html', error_code=401, error_msg="UNAUTHORIZED"), 401
 
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        logging.error(error)
+        description = "Our team is working to fix the issue. Please try again later."
+        flash(description, category="info")
+
+        return render_template('error.html', error_code=500, error_msg="Oops! Something went wrong"), 500
+
     return app
 
 app = create_app(debug=True)
