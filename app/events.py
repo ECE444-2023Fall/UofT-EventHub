@@ -313,7 +313,7 @@ def send_file(filename):
 def register_for_event(event_id):
     """
     Description: Responsible for registering the user for an event.
-                 Upon succesfull registeration it re-renders the template
+                 Upon succesfull registration it re-renders the template
 
     Returns:
         0: On successful registration
@@ -353,11 +353,11 @@ def register_for_event(event_id):
     if is_registered:
         logging.info("Cancelling user's registration")
 
-        # Delete the registeration
+        # Delete the registration
         EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).delete()
         db.session.commit()
 
-        flash("Cancelled registeration for the event!", category="primary")
+        flash("Cancelled registration for the event!", category="primary")
         event = EventDetails.query.filter_by(id=event_id).first()
 
         return redirect(url_for('events.show_event', id=event_id))
