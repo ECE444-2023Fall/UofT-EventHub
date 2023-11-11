@@ -10,6 +10,7 @@ from app.search import get_eventids_matching_search_query
 from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list, filter_for_past_events
 from app.main import db
 import json
+import random
 
 user = Blueprint("user", __name__)
 
@@ -66,9 +67,6 @@ def get_all_events_from_database():
         dict_of_events_details[row.id] = event_detail
 
     return dict_of_events_details
-
-#shift this up
-import random
 
 def convert_dictionary_to_JSON(events):
     event_list = []
