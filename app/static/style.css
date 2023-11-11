@@ -479,17 +479,17 @@ div.error-container {
 }
 
 div.error-code {
-  font-size: 22vw;
-  font-family: 'Aclonica', sans-serif;
-  color: #ea453f;
-  margin-left: -5vw;
+  font-size: 10vw;
+  font-weight: 900;
+  color: #FF7F50;
+  margin-left: -.5vw;
 }
 
 div.error-msg {
-  font-size: 4vw;
+  font-size: 3vw;
   font-family: 'ADLaM Display', sans-serif;
-  color: #333333;
-  margin-top: -6vw;
+  color: #333;
+  margin-top: -1vw;
 }
 
 /* The style below is for the Organizer Main Page */
