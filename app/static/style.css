@@ -411,6 +411,47 @@ h1.heading {
     height: 130px;
   }
 }
+/* Default height for small screens */
+.card-content-organizer-event {
+  padding:15px;
+  text-align:left;
+  height: 120px;
+}
+/* Adjust height for small screens and above */
+@media screen and (min-width: 575px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 160px;
+  }
+}
+
+/* Adjust height for medium screens and above */
+@media screen and (min-width: 768px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 180px;
+  }
+}
+
+/* Adjust height for large screens and above */
+@media screen and (min-width: 992px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 170px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .card-content-organizer-event {
+    padding:15px;
+    text-align:left;
+    height: 150px;
+  }
+}
+
 .card-title {
   margin-top:0px;
   font-weight: 700;
