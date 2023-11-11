@@ -364,7 +364,13 @@ h1.heading {
   height: 200px;
   object-fit:cover; 
   transition: all .25s ease;
-} 
+}
+
+.card-content-organizer-list {
+  padding:15px;
+  text-align:left;
+}
+
 /* Default height for small screens */
 .card-content {
   padding:15px;
@@ -427,7 +433,7 @@ h1.heading {
 /* Below are the styles for user_organizers_list.html */
 .icon-container {
   text-align: center;
-  margin-top: 55px; /* Adjust the margin as needed */
+  margin-top: 50px; /* Adjust the margin as needed */
 }
 
 .fa-users {
