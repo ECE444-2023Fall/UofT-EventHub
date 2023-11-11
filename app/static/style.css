@@ -227,15 +227,15 @@ button .fa-solid{
 
 #search-btn{
   width: 3.5vw;
-  background-color: #ffc2c2;
+  background-color: #FF7F50;
 }
 
 #search-btn:hover{
-  background-color: #ffc2c2;
+  background-color: #FF7F50;
 }
 
 .btn-light:hover{
-  background-color: #ea453f;
+  background-color: #0074DF;
   color: white;
 }
 
