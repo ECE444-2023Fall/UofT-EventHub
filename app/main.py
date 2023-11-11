@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, render_template, flash
 from flask_cors import CORS
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 import os, time
@@ -64,6 +64,7 @@ def create_app(debug):
     from app.search import search
     from app.filter import filter
     from app.user_events import user_events
+    from app.account import account
 
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(user, url_prefix="/")
@@ -72,6 +73,7 @@ def create_app(debug):
     app.register_blueprint(search, url_prefix="/")
     app.register_blueprint(filter, url_prefix="/")
     app.register_blueprint(user_events, url_prefix="/")
+    app.register_blueprint(account, url_prefix="/")
 
     with app.app_context():
         db.create_all()
@@ -89,7 +91,7 @@ def create_app(debug):
             event_detail = {
                 "id": str(getattr(row, "id")),
                 "name": str(getattr(row, "name")),
-                "description": str(getattr(row, "description")),
+                "description": str(getattr(row, "short_description")),
                 "category": str(getattr(row, "category")),
                 "venue": str(getattr(row, "venue")),
                 "additional_info": str(getattr(row, "additional_info")),
@@ -106,6 +108,25 @@ def create_app(debug):
     @login_manager.user_loader
     def load_user(username):
         return Credentials.query.get(username)
+
+    # Custom Error Handling for 404 Error
+    @app.errorhandler(404)
+    def page_not_found(error):
+        logging.error(error)
+        description = getattr(error, 'description')
+        if "message" in description:
+            flash(description["message"], category="danger")
+
+        return render_template('error.html', error_code=404, error_msg="PAGE NOT FOUND"), 404
+
+    @app.errorhandler(401)
+    def unauthorized(error):
+        logging.error(error)
+        description = getattr(error, 'description')
+        if "message" in description:
+            flash(description["message"], category="danger")
+
+        return render_template('error.html', error_code=401, error_msg="UNAUTHORIZED"), 401
 
     return app
 

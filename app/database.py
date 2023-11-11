@@ -7,14 +7,35 @@ class Credentials(db.Model, UserMixin):
     __tablename__ = "credentials"
 
     username = db.Column(db.String(150), primary_key=True)
-    password = db.Column(db.String(150))
     role = db.Column(db.Integer)  # 0: User, 1: Organizer
+    password = db.Column(db.String(150))
     name  = db.Column(db.String(150))
 
     # A sample data from this table will look like this
     def __repr__(self):
         return (
             f"Username : {self.username}, Password: {self.password}, Role: {self.role}, Name: {self.name}"
+        )
+
+    def get_id(self):
+        return (self.username)
+
+class UserDetails(db.Model, UserMixin):
+    __tablename__ = "user_details"
+
+    username = db.Column(db.String(150), ForeignKey("credentials.username"), primary_key=True)
+    firstname = db.Column(db.String(150))
+    lastname = db.Column(db.String(150))
+    year = db.Column(db.String(150))
+    course_type = db.Column(db.String(150))
+    department = db.Column(db.String(150))
+    campus = db.Column(db.String(150))
+    email = db.Column(db.String(150))
+
+    # A sample data from this table will look like this
+    def __repr__(self):
+        return (
+            f"Username : {self.username}, First name: {self.firstname}, Last name: {self.lastname}"
         )
 
     def get_id(self):
@@ -39,7 +60,8 @@ class EventDetails(db.Model):
     # Event Indetifier information
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=False)
-    description = db.Column(db.String(1000))
+    short_description = db.Column(db.String(100))
+    long_description = db.Column(db.String(1000))
     category = db.Column(db.String(150))
     organizer = db.Column(db.String(150), ForeignKey("credentials.username"))
 
@@ -71,6 +93,11 @@ class EventDetails(db.Model):
 
     def get_id(self):
         return self.id
+    
+    # Method to get the Organizer's name without having to directly access Credentials table otherwise
+    def get_organizer_name_from_username(organizer_username):
+        organizer = Credentials.query.filter_by(username=organizer_username).first()
+        return organizer.name if organizer else None
 
 
 class EventBanner(db.Model):
@@ -117,17 +144,3 @@ class EventRegistration(db.Model):
     # A sample data from this table will look like this
     def __repr__(self):
         return f"Attendee: {self.attendee_username}, Event ID: {self.event_id}"
-
-
-class UserDetails(db.Model):
-    __tablename__ = "user_details"
-
-    # Basic user details we will need for registration
-    username = db.Column(db.String(150), primary_key=True)
-    firstname = db.Column(db.String(250), nullable=False)
-    lastname = db.Column(db.String(250), nullable=True)
-    email = db.Column(db.String(250), nullable=False)
-
-    # A sample data from this table will look like this
-    def __repr__(self):
-        return f"Username : {self.username}, First name: {self.firstname}, Email: {self.email}"

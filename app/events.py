@@ -25,6 +25,7 @@ from app.globals import Role
 from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
 from app.forms import EventCreateForm
+from app.organizer import get_user_analytics
 
 events = Blueprint("events", __name__)
 
@@ -41,7 +42,7 @@ def show_event(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "show_event",
             "message": "Can not show the event since the event does not exist"
@@ -65,8 +66,12 @@ def show_event(id):
     event_dict["id"] = str_id
 
     if is_registered is not None:
-        flash("You are already registered for the event!", category="info")
-        return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
+        if not is_past_event:
+            flash("You are registered for the event!", category="primary")
+            return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
+        else:
+            flash("This is a past event!", category="primary")
+            return render_template("event.html", event=event_dict, is_registered=True, is_past_event = is_past_event, prev_rating=prev_rating)
     else:
         return render_template("event.html", event=event_dict, is_registered=False, is_past_event = is_past_event, prev_rating=prev_rating)
 
@@ -84,7 +89,7 @@ def show_event_admin(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "show_event_admin",
             "message": "Can not show the event since the event does not exist"
@@ -94,12 +99,14 @@ def show_event_admin(id):
     registered_users = EventRegistration.query.filter_by(event_id=id).all()
     num_of_registrations = len(registered_users)
 
+    user_analytic_charts = get_user_analytics(event_id=id)
+
     # Fix: Need to pass event ID as a string
     event_dict = event.__dict__
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
-    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations)
+    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations, user_analytic_charts=user_analytic_charts)
 
 
 @events.route("/events/create_event", methods=["GET", "POST"])
@@ -112,7 +119,8 @@ def create_event():
         # Add the event details
         new_event = EventDetails(
             name=form.name.data,
-            description=form.description.data,
+            short_description=form.short_description.data,
+            long_description=form.long_description.data,
             category=form.category.data.lower(),
             organizer=current_user.username,
             is_online=form.is_online.data,
@@ -165,7 +173,7 @@ def edit_event(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "edit_event",
             "message": "Can not edit the event since the event does not exist"
@@ -190,7 +198,8 @@ def edit_event(id):
         logging.info(f"Edited Event Entries: {form.name.data}, {form.category.data}")
         # Add the event details
         event.name = form.name.data
-        event.description = form.description.data
+        event.short_description = form.short_description.data
+        event.long_description = form.long_description.data
         event.category = form.category.data.lower()
         event.is_online = form.is_online.data
         event.venue = form.venue.data
@@ -244,7 +253,7 @@ def delete_event(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "delete_event",
             "message": "Can not delete the event since the event does not exist"
@@ -252,7 +261,7 @@ def delete_event(id):
 
     if event.organizer != current_user.username:
         logging.info(f"Current Organizer ({current_user.username} doesn't match the event creator {event.organizer})")
-        abort(401, {
+        abort(401, description = {
             "type": "unauthorized_organizer",
             "caller": "delete_event",
             "message": "You are not authorized to delete this event"
@@ -324,7 +333,7 @@ def register_for_event(event_id):
         EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).delete()
         db.session.commit()
 
-        flash("Cancelled registeration for the event!", category="success")
+        flash("Cancelled registeration for the event!", category="primary")
         event = EventDetails.query.filter_by(id=event_id).first()
 
         return redirect(url_for('events.show_event', id=event_id))
@@ -338,7 +347,6 @@ def register_for_event(event_id):
     db.session.add(new_registration)
     db.session.commit()
 
-    flash("Registered for the event!", category="success")
     event = EventDetails.query.filter_by(id=event_id).first()
     return redirect(url_for('events.show_event', id=event_id))
 
@@ -346,7 +354,7 @@ def add_event_to_index(new_event):
     event_detail = {
         "id": new_event.id,
         "name": new_event.name,
-        "description": new_event.description,
+        "short_description": new_event.short_description,
         "category": new_event.category,
         "venue": new_event.venue,
         "additional_info": new_event.additional_info,
@@ -395,7 +403,7 @@ def submit_rating(event_id):
             existing_rating.rating = rating
             db.session.commit()
             logging.info("Here is the updated rating: ", existing_rating)
-            flash('Rating Updated successfully', 'success')
+            flash('Rating Updated successfully!', 'warning')
         else:
             # Create a new rating record
             new_rating = EventRating(attendee_username=attendee_username ,event_id=event_id, rating=rating)
@@ -404,9 +412,9 @@ def submit_rating(event_id):
             
             db.session.commit()
 
-            flash('Rating submitted successfully', 'success')
+            flash('Rating submitted successfully!', 'warning')
     else:
-        flash('Failed to submit rating. Please try again.', 'error')
+        flash('Failed to submit rating. Please try again.', 'danger')
         
     return redirect(url_for('events.show_event', id=event_id))
 

@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
 from sqlalchemy import distinct
 from datetime import datetime
 import logging
 
-from app.globals import FILTERS
+from app.globals import FILTERS, EVENT_CATEGORIES
 from app.auth import login_required, user_required
 from app.database import EventDetails, Credentials
 from app.search import get_eventids_matching_search_query
@@ -36,6 +36,12 @@ def main(filter="all", search=None):
     elif filter == "past events":
         dict_of_events_details =  filter_for_past_events(events=dict_of_events_details)
     elif filter != "all":
+        if filter.capitalize() not in EVENT_CATEGORIES:
+            abort(404, description = {
+                "type": "invalid_filter",
+                "caller": "user.main",
+                "message": f"Invalid filter category {filter}"
+            })
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
     return render_template("user_main.html", event_data=dict_of_events_details, search=search, filter=filter, filter_tags=FILTERS)
@@ -61,13 +67,13 @@ def get_all_events_from_database():
 @login_required
 @user_required
 def view_all_organizers():
-    logging.info("Loading webpage for Users to view Organizers")
+    logging.info("Loading webpage for Users to view all Organizers")
 
     organizers = get_active_organizers()
 
     return render_template("user_organizers_list.html", organizers=organizers)
 
-# Get only the organizers that have upcoming events or had past events
+# Get only the organizers that have upcoming events or had events in the past
 def get_active_organizers():
 
     # Joining EventDetails and Credentials tables
@@ -83,11 +89,13 @@ def get_active_organizers():
 @user_required
 def view_organizer(organizer_username):
     logging.info("Loading webpage for Organizer: %s", organizer_username)
+
+    organizer_name = EventDetails.get_organizer_name_from_username(organizer_username)
     
     upcoming_events = get_organizer_upcoming_events(organizer_username)
     past_events = get_organizer_past_events(organizer_username)
 
-    return render_template("user_organizer_page.html", upcoming_events=upcoming_events, past_events=past_events)
+    return render_template("user_organizer_page.html", organizer_name=organizer_name, upcoming_events=upcoming_events, past_events=past_events)
 
 # Get the upcoming events for an organizer
 def get_organizer_upcoming_events(organizer_username):

@@ -3,6 +3,17 @@
 {% block title %}Organizer List for Users{% endblock %}
 
 {% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+        <button type="button" class="btn-close" data-dismiss="alert"></button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% block page_content %}
     {% block page_content %}
         <div class="page-header">
             <h1>List of Organizers</h1>
@@ -13,7 +24,7 @@
                     <!-- Displays the list of organizers in card view, each as a hyperlink with their respective pages for more information. -->
                     {% for organizer_username, organizer_name in organizers %}
                         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                            <div class="card" style="min-height: 300px;"> <!-- Adjust the minimum height as needed -->
+                            <div class="card" style="min-height: 300px;"> <!-- Can adjust the minimum height as needed -->
                                 <a class="img-card" href="/user/organizers/{{ organizer_username }}">
                                     <div class="icon-container">
                                         <!-- Added icons for organizers -->
