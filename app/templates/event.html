@@ -35,8 +35,8 @@
 
                 <div class="event-section">
                     <h4 class="event-section-header">Date and Time</h4>
-                    <p>Starts on: {{event.start_date}}</p>
-                    <p>Ends on: {{event.end_date}}</p>
+                    <p>Starts On: {{event.start_date}}</p>
+                    <p>Ends On: {{event.end_date}}</p>
                     <p>From: {{event.start_time}} to {{event.end_time}} EST</p>
                 </div>
 
@@ -57,9 +57,9 @@
                 <div class="event-section">
                     <h4 class="event-section-header">Ticket Price</h4>
                     {% if event.ticket_price == 0.0 %}
-                        <p>Tickets cost: Free</p>
+                        <p>Tickets Cost: Free</p>
                     {% else %}
-                        <p>Tickets cost (per person): {{event.ticket_price}} CAD</p>
+                        <p>Tickets Cost (per person): {{event.ticket_price}} CAD</p>
                     {% endif %}
                 </div>
 
@@ -79,9 +79,14 @@
                     {% if event.redirect_link != "" %}
                         <button type="button" class="btn btn-light" href="{{event.redirect_link}}">Register</button>
                     {% else %}
-                    <form action="/events/register/{{event.id}}" method="post"> 
-                        <input type="submit" id="register_btn" class="btn btn-primary" value="Register"></input>
-                    </form>
+                        <div class="d-flex">
+                            <form action="/events/register/{{event.id}}" method="post" class="me-3"> 
+                                <input type="submit" id="register_btn" class="btn btn-primary btn-lg" value="Register">
+                            </form>
+                            <form action="/events/{{event.id}}/calendar_invite" method="get"> 
+                                <input type="submit" id="add_calendar_btn" class="btn btn-primary btn-lg" value="Add to Google Calendar">
+                            </form>
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -93,6 +98,7 @@
             //Disable this check to be able to test the ratings function easily.
             if("{{is_past_event}}" == "True") {
                 document.getElementById('register_btn').disabled = true;
+                document.getElementById('add_calendar_btn').disabled = true;
             }
             else if("{{is_registered}}" == "True") {
                 console.log("JS: User is already registered");
@@ -101,6 +107,8 @@
             }
             else {
                 console.log("JS: User is not registered");
+                document.getElementById('add_calendar_btn').disabled = true;
+                
             }
         </script>
 
