@@ -1,3 +1,5 @@
+/* ------------------------------------------------------------ */
+
 /* The defualt font of our website, we can experiment with it */
 html {
   font-family: inherit;
@@ -7,6 +9,10 @@ h1{
     font-weight: 900;
     color: #1d293f;
     font-size: 45px;
+}
+
+p{
+  color: #1d293f;
 }
 
 h2{
@@ -38,6 +44,16 @@ h2{
   border-color: #f8f9fa;
 }
 
+/* input[type=submit], input[type=reset] {
+  background-color: #04AA6D;
+  border: black ;
+  color: white;
+  padding: 10px 16px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+} */
+
 .btn.btn-default:hover{
   background-color: #ea453f;
   color: white;
@@ -49,7 +65,7 @@ h2{
 }
 
 /* Spacing and alignment of the Login page */
-.frame-15c {
+.welcome-image {
     width: 32.0605rem;
     height: 24.8924rem;
     position: relative;
@@ -123,6 +139,25 @@ ul.navbar-nav {
   font-size: 180%;
   color: #ccc;
 }
+
+/* ------------------------------------------------------------ */
+
+/* Below are the styles for login */
+
+.welcome-card {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  margin: auto;
+}
+
+.welcome-card-body {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 /* ------------------------------------------------------------ */
 
 /* Below are the styles for new ratings*/
@@ -167,6 +202,27 @@ ul.navbar-nav {
 .rate-area > label:hover ~ input:checked ~ label {
 	color: gold;
 }
+/* ------------------------------------------------------------ */
+
+/* The defualt font of our website, we can experiment with it */
+
+.event-banner{
+  margin: auto;
+  border-radius: 1rem;
+  width: 100%;
+  height: 60vh;
+}
+
+.event-section{
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.event-section-header{
+  font-weight: 700;
+  color: #1d293f;
+}
+
 /* ------------------------------------------------------------ */
 
 /* Below are the styles for user_main.html */
@@ -219,8 +275,13 @@ button .fa-solid{
   background-color: #ffc2c2;
 }
 
+.btn-light{
+  background-color: #fff;
+  border-color: #fff;
+}
+
 .btn-light:hover{
-  background-color: #ea453f;
+  background-color: #f59692;
   color: white;
 }
 
@@ -304,9 +365,45 @@ h1.heading {
   object-fit:cover; 
   transition: all .25s ease;
 } 
+/* Default height for small screens */
 .card-content {
   padding:15px;
   text-align:left;
+  height: 120px;
+}
+/* Adjust height for small screens and above */
+@media screen and (min-width: 575px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 265px;
+  }
+}
+
+/* Adjust height for medium screens and above */
+@media screen and (min-width: 768px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 180px;
+  }
+}
+
+/* Adjust height for large screens and above */
+@media screen and (min-width: 992px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 160px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .card-content {
+    padding:15px;
+    text-align:left;
+    height: 130px;
+  }
 }
 .card-title {
   margin-top:0px;
@@ -342,4 +439,52 @@ h1.heading {
 .alert {
   margin-top: 20px;
   border-radius: 20px;
+  align-content: center;
+  display: flex;
+}
+
+.btn-close{
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+
+.user-analytics-container {
+  padding: 0vw;
+}
+
+.user-analytics-container .row {
+  padding: 0vw;
+  align-items: start;
+}
+
+.user-analytics-object {
+  display: block; 
+  padding: 2vw;
+}
+
+.user-analytics-object img{
+  width: 100%;
+  object-fit:cover; 
+  transition: all .25s ease;
+
+/* The style below is for Error Pages */
+div.error-container {
+  text-align: center;
+  justify-content: center;
+}
+
+div.error-code {
+  font-size: 22vw;
+  font-family: 'Aclonica', sans-serif;
+  color: #ea453f;
+  margin-left: -5vw;
+}
+
+div.error-msg {
+  font-size: 4vw;
+  font-family: 'ADLaM Display', sans-serif;
+  color: #333333;
+  margin-top: -6vw;
 }

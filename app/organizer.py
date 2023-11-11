@@ -1,8 +1,13 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
+from sqlalchemy import func
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+import logging
 
 from app.main import db # db is for database
-from app.database import EventDetails, EventBanner, Credentials
+from app.database import EventDetails, Credentials, UserDetails, EventRegistration
 from app.auth import organizer_required
 
 organizer = Blueprint("organizer", __name__)
@@ -19,77 +24,52 @@ def main():
     )
     return render_template("organizer_main.html", my_events_data=my_events_data)
 
+def get_user_analytics(event_id):
+    # Define a function that generates an analytic chart
+    # This function takes in an analytic column as an input (ie. Department), and
+    # returns a pie chart (with a title and legend)
+    # NOTE: If the function does not find any analytics data then it returns None
+    def get_analytic_chart_given_column(event_id, user_detail_column, title):
+        analytics_data = db.session.query(user_detail_column, func.count(UserDetails.username).label('order_count')).\
+            join(EventRegistration, UserDetails.username == EventRegistration.attendee_username).\
+            filter(EventRegistration.event_id == event_id).group_by(user_detail_column).all()
 
-@organizer.route("/organizer/create_event", methods=["GET", "POST"])
-@login_required
-@organizer_required
-def create_event():
-    form = EventCreateForm()
+        # No analytics data found
+        if len(analytics_data) == 0:
+            logging.info(f"Column ({title}) has no analytics data")
+            return None
 
-    if form.validate_on_submit():
-        # Add the event details
-        new_event = EventDetails(
-            name=form.name.data,
-            short_description=form.short_description.data,
-            long_description=form.long_description.data,
-            category=form.category.data.lower(),
-            is_online=form.is_online.data,
-            venue=form.venue.data,
-            start_date=form.start_date.data,
-            end_date=form.end_date.data,
-            start_time=form.start_time.data,
-            end_time=form.end_time.data,
-            max_capacity=form.max_capacity.data,
-            current_capacity=0,
-            ticket_price=form.ticket_price.data,
-            redirect_link=form.redirect_link.data,
-            additional_info=form.additional_info.data,
-        )
-        db.session.add(new_event)
-        db.session.commit()
+        logging.info(f"Analytics for {title}: {analytics_data}")
 
-        # Add the event details to the index for elastic search
-        add_event_to_index(new_event)
+        # Create a matplotlib plot
+        plt.figure(figsize=(8, 8))
+        keys = [elem[0] for elem in analytics_data]
+        values = [elem[1] for elem in analytics_data]
+        colors = plt.cm.Paired(range(len(keys)))
+        wedges, _ = plt.pie(values, autopct=None, startangle=90, colors=colors)
+        plt.title(f"{title} Distribution")
 
-        # Add the banner information for the newly created event
-        banner_file = form.banner_image.data
-        filename = "event_banner_" + str(new_event.id) + ".png"
+        plt.legend(wedges, keys, title=f'{title} Categories', loc='upper center', bbox_to_anchor=(1, 1))
+        plt.axis('equal')
 
-        # Save the banner in static/event-assets
-        banner_file.save(
-            os.path.join(current_app.root_path, "static", "event-assets", filename)
-        )
+        # Save the chart to a BytesIO object
+        chart_image = BytesIO()
+        plt.savefig(chart_image, format='png', bbox_inches='tight')
+        chart_image.seek(0)
 
-        # Store the path to the banner EventBanner
-        event_graphic = EventBanner(event_id=new_event.id, image=filename)
+        # Encode the image to base64 for embedding in HTML
+        chart_image_base64 = base64.b64encode(chart_image.read()).decode('utf-8')
+        return chart_image_base64
+    
+    analytics_charts = []
 
-        db.session.add(event_graphic)
-        db.session.commit()
-
-        new_organizer_event_relation = OrganizerEventDetails(
-            event_id=new_event.id, organizer_username=current_user.username
-        )
-        db.session.add(new_organizer_event_relation)
-        db.session.commit()
-
-        return redirect(url_for("organizer.main"))
-
-    organizer = current_user
-
-    return render_template("create_event.html", form=form)
-
-#Adds it to the "index" which we use for searching events
-def add_event_to_index(new_event):
-    event_detail = {
-        "id": new_event.id,
-        "name": new_event.name,
-        "description": new_event.description,
-        "category": new_event.category,
-        "venue": new_event.venue,
-        "additional_info": new_event.additional_info,
-    }
-
-    logging.info("The event dict for indexing:", event_detail)
-    es.index(index="events", document=event_detail)
-    es.indices.refresh(index="events")
-    logging.info(es.cat.count(index="events", format="json"))
+    # Define the different interested analytics
+    titles = ["Years", "Campus", "Department", "Course Type"]
+    columns = [UserDetails.year, UserDetails.campus, UserDetails.department, UserDetails.course_type]
+    for title, column in zip(titles, columns):
+        chart = get_analytic_chart_given_column(event_id, column, title)
+        if chart is None:
+            continue
+        analytics_charts.append(chart)
+    
+    return analytics_charts

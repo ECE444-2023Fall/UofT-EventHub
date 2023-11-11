@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
 from sqlalchemy import distinct
 from datetime import datetime
 import logging
 
-from app.globals import FILTERS
+from app.globals import FILTERS, EVENT_CATEGORIES
 from app.auth import login_required, user_required
 from app.database import EventDetails, Credentials
 from app.search import get_eventids_matching_search_query
@@ -36,6 +36,12 @@ def main(filter="all", search=None):
     elif filter == "past events":
         dict_of_events_details =  filter_for_past_events(events=dict_of_events_details)
     elif filter != "all":
+        if filter.capitalize() not in EVENT_CATEGORIES:
+            abort(404, description = {
+                "type": "invalid_filter",
+                "caller": "user.main",
+                "message": f"Invalid filter category {filter}"
+            })
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
     return render_template("user_main.html", event_data=dict_of_events_details, search=search, filter=filter, filter_tags=FILTERS)
