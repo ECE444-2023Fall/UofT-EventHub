@@ -369,6 +369,7 @@ div.error-code {
   font-size: 22vw;
   font-family: 'Aclonica', sans-serif;
   color: #ea453f;
+  margin-left: -5vw;
 }
 
 div.error-msg {
