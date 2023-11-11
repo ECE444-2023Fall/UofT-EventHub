@@ -1,54 +1,7 @@
-{% extends "base.html" %} {%block title %}User's Page{% endblock %} {% block
-navbar %}
-<!-- this overrides the definition of the navbar in base.html-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
-  <a class="navbar-brand" href="/">
-    <img
-      src="{{ url_for ('static', filename='images/final_logo.png')}}"
-      alt="logo"
-      width="175.6"
-      height="46"
-  /></a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarNavDropdown"
-    aria-controls="navbarNavDropdown"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
-      </li>
-      <!--<li class="nav-item">
-        <a class="nav-link" href="/">Engineering</a>
-    </li>-->
-      <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="/"
-          id="navbarDropdownMenuLink"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Profile
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/myevents">My Events</a>
-          <a class="dropdown-item" href="/">Settings</a>
-          <a class="dropdown-item" href="/logout">Logout</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
-{% endblock %} {% block content %}
+{% extends "base.html" %}
+{%block title %}User's Page{% endblock %} 
+
+{% block content %}
 <!-- For JS support -->
 <script
   src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
@@ -59,150 +12,125 @@ navbar %}
 
 <!-- Container for search and sorting functionality -->
 <div class="container">
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ message }}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }}" role="alert">
+      <button type="button" class="btn-close" data-dismiss="alert"></button>
+      {{ message }}
   </div>
-  {% endfor %} {% block page_content %}
-  <script>
-    // This script enhances a search box's functionality by providing an autocomplete feature.
-    $(document).ready(function () {
-      console.log("Hello");
-      let debounce; // A variable to store the timer for delaying the autocomplete function.
-      // This event is triggered when a key is pressed in the search box.
-      $(".search-box").on("keydown", function (e) {
-        clearTimeout(debounce);
-        // Sets a new timeout after the key is pressed and waits for 300 milliseconds.
-        debounce = setTimeout(() => {
-          getAutoComplete(); // Calls the function to fetch autocomplete suggestions after the delay.
-        }, 300);
-      });
-    });
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  {% block page_content %}
+    <script>
+            // This script enhances a search box's functionality by providing an autocomplete feature.
+            $(document).ready(function() {
+                let debounce; // A variable to store the timer for delaying the autocomplete function.
+                // This event is triggered when a key is pressed in the search box.
+                $('.search-box').on('keydown', function (e) {
+                  clearTimeout(debounce)
+                  // Sets a new timeout after the key is pressed and waits for 300 milliseconds.
+                  debounce = setTimeout(() => {
+                          getAutoComplete(); // Calls the function to fetch autocomplete suggestions after the delay.
+                  }, 300);
+                })
+            })
 
-    // This function is responsible for obtaining autocomplete suggestions.
-    function getAutoComplete() {
-      const query = $(".search-box").val();
-      console.log(query);
-      fetch(
-        `http://localhost:5000/search?search=${encodeURIComponent(
-          query.trim()
-        )}`
-      )
-        .then((resp) => resp.json())
-        .then((data) => {
-          $(".results").empty();
-          for (let i = 0; i < data.length; i++) {
-            $(".results").append(`<li>${data[i]}</li>`); // Appends each suggestion to the results list.
-          }
-        });
-    }
-  </script>
-  <div class="page-header">
-    <h1 style="color: #050151; font-family: Georgia, serif">
-      University of Toronto Events
-    </h1>
-  </div>
-  <div class="container search-sort-container">
-    <div class="row" style="text-align: center">
-      <div class="col-xs-12 col-sm-12" style="text-align: center">
-        <!-- Generates a form with a search input field and a search button. -->
-        <form
-          action="{{ url_for('search.search_events', filter=filter) }}"
-          method="post"
-        >
-          <input
-            class="search-box"
-            name="query"
-            id="search-text"
-            autocomplete="off"
-            placeholder="Search all events..."
-          />
-          <button
-            id="search-btn"
-            class="btn btn-light my-2 my-sm-0"
-            type="submit"
-          >
+            // This function is responsible for obtaining autocomplete suggestions.
+            function getAutoComplete() {
+              const query = $('.search-box').val();
+              console.log(`User search for ${query}`)
+              fetch(`http://localhost:5000/search?search=${encodeURIComponent(query.trim())}`)
+                .then((resp) => resp.json())
+                .then((data) => {
+                        $('.autocomplete-drop-down').empty();
+                        for (let i = 0; i < data.length; i++) {
+                                // Appends each suggestion to the autocomplete dropdown list.
+                                console.log(`Event name ${data[i][0]} -- ${data[i][1]}`)
+                                $('.autocomplete-drop-down').append(`<a class="dropdown-item autocomplete-item" href="/events/${data[i][1]}">${data[i][0]}</a>`) 
+                        }
+                      });
+            }
+        </script>
+        <div class="page-header">
+          <h1>University of Toronto Events</h1>
+        </div>
+        <div class="container search-sort-container">
+          <div class="row" style="text-align: center;">
+            <div class="col-xs-4 col-sm-4" style="text-align: center; margin: auto;">
+              
+              <!-- Generates a form with a search input field and a search button. -->
+              <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
+                  <input class="search-box" name="query" id="search-text" autocomplete="off" placeholder="Search all events...">
+                  <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #FF7F50;"></i></button>
+                  <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
+                  <button type="button" id="toggleViewButton" class="btn btn-primary">Toggle View</button>
+                </form>
 
-            <i class="fa-solid fa-magnifying-glass" style="color: #ea453f"></i>
-          </button>
-          <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
-          <button type="button" id="toggleViewButton" class="btn btn-primary">Toggle View</button>
-        </form>
-      </div>
-      <div class="col-xs-12 col-sm-12" style="text-align: center">
-        <form
-          action="{{ url_for('filter.filter_events', search=search) }}"
-          method="post"
-        >
-          {% for filter_tag in filter_tags %}
-          <button
-            id="sort-key-btn"
-            class="btn btn-light my-2 my-sm-0"
-            type="submit"
-            name="filter-tag"
-            value="{{filter_tag | lower}}"
-          >
-            {{filter_tag}}
-          </button>
-          {% endfor %}
-          <button
-            id="sort-clear-btn"
-            class="btn btn-light my-2 my-sm-0"
-            type="submit"
-            name="filter-tag"
-            value="clear"
-          >
-            Clear Filters
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-  {% endblock %}
-      {% if toggle == 0%}
-        <div id="cardView" style="display: none;">
-          <div class="content">
-            <div class="container event-list-container">
-              <div class="row">
-                <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
-                {% for key, value in event_data.items() %}
-                  <div class="col-xs-12 col-sm-4">
-                    <div class="card">
-                      <a class="img-card" href="/events/{{ key }}">
-                        <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}"/>
-                      </a>
-                      <div class="card-content">
-                        <h4 class="card-title">
-                          <a href="/events/{{ key }}"> {{value.name}} </a>
-                        </h4>
-                        <p class="">{{value.description}}</p>
-                      </div>
-                      <div class="card-read-more">
-                        <a href="/events/{{ key }}" class="btn btn-link btn-block">
-                          Read More
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
+              <!-- <div class="col-xs-12 col-sm-12" style="text-align: center; display: block; position: relative;"> -->
+                <!-- The text box to display autocomplete suggestions -->
+                <div class="dropdown-menu autocomplete-drop-down"></div>
+              <!-- </div> -->
+            </div>
+          </div>
+          <div class="row" style="text-align: center;">
+            
+          </div>
+          <div class="row" style="text-align: center;">
+            <div class="col-xs-12 col-sm-12" style="text-align: center;">
+              <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
+                  {% for filter_tag in filter_tags %}
+                  <button id="sort-key-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
+                  {% endfor %}
+                  <button id="sort-clear-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
+              </form>
             </div>
           </div>
         </div>
-        { % else % }
-        <div id="calendarView"  style="display: block;">
-          <div class="event_data_hide" id="event_data_json">{{event_data_json}}</div>
-          <script src="{{ url_for ('static', filename='js/calendar.js')}}"></script>
-            <div class="container">
-              <div class="row">
-                <div class="col-12">
-                  <div id="calendar"></div>
+    {% endblock %}
+              <div id="cardView" style="display: none;">
+                <div class="content">
+                  <div class="container event-list-container">
+                    <div class="row">
+                      <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
+                     {% for key, value in event_data.items() %}
+                        <div class="col-xs-12 col-sm-4">
+                          <div class="card">
+                            <a class="img-card" href="/events/{{ key }}">
+                              <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
+                            </a>
+                            <div class="card-content">
+                              <h4 class="card-title">
+                                <a href="/events/{{ key }}"> {{value.name}} </a>
+                              </h4>
+                              <p class="">
+                                  {{value.short_description}}
+                              </p>
+                            </div>
+                            <div class="card-read-more">
+                              <a href="/events/{{ key }}" class="btn btn-link btn-block">
+                                Read More
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                     {% endfor %}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-        </div>
-        {% endif %}
+              <div id="calendarView"  style="display: block;">
+                  <div class="event_data_hide" id="event_data_json">{{event_data_json}}</div>
+                   <script src="{{ url_for ('static', filename='js/calendar.js')}}"></script>
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-12">
+                          <div id="calendar"></div>
+                        </div>
+                      </div>
+                    </div>
+              </div>
         <script> //script to toggle between the card view and calendar view
         document.getElementById("toggleViewButton").addEventListener("click", function () {
             const cardView = document.getElementById("cardView");
@@ -217,8 +145,7 @@ navbar %}
                 calendarView.style.display = "block";
             }
         });
-        var toggle = "{{ toggle }}";
-        
+
       </script>
     
     </div>

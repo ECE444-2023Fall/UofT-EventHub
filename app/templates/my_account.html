@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+<!-- This is the general template for showcasing events -->
+
+{% block title %}My Account Page{% endblock %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<div class="container">
+    <!-- Validation messages when user updates his preference -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }}" role="alert">
+      <button type="button" class="btn-close" data-dismiss="alert"></button>
+      {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+    {% block page_content %}
+    <div class="page-header">
+        <h1>Account Information</h1>
+    </div>
+
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-12 col-xl-11">
+          <div class="card text-black" style="border-radius: 25px;">
+            <div class="card-body p-md-5">
+              <div class="row justify-content-center">
+                <div class="col-lg"></div>
+                <div class="col-lg text-center">
+                  <i class="fa-solid fa-user profile-icon"></i>
+                </div>
+                <div class="col-lg"></div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                  {{ wtf.quick_form(form) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+</div>
+{% endblock %}

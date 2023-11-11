@@ -12,12 +12,16 @@
 <div class="container event-form">
   <br>
     <br>
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+        <button type="button" class="btn-close" data-dismiss="alert"></button>
         {{ message }}
     </div>
     {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     {% block page_content %}
     
@@ -32,14 +36,11 @@
                           <div class="page-header-create-event">
                             <h1>Create Event</h1>
                           </div>
-                          <form  action="" method="post" role="form">
                             {{ wtf.quick_form(form) }}
                             <!--for now cancel button is in next line, until then leaving it as hyperlink
                               <a href="/organizer" class="btn btn-default">Cancel</a>
                             -->
-                          </form>
                           <p><a href="/organizer">Return to main</a></p>
-                          
                         </div>
                       </div>
                     </div>

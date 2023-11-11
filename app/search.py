@@ -32,14 +32,13 @@ def search_autocomplete():
         }
     }
 
-    resp = es.search(index="events", query=payload, size=10)
-
+    resp = es.search(index="events", query=payload, size=5)
+    
     # Return a list of event name and id ordered by the most relevant on top
     return [
         [result["_source"]["name"], result["_source"]["id"]]
         for result in resp["hits"]["hits"]
     ]
-
 
 @search.route("/search_events/<filter>", methods=["POST"])
 @login_required
