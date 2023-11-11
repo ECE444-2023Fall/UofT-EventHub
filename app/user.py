@@ -73,11 +73,11 @@ def convert_dictionary_to_JSON(events):
         start_time = event_data['start_time']
         end_time = event_data['end_time']
         
-        # Randomly select a background color from the list
         background_color = random.choice(colors)
         border_color = background_color
     
         event_info = {
+            'key' : event_id,
             'title': name,
             'start': f'{start_date}T{start_time}',
             'end': f'{end_date}T{end_time}',
@@ -87,10 +87,8 @@ def convert_dictionary_to_JSON(events):
         
         event_list.append(event_info)
 
-    # Convert the list to JSON
     event_data_json = json.dumps(event_list)
 
-    # Print the JSON
     logging.info(event_data_json)
     return event_data_json
 

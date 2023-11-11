@@ -26,7 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
             right: 'dayGridMonth,dayGridWeek,listMonth'
         },
 
+        eventClick: function(info) {
+                eventKey = info.event.extendedProps.key;
+                window.location.href = `/events/${eventKey}` ;
+            },
+
         events: eventData,
+        
     });
 
     calendar.render();
