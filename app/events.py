@@ -42,7 +42,7 @@ def show_event(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "show_event",
             "message": "Can not show the event since the event does not exist"
@@ -89,7 +89,7 @@ def show_event_admin(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "show_event_admin",
             "message": "Can not show the event since the event does not exist"
@@ -173,7 +173,7 @@ def edit_event(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "edit_event",
             "message": "Can not edit the event since the event does not exist"
@@ -253,7 +253,7 @@ def delete_event(id):
         logging.info(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
-        abort(404, {
+        abort(404, description = {
             "type": "event_not_found",
             "caller": "delete_event",
             "message": "Can not delete the event since the event does not exist"
@@ -261,7 +261,7 @@ def delete_event(id):
 
     if event.organizer != current_user.username:
         logging.info(f"Current Organizer ({current_user.username} doesn't match the event creator {event.organizer})")
-        abort(401, {
+        abort(401, description = {
             "type": "unauthorized_organizer",
             "caller": "delete_event",
             "message": "You are not authorized to delete this event"
