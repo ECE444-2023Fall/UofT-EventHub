@@ -395,6 +395,25 @@ h1.heading {
   border-radius: 20px;
 }
 
+.user-analytics-container {
+  padding: 0vw;
+}
+
+.user-analytics-container .row {
+  padding: 0vw;
+  align-items: start;
+}
+
+.user-analytics-object {
+  display: block; 
+  padding: 2vw;
+}
+
+.user-analytics-object img{
+  width: 100%;
+  object-fit:cover; 
+  transition: all .25s ease;
+
 /* The style below is for Error Pages */
 div.error-container {
   text-align: center;
