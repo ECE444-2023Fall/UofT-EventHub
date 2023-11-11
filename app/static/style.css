@@ -468,6 +468,7 @@ h1.heading {
   width: 100%;
   object-fit:cover; 
   transition: all .25s ease;
+}
 
 /* The style below is for Error Pages */
 div.error-container {
@@ -487,4 +488,32 @@ div.error-msg {
   font-family: 'ADLaM Display', sans-serif;
   color: #333333;
   margin-top: -6vw;
+}
+
+/* The style below is for the Organizer Main Page */
+.organizer-dashboard-section {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.create-new-event-btn {
+  margin-top: 2vw; 
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .organizer-avg-rating {
+  padding: 0px 20px;
+  margin-bottom: 2vw;
+}
+
+.organizer-dashboard-section .filled-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: gold;
+}
+
+.organizer-dashboard-section .empty-star {
+  font-size: 250%;
+  padding-right: 8px;
+  color: #ccc;
 }
