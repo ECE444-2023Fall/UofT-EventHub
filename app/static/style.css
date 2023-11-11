@@ -376,3 +376,26 @@ h1.heading {
   margin-top: 20px;
   border-radius: 20px;
 }
+<<<<<<< HEAD
+=======
+
+/* The style below is for Error Pages */
+div.error-container {
+  text-align: center;
+  justify-content: center;
+}
+
+div.error-code {
+  font-size: 22vw;
+  font-family: 'Aclonica', sans-serif;
+  color: #ea453f;
+  margin-left: -5vw;
+}
+
+div.error-msg {
+  font-size: 4vw;
+  font-family: 'ADLaM Display', sans-serif;
+  color: #333333;
+  margin-top: -6vw;
+}
+>>>>>>> bbabc40ec24fe600eb34d76c0aa52c494b03cb03

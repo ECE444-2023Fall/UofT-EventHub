@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, abort
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -102,9 +102,12 @@ def register():
 def user_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if current_user.role != 0:
-            flash("You need to be a user to access this page.", "warning")
-            return redirect(url_for("auth.login"), code=401)  # Redirect to login page
+        if current_user.role != Role.USER.value:
+            abort(401, description = {
+                "type": "user_unauthorized",
+                "caller": "user_required",
+                "message": "You need to be a user to access this page"
+            })
         return f(*args, **kwargs)
 
     return decorated_function
@@ -113,9 +116,12 @@ def user_required(f):
 def organizer_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if current_user.role != 1:
-            flash("You need to be an organizer to access this page.", "warning")
-            return redirect(url_for("auth.login"), code=401)  # Redirect to login page
+        if current_user.role != Role.ORGANIZER.value:
+            abort(401, description = {
+                "type": "organizer_unauthorized",
+                "caller": "organizer_required",
+                "message": "You need to be a organizer to access this page"
+            })
         return f(*args, **kwargs)
 
     return decorated_function

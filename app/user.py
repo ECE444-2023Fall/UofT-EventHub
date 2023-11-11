@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 from flask import Blueprint, jsonify, render_template
+=======
+from flask import Blueprint, render_template, abort
+>>>>>>> bbabc40ec24fe600eb34d76c0aa52c494b03cb03
 from sqlalchemy import distinct
 from datetime import datetime
 import logging
 
-from app.globals import FILTERS
+from app.globals import FILTERS, EVENT_CATEGORIES
 from app.auth import login_required, user_required
 from app.database import EventDetails, Credentials
 from app.search import get_eventids_matching_search_query
@@ -38,6 +42,12 @@ def main(filter="all", search=None, toggle=0):
     elif filter == "past events":
         dict_of_events_details =  filter_for_past_events(events=dict_of_events_details)
     elif filter != "all":
+        if filter not in EVENT_CATEGORIES:
+            abort(404, description = {
+                "type": "invalid_filter",
+                "caller": "user.main",
+                "message": f"Invalid filter category {filter}"
+            })
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
     event_data_json = convert_dictionary_to_JSON(dict_of_events_details)

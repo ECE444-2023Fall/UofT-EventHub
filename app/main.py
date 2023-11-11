@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, render_template, flash
 from flask_cors import CORS
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 import os, time
@@ -109,6 +109,25 @@ def create_app(debug):
     @login_manager.user_loader
     def load_user(username):
         return Credentials.query.get(username)
+
+    # Custom Error Handling for 404 Error
+    @app.errorhandler(404)
+    def page_not_found(error):
+        logging.error(error)
+        description = getattr(error, 'description')
+        if "message" in description:
+            flash(description["message"], category="danger")
+
+        return render_template('error.html', error_code=404, error_msg="PAGE NOT FOUND"), 404
+
+    @app.errorhandler(401)
+    def unauthorized(error):
+        logging.error(error)
+        description = getattr(error, 'description')
+        if "message" in description:
+            flash(description["message"], category="danger")
+
+        return render_template('error.html', error_code=401, error_msg="UNAUTHORIZED"), 401
 
     return app
 
