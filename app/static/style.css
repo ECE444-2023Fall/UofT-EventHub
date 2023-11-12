@@ -486,6 +486,11 @@ h1.heading {
   color: #FF7F50;
 }
 
+.fa-magnifying-glass {
+  background-color: #FF7F50;
+  color: white;
+}
+
 /* The style below is for the flash messages: */
 .alert {
   margin-top: 20px;
