@@ -109,9 +109,14 @@
                         <input type="submit" id="register_btn" class="btn btn-primary btn-lg" value="Register">
                     </form>
                     <form action="/events/{{event.id}}/calendar_invite" method="get"> 
-                        <input type="submit" id="add_calendar_btn" class="btn btn-primary btn-lg" value="Add to Google Calendar">
+                        <input id="add_calendar_btn" type="submit" tabindex="0" class="btn btn-primary btn-lg" role="button" data-toggle="popover" data-content="Thank you for downloading the iCal invite!" value="Add to Calendar">
                     </form>
                 </div>
+                    <script>
+                        $(document).ready(function(){
+                          $('[data-toggle="popover"]').popover();   
+                        });
+                    </script>
                 {% endif %}
 
                 <br>

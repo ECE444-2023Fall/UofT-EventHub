@@ -1,5 +1,6 @@
 from flask import (
     Blueprint,
+    Response,
     render_template,
     send_from_directory,
     flash,
@@ -10,11 +11,6 @@ from flask import (
     abort,
 )
 from flask_login import login_required, current_user
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials as AppCredentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from datetime import date
 import logging
 import os.path
@@ -22,10 +18,10 @@ import os
 
 from app.main import db, es # db is for database and es is for elasticsearch
 from app.globals import Role
-from app.auth import organizer_required
+from app.auth import organizer_required, user_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
 from app.forms import EventCreateForm
-from app.organizer import get_user_analytics
+from app.analytics import get_user_analytics, get_avg_rating
 
 events = Blueprint("events", __name__)
 
@@ -39,7 +35,7 @@ def show_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event has no valid entry in the database"
         )
         abort(404, description = {
@@ -110,7 +106,7 @@ def show_event_admin(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, description = {
@@ -125,12 +121,18 @@ def show_event_admin(id):
 
     user_analytic_charts = get_user_analytics(event_id=id)
 
+    avg_rating = get_avg_rating(event_id=id)
+
     # Fix: Need to pass event ID as a string
     event_dict = event.__dict__
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
-    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations, user_analytic_charts=user_analytic_charts)
+    return render_template("event_admin.html", 
+                           event=event_dict, 
+                           num_of_registrations=num_of_registrations, 
+                           user_analytic_charts=user_analytic_charts,
+                           avg_rating=avg_rating)
 
 
 @events.route("/events/create_event", methods=["GET", "POST"])
@@ -194,7 +196,7 @@ def edit_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, description = {
@@ -274,7 +276,7 @@ def delete_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, description = {
@@ -389,6 +391,7 @@ def add_event_to_index(new_event):
     es.indices.refresh(index="events")
     logging.info(es.cat.count(index="events", format="json"))
 
+
 def past_event(event_id):
     #Here we check to see if the event is a past event or not.
     #Only if it is a past event will users be able to add a rating for it
@@ -445,53 +448,24 @@ def submit_rating(event_id):
 
 @events.route("/events/<int:id>/calendar_invite", methods=["GET"])
 @login_required
-def create_google_calendar_event(id):
+@user_required
+def create_ical_event(id):
     # Get the event details from the database
     event = EventDetails.query.filter_by(id=id).first()
+    if event:
+        ical_data = event.to_ical_event()
 
-    if not event:
-        logging.info("Error! The event id passed to create_google_calendar_event() does not exit in the database")
+        # Modifying the filename to include the event name
+        filename = f"{event.name.replace(' ', '_')}_event.ics"
 
-    SCOPES = ['https://www.googleapis.com/auth/calendar']
-    creds = None
+        response = Response(ical_data, content_type='text/calendar')
+        response.headers['Content-Disposition'] = f'attachment; filename={filename}'
 
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.json'):
-        creds = AppCredentials.from_authorized_user_file('token.json', SCOPES)
-    
-    # If there are no (valid) credentials available, let the user log in
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'Google_Calendar/credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
-
-    try:
-        service = build('calendar', 'v3', credentials=creds)
-        event_data = {
-            "summary": event.name,
-            "location": event.venue,
-            "colorId": 6,
-            "start": {
-                "dateTime": f"{event.start_date}T{event.start_time}",
-                "timeZone": "Canada/Eastern"
-            },
-            "end": {
-                "dateTime": f"{event.end_date}T{event.end_time}",
-                "timeZone": "Canada/Eastern"
-            }
-        }
-
-        event_calendar = service.events().insert(calendarId="primary", body=event_data).execute()
-        logging.info(f'Event created: {event_calendar.get("htmlLink")}')
-        return redirect(url_for("events.show_event", id=event.id))
-
-    except HttpError as error:
-        logging.error("An error occurred: %s", error)
+        return response
+    else:
+        logging.error("The event ID passed to has no valid entry in the database")
+        abort(404, description = {
+            "type": "event_not_found",
+            "caller": "create_ical_event",
+            "message": "Can not add the event to calendar since the event does not exist"
+        })
