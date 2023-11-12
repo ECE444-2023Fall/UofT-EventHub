@@ -148,7 +148,7 @@ def test_rate_upcoming_event(client):
     # organizer1 creates event1 
     create_test_event(client, num_string)
     # organizer1 logs out
-    logout
+    logout(client)
     # register user1
     user_register(client, num_string)
     # user1 logs in
