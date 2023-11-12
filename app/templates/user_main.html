@@ -65,8 +65,14 @@
                   <input class="search-box" name="query" id="search-text" autocomplete="off" placeholder="Search all events...">
                   <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="color: #FF7F50;"></i></button>
                   <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
-                  <button type="button" id="toggleViewButton" class="btn btn-primary">Toggle View</button>
-                </form>
+              </form>
+
+              <!-- Generates a form to toggle between the user views -->
+              <!-- Form sends a POST request to flask to change the toggle value on the backend-side -->
+              <!-- And the new toggle value (from the server) is embedded in the button element -->
+              <form action="{{ url_for('user.toggle', filter=filter, search=search) }}" method="post">
+                <button id="toggleViewButton" class="btn btn-primary" embedded-toggle-data="{{toggle}}" type="submit">Toggle View</button>
+              </form>
 
               <!-- <div class="col-xs-12 col-sm-12" style="text-align: center; display: block; position: relative;"> -->
                 <!-- The text box to display autocomplete suggestions -->
@@ -132,20 +138,17 @@
                     </div>
               </div>
         <script> //script to toggle between the card view and calendar view
-        document.getElementById("toggleViewButton").addEventListener("click", function () {
-            const cardView = document.getElementById("cardView");
-            const calendarView = document.getElementById("calendarView");
-    
-            if (cardView.style.display === "none" || calendarView.style.display === "block") {
-                cardView.style.display = "block";
-                calendarView.style.display = "none";
-            } 
-            else {
-                cardView.style.display = "none";
-                calendarView.style.display = "block";
-            }
-        });
-
+          var toggle = document.getElementById("toggleViewButton").getAttribute('embedded-toggle-data');
+          if (toggle === "True") {
+            console.log("The page is in calendar Mode")
+            cardView.style.display = "none";
+            calendarView.style.display = "block";
+          } 
+          else {
+            console.log("The page is in Card Mode")
+            cardView.style.display = "block";
+            calendarView.style.display = "none";
+          };
       </script>
     
     </div>

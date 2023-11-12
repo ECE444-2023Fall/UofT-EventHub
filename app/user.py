@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, session, redirect, url_for
 from sqlalchemy import distinct
 from datetime import datetime
 import logging
@@ -20,9 +20,8 @@ user = Blueprint("user", __name__)
 @user.route("/user/<filter>/<search>", methods=["GET"])
 @login_required
 @user_required
-def main(filter="all", search=None, toggle=0):
+def main(filter="all", search=None):
     dict_of_events_details = get_all_events_from_database()
-    #0 - Card view and 1 - Calendar view
 
     # Filter the events list based on the search query
     if search != None:
@@ -48,10 +47,28 @@ def main(filter="all", search=None, toggle=0):
         dict_of_events_details = filter_events_on_category(events=dict_of_events_details, category=filter)
 
     event_data_json = convert_dictionary_to_JSON(dict_of_events_details)
-    
+
+    # NOTE: False - Card view and True - Calendar view
+    # Default is set to Card view
+
+    # Get the toggle value stored in the session 
+    # OR set it to False by default (if session doesn't have a value)
+    toggle = session.get('toggle_value', False)
+
     return render_template("user_main.html", event_data=dict_of_events_details, event_data_json=event_data_json, 
                            search=search, filter=filter, filter_tags=FILTERS, toggle=toggle)
 
+# This function is used to change the 'toggle_value' value in the session
+# while preserving the current filter and search parameters
+@user.route('/user/toggle', methods=["POST"])
+@user.route("/user/toggle/<filter>", methods=["POST"])
+@user.route("/user/toggle/<filter>/<search>", methods=["POST"])
+def toggle(filter="all", search=None):
+    # Toggle the value and store it in the session
+    session['toggle_value'] = not session.get('toggle_value', True)
+    return redirect(url_for('user.main', filter=filter, search=search))
+
+# Helper functions for the users main functionalities
 def get_all_events_from_database():
     events_data = EventDetails.query.all()
 
