@@ -1,5 +1,7 @@
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey
+from icalendar import Calendar, Event
+from datetime import datetime
 
 from app.main import db
 
@@ -98,6 +100,24 @@ class EventDetails(db.Model):
     def get_organizer_name_from_username(organizer_username):
         organizer = Credentials.query.filter_by(username=organizer_username).first()
         return organizer.name if organizer else None
+    
+    def to_ical_event(self):
+        cal = Calendar()
+        event = Event()
+
+        event.add('summary', self.name)
+        event.add('description', self.short_description)
+        event.add('location', self.venue)
+
+        # Set the event start and end time
+        start_datetime = datetime.combine(self.start_date, self.start_time)
+        end_datetime = datetime.combine(self.end_date, self.end_time)
+
+        event.add('dtstart', start_datetime)
+        event.add('dtend', end_datetime)
+
+        cal.add_component(event)
+        return cal.to_ical()
 
 
 class EventBanner(db.Model):
