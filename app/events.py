@@ -25,7 +25,7 @@ from app.globals import Role
 from app.auth import organizer_required
 from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
 from app.forms import EventCreateForm
-from app.organizer import get_user_analytics
+from app.analytics import get_user_analytics, get_avg_rating
 
 events = Blueprint("events", __name__)
 
@@ -125,12 +125,18 @@ def show_event_admin(id):
 
     user_analytic_charts = get_user_analytics(event_id=id)
 
+    avg_rating = get_avg_rating(event_id=id)
+
     # Fix: Need to pass event ID as a string
     event_dict = event.__dict__
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
-    return render_template("event_admin.html", event=event_dict, num_of_registrations=num_of_registrations, user_analytic_charts=user_analytic_charts)
+    return render_template("event_admin.html", 
+                           event=event_dict, 
+                           num_of_registrations=num_of_registrations, 
+                           user_analytic_charts=user_analytic_charts,
+                           avg_rating=avg_rating)
 
 
 @events.route("/events/create_event", methods=["GET", "POST"])
@@ -388,6 +394,7 @@ def add_event_to_index(new_event):
     es.index(index="events", document=event_detail)
     es.indices.refresh(index="events")
     logging.info(es.cat.count(index="events", format="json"))
+
 
 def past_event(event_id):
     #Here we check to see if the event is a past event or not.
