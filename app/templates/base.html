@@ -14,8 +14,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Aclonica&display=swap">
   <link rel="stylesheet" href="{{ url_for ('static', filename='style.css')}}">
-
-  {% import "bootstrap/wtf.html" as wtf %}
+    
+    {% import "bootstrap/wtf.html" as wtf %}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.js'></script>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
 
 </head>

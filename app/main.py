@@ -72,6 +72,7 @@ def create_app(debug):
     app.register_blueprint(events, url_prefix="/")
     app.register_blueprint(search, url_prefix="/")
     app.register_blueprint(filter, url_prefix="/")
+    
     app.register_blueprint(user_events, url_prefix="/")
     app.register_blueprint(account, url_prefix="/")
 
