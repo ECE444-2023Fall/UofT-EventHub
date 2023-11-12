@@ -50,7 +50,7 @@
                                 console.log(`Event name ${data[i][0]} -- ${data[i][1]}`)
                                 $('.autocomplete-drop-down').append(`<a class="dropdown-item autocomplete-item" href="/events/${data[i][1]}">${data[i][0]}</a>`) 
                         }
-                      })
+                      });
             }
         </script>
         <div class="page-header">
@@ -63,8 +63,15 @@
               <!-- Generates a form with a search input field and a search button. -->
               <form action="{{ url_for('search.search_events', filter=filter) }}" method="post">
                   <input class="search-box" name="query" id="search-text" autocomplete="off" placeholder="Search all events...">
-                  <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass" style="background-color: #FF7F50; color: white;"></i></button>
+                  <button id="search-btn" class="btn btn-light my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                   <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
+              </form>
+
+              <!-- Generates a form to toggle between the user views -->
+              <!-- Form sends a POST request to flask to change the toggle value on the backend-side -->
+              <!-- And the new toggle value (from the server) is embedded in the button element -->
+              <form action="{{ url_for('user.toggle', filter=filter, search=search) }}" method="post">
+                <button id="toggleViewButton" class="btn btn-primary" embedded-toggle-data="{{toggle}}" type="submit">Toggle View</button>
               </form>
 
               <!-- <div class="col-xs-12 col-sm-12" style="text-align: center; display: block; position: relative;"> -->
@@ -88,36 +95,63 @@
           </div>
         </div>
     {% endblock %}
-    
-    <div class="content">
-      <div class="container event-list-container">
-          <div class="row">
-            <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
-            {% for key, value in event_data.items() %}
-              <div class="col-xs-12 col-sm-4">
-                <div class="card">
-                    <a class="img-card" href="/events/{{ key }}">
-                    <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
-                  </a>
-                    <div class="card-content"> <!-- Ensure all cards displayed are the same size -->
-                        <h4 class="card-title">
-                            <a href="/events/{{ key }}"> {{value.name}}
-                          </a>
-                        </h4>
-                        <p class="">
-                            {{value.short_description}}
-                        </p>
+              <div id="cardView" style="display: none;">
+                <div class="content">
+                  <div class="container event-list-container">
+                    <div class="row">
+                      <!-- Displays a list of events in card view, each as a hyperlink with their respective names. -->
+                     {% for key, value in event_data.items() %}
+                        <div class="col-xs-12 col-sm-4">
+                          <div class="card">
+                            <a class="img-card" href="/events/{{ key }}">
+                              <img src="{{ url_for ('static', filename='event-assets/event_banner_' + value.id + '.png')}}" />
+                            </a>
+                            <div class="card-content">
+                              <h4 class="card-title">
+                                <a href="/events/{{ key }}"> {{value.name}} </a>
+                              </h4>
+                              <p class="">
+                                  {{value.short_description}}
+                              </p>
+                            </div>
+                            <div class="card-read-more">
+                              <a href="/events/{{ key }}" class="btn btn-link btn-block">
+                                Read More
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                     {% endfor %}
                     </div>
-                    <div class="card-read-more">
-                        <a href="/events/{{ key }}" class="btn btn-link btn-block">
-                            Read More
-                        </a>
-                    </div>
+                  </div>
                 </div>
-            </div>
-            {% endfor %}
-          </div>
-      </div>
+              </div>
+              <div id="calendarView"  style="display: block;">
+                  <div class="event_data_hide" id="event_data_json">{{event_data_json}}</div>
+                   <script src="{{ url_for ('static', filename='js/calendar.js')}}"></script>
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-12">
+                          <div id="calendar"></div>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+        <script> //script to toggle between the card view and calendar view
+          var toggle = document.getElementById("toggleViewButton").getAttribute('embedded-toggle-data');
+          if (toggle === "True") {
+            console.log("The page is in calendar Mode")
+            cardView.style.display = "none";
+            calendarView.style.display = "block";
+          } 
+          else {
+            console.log("The page is in Card Mode")
+            cardView.style.display = "block";
+            calendarView.style.display = "none";
+          };
+      </script>
+    
+    </div>
   </div>
 </div>
 {% endblock %}

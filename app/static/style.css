@@ -40,27 +40,17 @@ h2{
 /* overriding bootstrap default button to fit project theme*/
 .btn.btn-default{
   color: #000;
-  background-color: #f8f9fa;
-  border-color: #f8f9fa;
+  background-color: #e6e6e8;
+  border-color: #e9eaec;
 }
 
-/* input[type=submit], input[type=reset] {
-  background-color: #04AA6D;
-  border: black ;
-  color: white;
-  padding: 10px 16px;
-  text-decoration: none;
-  margin: 4px 2px;
-  cursor: pointer;
-} */
-
 .btn.btn-default:hover{
-  background-color: #ea453f;
+  background-color: #FF7F50;
   color: white;
 }
 
 .btn.btn-default:active {
-  background-color: #ea453f;
+  background-color: #FF7F50;
   color: white;
 }
 
@@ -284,7 +274,7 @@ button .fa-solid{
 }
 
 .btn-light:hover{
-  background-color: #f59692;
+  background-color: #FF7F50;
   color: white;
 }
 
@@ -303,6 +293,7 @@ button .fa-solid{
 .form-group{
   margin: 10px 0;
 }
+
 .wrapper {
   display: table;
   height: 100%;
@@ -474,6 +465,23 @@ h1.heading {
   text-transform: uppercase
 }
 
+.event_data_hide {
+  display: none;
+}
+/* Default styles for calendar buttons 
+.fc-button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+  .fc-button {
+      font-size: 14px;
+      padding: 8px 16px;
+  }
+}
+*/
+
 /* Below are the styles for user_organizers_list.html */
 .icon-container {
   text-align: center;
@@ -483,6 +491,12 @@ h1.heading {
 .fa-users {
   font-size: 130px; /* Adjust the font size as needed */
   vertical-align: middle;
+  color: #FF7F50;
+}
+
+.fa-magnifying-glass {
+  background-color: #FF7F50;
+  color: white;
 }
 
 /* The style below is for the flash messages: */
