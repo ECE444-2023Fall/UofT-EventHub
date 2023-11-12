@@ -551,18 +551,18 @@ div.error-msg {
   margin-bottom: 2vw;
 }
 
-.organizer-dashboard-section .organizer-avg-rating {
+/* The style below is for displaing the ratings to organizers */
+.avg-rating-container {
   padding: 0px 20px;
-  margin-bottom: 2vw;
 }
 
-.organizer-dashboard-section .filled-star {
+.avg-rating-container .filled-star {
   font-size: 250%;
   padding-right: 8px;
   color: gold;
 }
 
-.organizer-dashboard-section .empty-star {
+.avg-rating-container .empty-star {
   font-size: 250%;
   padding-right: 8px;
   color: #ccc;
