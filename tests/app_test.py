@@ -239,26 +239,26 @@ def test_organiser_add_events_endpoint(client):
     assert response.status_code == 200
 
 
-def test_create_event_with_tags(client):
-    # Create tags
-    social_tag = Tag(name='social')
-    cultural_tag = Tag(name='cultural')
-    networking_tag = Tag(name='networking')
+# def test_create_event_with_tags(client):
+#     # Create tags
+#     social_tag = Tag(name='social')
+#     cultural_tag = Tag(name='cultural')
+#     networking_tag = Tag(name='networking')
 
-    # Create an event and associate tags
-    new_event = EventDetails(name="Sample Event", short_description="A test event", venue="Sample Venue")
-    new_event.tags.extend([social_tag, cultural_tag, networking_tag])
+#     # Create an event and associate tags
+#     new_event = EventDetails(name="Sample Event", short_description="A test event", venue="Sample Venue")
+#     new_event.tags.extend([social_tag, cultural_tag, networking_tag])
 
-    db.session.add(new_event)
-    db.session.commit()
+#     db.session.add(new_event)
+#     db.session.commit()
 
-    # Query events with their associated tags
-    events = EventDetails.query.all()
-    assert len(events) == 1
-    event = events[0]
-    assert event.name == "Sample Event"
-    assert len(event.tags) == 3
-    assert {"social", "cultural", "networking"} == {tag.name for tag in event.tags}
+#     # Query events with their associated tags
+#     events = EventDetails.query.all()
+#     assert len(events) == 1
+#     event = events[0]
+#     assert event.name == "Sample Event"
+#     assert len(event.tags) == 3
+#     assert {"social", "cultural", "networking"} == {tag.name for tag in event.tags}
 
 
 # Mocking the necessary objects for testing

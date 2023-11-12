@@ -15,7 +15,7 @@ from google.oauth2.credentials import Credentials as AppCredentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from datetime import date
+from datetime import datetime
 import logging
 import os.path
 import os
@@ -90,6 +90,8 @@ def show_event(id):
             event_day=event_dict["start_date"].day,
             event_month=event_dict["start_date"].strftime("%B"))
     else:
+        if is_past_event:
+            flash("This is a past event!", category="primary")
         return render_template("event.html", 
         event=event_dict, 
         is_registered=False, 
@@ -327,7 +329,7 @@ def register_for_event(event_id):
         2: If the username is invalid
         3: If username is valid but the role is organizer
         4: If the user is already registered for the event
-        redirect: If the event is a past event
+        401 error: If the event is a past event
     """
     # Check for valid event ID
     if event_id is None:
@@ -351,6 +353,13 @@ def register_for_event(event_id):
     
     #Check for past event is also needed and has been implemented on
     #the event.html page where the register button is disabled once an event is over.
+    if is_past_event:
+        logging.warning("Cannot register to a past event!")
+        abort(401, description = {
+                "type": "user_unauthorized",
+                "caller": "events.register_for_event",
+                "message": "Event is a past event"
+            })
 
     # TODO: Check if event has enough seats left
 
@@ -399,10 +408,13 @@ def add_event_to_index(new_event):
 def past_event(event_id):
     #Here we check to see if the event is a past event or not.
     #Only if it is a past event will users be able to add a rating for it
-    #TODO: Compare to the exact time as well. Currently only filters by date.
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
     event_detail = EventDetails.query.filter_by(id=event_id).first()
-    logging.info(date.today())
-    if event_detail.end_date < date.today():
+    logging.info("Current Date: ", current_date, " Current time: ", current_time)
+    if event_detail.start_date < current_date:
+        return True
+    elif (event_detail.start_date == current_date and event_detail.start_time < current_time):
         return True
     else:
         return False
@@ -422,6 +434,15 @@ def previous_rating(attendee_username, event_id):
 
 @events.route("/events/submit_rating/<int:event_id>", methods=["GET", "POST"])
 def submit_rating(event_id):
+    # Check if the user registered for the event
+    is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=event_id).first()
+    is_past_event = past_event(event_id)
+    if (is_past_event == False or is_registered is None):
+        abort(401, description = {
+                "type": "user_unauthorized",
+                "caller": "events.submit_rating",
+                "message": "Event is either not a past event or user is not registered to the event"
+            })
     # Get the user's username (assuming they are logged in)
     attendee_username = current_user.get_id()
     event_id = request.form.get('event_id')

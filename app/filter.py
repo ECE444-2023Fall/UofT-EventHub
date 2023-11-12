@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from datetime import date
+from datetime import date, datetime
 import logging
 
 from app.auth import login_required
@@ -74,9 +74,9 @@ def filter_events_on_event_ids_list(events, event_ids):
     }
 
 def filter_for_past_events(events):
-    #TODO: Compare to the exact time as well. Currently only filters by date.
+    # Return events that are past events
     return { 
         event_id: events[event_id] 
         for event_id in events.keys() 
-        if events[event_id]["end_date"] < date.today().strftime('%Y-%m-%d')
+        if (events[event_id]["start_date"] < date.today().strftime('%Y-%m-%d')) or (events[event_id]["start_date"] == date.today().strftime('%Y-%m-%d') and events[event_id]["start_time"] < datetime.now().strftime("%H:%M:%S"))
     }
