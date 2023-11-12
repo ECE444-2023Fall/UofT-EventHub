@@ -483,6 +483,7 @@ h1.heading {
 .fa-users {
   font-size: 130px; /* Adjust the font size as needed */
   vertical-align: middle;
+  color: #FF7F50;
 }
 
 /* The style below is for the flash messages: */
