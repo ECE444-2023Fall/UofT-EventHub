@@ -35,7 +35,7 @@ def show_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event has no valid entry in the database"
         )
         abort(404, description = {
@@ -106,7 +106,7 @@ def show_event_admin(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, description = {
@@ -190,7 +190,7 @@ def edit_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, description = {
@@ -270,7 +270,7 @@ def delete_event(id):
     event = EventDetails.query.filter_by(id=id).first()
 
     if not event:
-        logging.info(
+        logging.error(
             "Integrity Error: The event ID passed to show_event_admin has no valid entry in the database"
         )
         abort(404, description = {
@@ -456,4 +456,9 @@ def create_ical_event(id):
 
         return response
     else:
-        return "Event not found", 404
+        logging.error("The event ID passed to has no valid entry in the database")
+        abort(404, description = {
+            "type": "event_not_found",
+            "caller": "create_ical_event",
+            "message": "Can not add the event to calendar since the event does not exist"
+        })
