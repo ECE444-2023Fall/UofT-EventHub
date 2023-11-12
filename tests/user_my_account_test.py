@@ -29,7 +29,7 @@ def user_register(client, num_string):
     response = client.post(
         "/register",
         data=dict(
-            name="Test Myaccount", username="my_account"+num_string, password1="password", password2="password", role=Role.USER.value
+            name="Jane Doe", username="my_account"+num_string, password1="password", password2="password", role=Role.USER.value
         ),
         follow_redirects=True,
     )
@@ -38,8 +38,8 @@ def user_register(client, num_string):
     response = client.post(
         "/account/add",
         data=dict(
-            firstname="Test",
-            lastname="Myaccount",
+            firstname="Jane",
+            lastname="Doe",
             year="4",
             course_type="Undergraduate",
             department="Law",
@@ -87,8 +87,8 @@ def test_update_my_account_info(client):
     response = client.post(
         "/account/show",
         data=dict(
-            firstname="Test",
-            lastname="Myaccount",
+            firstname="Jane",
+            lastname="Doe",
             year="3",
             course_type="Undergraduate",
             department="Music",

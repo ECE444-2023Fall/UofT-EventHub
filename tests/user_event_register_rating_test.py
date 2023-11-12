@@ -30,7 +30,7 @@ def user_register(client, num_string):
     response = client.post(
         "/register",
         data=dict(
-            name="User Event", username="my_event"+num_string, password1="password", password2="password", role=Role.USER.value
+            name="John Doe", username="my_event"+num_string, password1="password", password2="password", role=Role.USER.value
         ),
         follow_redirects=True,
     )
@@ -39,8 +39,8 @@ def user_register(client, num_string):
     response = client.post(
         "/account/add",
         data=dict(
-            firstname="User",
-            lastname="Event",
+            firstname="John",
+            lastname="Doe",
             year="4",
             course_type="Undergraduate",
             department="Music",
@@ -169,7 +169,7 @@ def test_past_event_registration(client):
     # organizer2 creates event1 
     create_past_event(client, num_string)
     # organizer2 logs out
-    logout
+    logout(client)
     # register user2
     user_register(client, num_string)
     # user2 logs in
