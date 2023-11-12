@@ -40,27 +40,17 @@ h2{
 /* overriding bootstrap default button to fit project theme*/
 .btn.btn-default{
   color: #000;
-  background-color: #f8f9fa;
-  border-color: #f8f9fa;
+  background-color: #e6e6e8;
+  border-color: #e9eaec;
 }
 
-/* input[type=submit], input[type=reset] {
-  background-color: #04AA6D;
-  border: black ;
-  color: white;
-  padding: 10px 16px;
-  text-decoration: none;
-  margin: 4px 2px;
-  cursor: pointer;
-} */
-
 .btn.btn-default:hover{
-  background-color: #ea453f;
+  background-color: #FF7F50;
   color: white;
 }
 
 .btn.btn-default:active {
-  background-color: #ea453f;
+  background-color: #FF7F50;
   color: white;
 }
 
