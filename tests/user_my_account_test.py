@@ -5,7 +5,6 @@ from flask_login import current_user
 from app.main import app, db
 from app.user import get_active_organizers
 from app.database import EventDetails, Tag
-from app.events import create_google_calendar_event
 from app.globals import Role
 
 TEST_DB = "test2.db"
