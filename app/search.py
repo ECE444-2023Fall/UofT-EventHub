@@ -15,6 +15,35 @@ def search_autocomplete():
     # Login won't be required for this method
     
     query = request.args["search"].lower()
+
+    if USE_SIMPLE_SEARCH:
+        # Using database for autocomplete suggestions
+        # Use simple search algorithm
+        result = []
+
+        # If empty query return empty list
+        if (query == ""):
+            return result
+
+        # Query the events database
+        events_data = EventDetails.query.all()
+
+        for row in events_data:
+            # Check if title matches
+            event_name = str(getattr(row, "name"))
+            event_id = str(getattr(row, "id"))
+
+            if (query in event_name.lower()):
+                logging.info("Query matched event: %s - %s", event_name, event_id)
+                
+                # Append the IDS
+                result.append([event_name, event_id])
+
+            else:
+                logging.info("Query did not match event: %s", event_name)
+
+        return result
+
     tokens = query.split(" ")
 
     logging.info("Search autocomplete received the query: ", tokens)
