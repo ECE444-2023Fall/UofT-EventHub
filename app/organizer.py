@@ -21,8 +21,6 @@ def main():
     my_events_data = get_my_events_from_database()
     my_avg_rating = get_avg_rating()
 
-    # TODO: Pass the event banner information
-
     return render_template("organizer_main.html", my_events_data=my_events_data, my_avg_rating=my_avg_rating)
 
 def get_my_events_from_database():

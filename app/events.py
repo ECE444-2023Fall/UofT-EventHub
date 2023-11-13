@@ -65,7 +65,7 @@ def show_event(id):
     logging.info("The start date of the event is: %s - %s - %s", event_dict["start_date"].weekday(), event_dict["start_date"].month, event_dict["start_date"].day)
 
     # Get image for event
-    logging.info("HP: Retreived event image: %s", event.image)
+    logging.info("Retreived event image: %s", event.image)
 
     if is_registered is not None:
         if not is_past_event:
@@ -134,7 +134,7 @@ def show_event_admin(id):
     event_dict["id"] = str_id
 
     # Get image for event
-    logging.info("HP: Retreived event image: %s", event.image)
+    logging.info("Retreived event image: %s", event.image)
 
     return render_template("event_admin.html",
                            event=event_dict,
