@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 import logging
 
-from app.main import es
-from app.auth import login_required
+
 from app.globals import USE_SIMPLE_SEARCH
+from app.auth import login_required
 from app.database import EventDetails
+
+# To switch between two different serach implementation
+if not USE_SIMPLE_SEARCH:
+    from app.main import es
 
 search = Blueprint("search", __name__)
 

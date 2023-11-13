@@ -16,12 +16,15 @@ import logging
 import os.path
 import os
 
-from app.main import db, es # db is for database and es is for elasticsearch
-from app.globals import Role
+from app.main import db # db is for database
+from app.globals import Role, USE_SIMPLE_SEARCH
 from app.auth import organizer_required, user_required
 from app.database import Credentials, EventRegistration, EventDetails, EventRating
 from app.forms import EventCreateForm
 from app.analytics import get_user_analytics, get_avg_rating
+
+if not USE_SIMPLE_SEARCH:
+    from app.main import es # es is for elasticsearch
 
 events = Blueprint("events", __name__)
 
@@ -190,7 +193,8 @@ def create_event():
         db.session.add(new_event)
         db.session.commit()
 
-        add_event_to_index(new_event)
+        if not USE_SIMPLE_SEARCH:
+            add_event_to_index(new_event)
 
         return redirect(url_for("events.show_event_admin", id=new_event.id))
 
@@ -332,6 +336,7 @@ def register_for_event(event_id):
         4: If the user is already registered for the event
         401 error: If the event is a past event
     """
+    
     # Check for valid event ID
     if event_id is None:
         logging.info("Cannot register user with an event ID: None")

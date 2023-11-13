@@ -10,6 +10,7 @@ import logging, sys
 ## Initialize and import databases schemas
 db = SQLAlchemy()
 from app.database import Credentials, EventDetails
+from app.globals import DB_NAME, USE_SIMPLE_SEARCH
 
 # Initialize logger module
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
@@ -37,10 +38,9 @@ def create_elasticsearch(elasticsearch_host, max_retries=60, retry_delay=5):
 
     return es
 
-elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
-es = create_elasticsearch(elasticsearch_host)
-
-from app.globals import DB_NAME
+if not USE_SIMPLE_SEARCH:
+    elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
+    es = create_elasticsearch(elasticsearch_host)
 
 def create_app(debug):
     app = Flask(__name__)
@@ -81,27 +81,28 @@ def create_app(debug):
 
         # Index the events database using elasticsearch
         # Scrape any existing "junk" data
-        if es.indices.exists(index="events"):
-            es.options(ignore_status=[400, 404]).indices.delete(index="events")
-        # Initialize the events index to an empty dict
-        if not es.indices.exists(index="events"):
-            es.index(index="events", document={})
+        if not USE_SIMPLE_SEARCH:
+            if es.indices.exists(index="events"):
+                es.options(ignore_status=[400, 404]).indices.delete(index="events")
+            # Initialize the events index to an empty dict
+            if not es.indices.exists(index="events"):
+                es.index(index="events", document={})
 
-        events_data = EventDetails.query.all()
-        for row in events_data:
-            event_detail = {
-                "id": str(getattr(row, "id")),
-                "name": str(getattr(row, "name")),
-                "description": str(getattr(row, "short_description")),
-                "category": str(getattr(row, "category")),
-                "venue": str(getattr(row, "venue")),
-                "additional_info": str(getattr(row, "additional_info")),
-            }
-            logging.info("The event dict for indexing:", event_detail)
-            es.index(index="events", document=event_detail)
+            events_data = EventDetails.query.all()
+            for row in events_data:
+                event_detail = {
+                    "id": str(getattr(row, "id")),
+                    "name": str(getattr(row, "name")),
+                    "description": str(getattr(row, "short_description")),
+                    "category": str(getattr(row, "category")),
+                    "venue": str(getattr(row, "venue")),
+                    "additional_info": str(getattr(row, "additional_info")),
+                }
+                logging.info("The event dict for indexing:", event_detail)
+                es.index(index="events", document=event_detail)
 
-        es.indices.refresh(index="events")
-        logging.info(es.cat.count(index="events", format="json"))
+            es.indices.refresh(index="events")
+            logging.info(es.cat.count(index="events", format="json"))
 
     login_manager = LoginManager()
     login_manager.init_app(app)
