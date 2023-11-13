@@ -19,7 +19,7 @@ import os
 from app.main import db, es # db is for database and es is for elasticsearch
 from app.globals import Role
 from app.auth import organizer_required, user_required
-from app.database import Credentials, EventRegistration, EventDetails, EventBanner, EventRating
+from app.database import Credentials, EventRegistration, EventDetails, EventRating
 from app.forms import EventCreateForm
 from app.analytics import get_user_analytics, get_avg_rating
 
@@ -64,6 +64,9 @@ def show_event(id):
     # Get the day of the event
     logging.info("The start date of the event is: %s - %s - %s", event_dict["start_date"].weekday(), event_dict["start_date"].month, event_dict["start_date"].day)
 
+    # Get image for event
+    logging.info("Retreived event image: %s", event.image)
+
     if is_registered is not None:
         if not is_past_event:
             flash("You are registered for the event!", category="primary")
@@ -74,7 +77,7 @@ def show_event(id):
             prev_rating=prev_rating, 
             event_dayofweek=event_dict["start_date"].weekday(), 
             event_day=event_dict["start_date"].day,
-            event_month=event_dict["start_date"].strftime("%B"))
+            event_month=event_dict["start_date"].strftime("%B"),)
         else:
             flash("This is a past event!", category="primary")
             return render_template("event.html", 
@@ -84,7 +87,7 @@ def show_event(id):
             prev_rating=prev_rating,
             event_dayofweek=event_dict["start_date"].weekday(), 
             event_day=event_dict["start_date"].day,
-            event_month=event_dict["start_date"].strftime("%B"))
+            event_month=event_dict["start_date"].strftime("%B"),)
     else:
         if is_past_event:
             flash("This is a past event!", category="primary")
@@ -95,7 +98,7 @@ def show_event(id):
         prev_rating=prev_rating,
         event_dayofweek=event_dict["start_date"].weekday(), 
         event_day=event_dict["start_date"].day,
-        event_month=event_dict["start_date"].strftime("%B"))
+        event_month=event_dict["start_date"].strftime("%B"),)
 
 
 @events.route("/events/admin/<int:id>", methods=["GET"])
@@ -130,12 +133,14 @@ def show_event_admin(id):
     str_id = str(event_dict["id"])
     event_dict["id"] = str_id
 
-    return render_template("event_admin.html", 
-                           event=event_dict, 
+    # Get image for event
+    logging.info("Retreived event image: %s", event.image)
+
+    return render_template("event_admin.html",
+                           event=event_dict,
                            num_of_registrations=num_of_registrations, 
                            user_analytic_charts=user_analytic_charts,
                            avg_rating=avg_rating)
-
 
 @events.route("/events/create_event", methods=["GET", "POST"])
 @login_required
@@ -163,25 +168,29 @@ def create_event():
             redirect_link=form.redirect_link.data,
             additional_info=form.additional_info.data,
         )
+
+        banner_file = form.banner_image.data
+
+        # If an image is not supplied save a place holder
+        if "FileStorage: ''" in str(banner_file):
+            logging.info("Adding a default image")
+            new_event.image = "placeholder.png"
+        else:
+            logging.info("The image supplied is: %s", banner_file)
+            
+            # Add the banner information for the newly created event
+            filename = "event_banner_" + str(new_event.id) + ".png"
+            new_event.image = filename
+
+            # Save the banner in static/event-assets
+            banner_file.save(
+                os.path.join(current_app.root_path, "static", "event-assets", filename)
+            )
+
         db.session.add(new_event)
         db.session.commit()
 
         add_event_to_index(new_event)
-
-        # Add the banner information for the newly created event
-        banner_file = form.banner_image.data
-        filename = "event_banner_" + str(new_event.id) + ".png"
-
-        # Save the banner in static/event-assets
-        banner_file.save(
-            os.path.join(current_app.root_path, "static", "event-assets", filename)
-        )
-
-        # Store the path to the banner EventBanner
-        event_graphic = EventBanner(event_id=new_event.id, image=filename)
-
-        db.session.add(event_graphic)
-        db.session.commit()
 
         return redirect(url_for("events.show_event_admin", id=new_event.id))
 
@@ -240,27 +249,23 @@ def edit_event(id):
         event.ticket_price = form.ticket_price.data
         event.redirect_link = form.redirect_link.data
         event.additional_info = form.additional_info.data
-        db.session.commit()
 
         # TODO: Update the event details to the index for elastic search
 
-        # Add the banner information for the newly created event
+        # Add the banner details for the newly edited event
         banner_file = form.banner_image.data
-        filename = "event_banner_" + str(event.id) + ".png"
+        if "FileStorage: ''" not in str(banner_file):
+            logging.info("The image supplied is: %s", banner_file)
+            
+            # Add the banner information for the newly created event
+            filename = "event_banner_" + str(id) + ".png"
+            event.image = filename
 
-        # Save the banner in static/event-assets
-        banner_file.save(
-            os.path.join(current_app.root_path, "static", "event-assets", filename)
-        )
-
-        # Store the path to the banner EventBanner
-        event_graphic = EventBanner.query.filter_by(event_id=event.id).first()
-        if event_graphic:
-            event_graphic.image = filename
-        else:
-            event_graphic = EventBanner(event_id=event.id, image=filename)
-            db.session.add(event_graphic)
-
+            # Save the banner in static/event-assets
+            banner_file.save(
+                os.path.join(current_app.root_path, "static", "event-assets", filename)
+            )
+            
         db.session.commit()
 
         return redirect(url_for("events.show_event_admin", id=event.id))

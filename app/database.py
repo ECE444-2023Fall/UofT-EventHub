@@ -67,6 +67,9 @@ class EventDetails(db.Model):
     category = db.Column(db.String(150))
     organizer = db.Column(db.String(150), ForeignKey("credentials.username"))
 
+    # Event banner information
+    image = db.Column(db.String(250), nullable=True)
+
     # Location and Time information
     is_online = db.Column(db.Integer)
     venue = db.Column(db.String(150))
@@ -118,23 +121,6 @@ class EventDetails(db.Model):
 
         cal.add_component(event)
         return cal.to_ical()
-
-
-class EventBanner(db.Model):
-    __tablename__ = "event_banners"
-
-    # Event Indetifier information
-    # TODO: If we are restricting one graphics per event we can remove id and make event_id a primary key
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    event_id = db.Column(db.Integer, ForeignKey("event_details.id"))
-    image = db.Column(db.String(250), nullable=True)
-
-    # A sample data from this table will look like this
-    def __repr__(self):
-        return f"Event ID : {self.id}, Banner Image: {self.name}"
-
-    def get_id(self):
-        return self.event_id
 
 class EventRating(db.Model):
     __tablename__ = 'event_ratings'
