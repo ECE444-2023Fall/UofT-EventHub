@@ -97,6 +97,7 @@ def create_test_event(client, num_string):
         category="Academic",
         start_date=datetime(2024, 11, 15).date(),
         end_date=datetime(2024, 11, 15).date(),
+        image="placeholder.png",
         start_time=time(9, 0, 0),
         end_time=time(10, 0, 0),
         max_capacity="5"
@@ -119,6 +120,7 @@ def create_past_event(client, num_string):
         category="Academic",
         start_date=datetime(2023, 10, 15).date(),
         end_date=datetime(2023, 10, 15).date(),
+        image="placeholder.png",
         start_time=time(9, 0, 0),
         end_time=time(10, 0, 0),
         max_capacity="5"
