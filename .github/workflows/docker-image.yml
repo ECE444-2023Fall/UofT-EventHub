@@ -22,7 +22,6 @@ jobs:
           compose-file: "docker-compose.yml"
           down-flags: "--volumes"
           services: |
-            elasticsearch
             web
 
     - name: Check the website status
