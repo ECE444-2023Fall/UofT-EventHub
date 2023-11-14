@@ -160,6 +160,7 @@ def test_rate_upcoming_event(client):
     # user1 tries to submit rating for an upcoming event
     response = client.post("/events/submit_rating/"+num_string, follow_redirects=True)
     assert response.status_code == 401
+    logout(client)
 
 def test_past_event_registration(client):
     # test if users can register for past events (Should not work)
@@ -179,6 +180,26 @@ def test_past_event_registration(client):
     # user2 attepts to register for event
     response = client.post("/events/register/"+num_string, follow_redirects=True)
     assert response.status_code == 401
+    logout(client)
 
+def test_calendar_invite(client):
+    # organizer logs in, creates an event and logs out
+    org_login(client, "1")
+    create_test_event(client, "3")
+    logout(client)
 
+    # user logs in
+    user_login(client, "1")
+    # user tries to view calendar invite for an event that does not exist, so fails
+    response = client.get("/events/"+ "1000" + "/calendar_invite", follow_redirects=True)
+    assert response.status_code == 404
 
+    # user tries to view calendar invite for an event that they have not registered for, so fails
+    response = client.get("/events/"+ "3" + "/calendar_invite", follow_redirects=True)
+    assert response.status_code == 404
+    
+    # user registers for event and can view calendar invite, so passes
+    user_event_registration(client, "3")
+    response = client.get("/events/"+ "3" + "/calendar_invite", follow_redirects=True)
+    assert response.status_code == 200
+    logout(client)
