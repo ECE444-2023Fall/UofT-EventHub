@@ -36,3 +36,4 @@ EVENT_CATEGORIES = ["Academic", "Hobbies", "Music", "Nightlife", "Business"]
 FILTERS = ["In-Person", "Today", "Free", *EVENT_CATEGORIES, "Past Events"]
 
 DB_NAME = "database.db"
+USE_SIMPLE_SEARCH=True

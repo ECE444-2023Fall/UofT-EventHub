@@ -1,8 +1,14 @@
 from flask import Blueprint, request, redirect, url_for
 import logging
 
-from app.main import es
+
+from app.globals import USE_SIMPLE_SEARCH
 from app.auth import login_required
+from app.database import EventDetails
+
+# To switch between two different serach implementation
+if not USE_SIMPLE_SEARCH:
+    from app.main import es
 
 search = Blueprint("search", __name__)
 
@@ -13,6 +19,35 @@ def search_autocomplete():
     # Login won't be required for this method
     
     query = request.args["search"].lower()
+
+    if USE_SIMPLE_SEARCH:
+        # Using database for autocomplete suggestions
+        # Use simple search algorithm
+        result = []
+
+        # If empty query return empty list
+        if (query == ""):
+            return result
+
+        # Query the events database
+        events_data = EventDetails.query.all()
+
+        for row in events_data:
+            # Check if title matches
+            event_name = str(getattr(row, "name"))
+            event_id = str(getattr(row, "id"))
+
+            if (query in event_name.lower()):
+                logging.info("Query matched event: %s - %s", event_name, event_id)
+                
+                # Append the IDS
+                result.append([event_name, event_id])
+
+            else:
+                logging.info("Query did not match event: %s", event_name)
+
+        return result
+
     tokens = query.split(" ")
 
     logging.info("Search autocomplete received the query: ", tokens)
@@ -75,11 +110,37 @@ def search_events(filter="all"):
 # Primary ElasticSearch retrival logic
 # Gets the events depending on the search query
 def get_eventids_matching_search_query(query):
+
+    query = query.lower()
+
+    if USE_SIMPLE_SEARCH:
+        # Use simple search algorithm
+        list_event_ids = []
+
+        # Query the events database
+        events_data = EventDetails.query.all()
+
+        for row in events_data:
+            # Check if title matches
+            event_name = str(getattr(row, "name")).lower()
+
+            if (query in event_name):
+                logging.info("Query matched event: %s", event_name)
+                
+                # Append the IDS
+                list_event_ids.append(getattr(row, "id"))
+
+            else:
+                logging.info("Query did not match event: %s", event_name)
+
+        return list_event_ids
+
+    # Here we use elastic search if config USE_SIMPLE_SEARCH is False
     tokens = query.split(" ")
 
-# This block creates a list of clauses, each specifying a fuzzy matching criterion for a token in the 'tokens' list.
-# Each clause is configured to perform a fuzzy match on the 'name' field of the Elasticsearch documents.
-# Make a JSON query to elastic search to get the list of relevant events
+    # This block creates a list of clauses, each specifying a fuzzy matching criterion for a token in the 'tokens' list.
+    # Each clause is configured to perform a fuzzy match on the 'name' field of the Elasticsearch documents.
+    # Make a JSON query to elastic search to get the list of relevant events
     clauses = [
         {
             "span_multi": {
@@ -89,14 +150,15 @@ def get_eventids_matching_search_query(query):
         for i in tokens
     ]
 
-# Constructing the search query parameters.
-# This operation looks for proximity matches of the clauses with zero distance and not necessarily in order.
+    # Constructing the search query parameters.
+    # This operation looks for proximity matches of the clauses with zero distance and not necessarily in order.
     payload = {
         "bool": {
             "must": [{"span_near": {"clauses": clauses, "slop": 0, "in_order": False}}]
         }
     }
-# It searches the 'events' index and retrieves a maximum of 10 matching results.
+
+    # It searches the 'events' index and retrieves a maximum of 10 matching results.
     resp = es.search(index="events", query=payload, size=10)
 
     ## Make a dict for relevant event details

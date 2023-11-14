@@ -22,13 +22,12 @@ jobs:
           compose-file: "docker-compose.yml"
           down-flags: "--volumes"
           services: |
-            elasticsearch
             web
 
     - name: Check the website status
       run: |
         ls -a
-        echo "Sleeping for 60 seconds"
+        echo "Sleeping for 45 seconds"
         sleep 45
         docker ps -a
         if curl -s http://localhost:5000/ | grep "Login to UofT Event"
