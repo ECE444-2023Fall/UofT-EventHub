@@ -6,7 +6,7 @@ import base64
 import logging
 
 from app.main import db # db is for database
-from app.database import EventDetails, Credentials, UserDetails, EventRegistration, EventRating
+from app.database import EventDetails, UserDetails, EventRegistration, EventRating
 
 
 def get_avg_rating(event_id=None):

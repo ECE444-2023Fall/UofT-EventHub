@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash
 from flask_cors import CORS
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 import os, time
