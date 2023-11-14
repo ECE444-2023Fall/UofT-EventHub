@@ -479,6 +479,16 @@ def create_ical_event(id):
     # Get the event details from the database
     event = EventDetails.query.filter_by(id=id).first()
     if event:
+        # Check if the user has registered for the event
+        is_registered = EventRegistration.query.filter_by(attendee_username=current_user.get_id(), event_id=id).first()
+        if is_registered is None:
+            logging.error("The user has not registered to be able to view the calendar invite")
+            abort(404, description = {
+                "type": "user_not_registered",
+                "caller": "create_ical_event",
+                "message": "Can not add the event to calendar since the user is not registered"
+            })
+
         ical_data = event.to_ical_event()
 
         # Modifying the filename to include the event name
@@ -487,6 +497,7 @@ def create_ical_event(id):
         response = Response(ical_data, content_type='text/calendar')
         response.headers['Content-Disposition'] = f'attachment; filename={filename}'
 
+        logging.info("Returning the event invite to the registered user")
         return response
     else:
         logging.error("The event ID passed to has no valid entry in the database")
