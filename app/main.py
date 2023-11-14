@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 import os, time
 import logging, sys
+from opensearchpy import OpenSearch
 
 ## Initialize and import databases schemas
 db = SQLAlchemy()
@@ -14,32 +15,14 @@ from app.database import Credentials, EventDetails
 # Initialize logger module
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
+#We migrated to opensearch as there is a AWS service available for it
+#There is also not a big difference in usage from opensearch to ES because OS is just an extension of ES
+es = OpenSearch(
+        hosts=['REPLACE_WITH_ENDPOINT:443'],
+        http_auth=('username', 'password')
+    )
+
 ## Initialize elastic search server for autocomplete functionality
-def create_elasticsearch(elasticsearch_host, max_retries=60, retry_delay=5):
-    es = Elasticsearch([f"http://{elasticsearch_host}:9200"])
-
-    # Retry until Elasticsearch becomes available or the maximum number of retries is reached
-    for retry in range(max_retries):
-        try:
-            # Attempt to ping Elasticsearch
-            if es.ping():
-                print("Elasticsearch is up and running")
-                break  # Elasticsearch is available; exit the loop
-        except Exception as e:
-            print(f"Retry {retry + 1}/{max_retries}: Elasticsearch is not available yet. Error: {e}")
-
-        # Wait for a few seconds before the next retry
-        time.sleep(retry_delay)
-
-    # If the loop completes without success, we can raise an error
-    if retry == max_retries - 1:
-        raise TimeoutError(f"Elasticsearch did not become available within {max_retries} retries.")
-
-    return es
-
-elasticsearch_host = os.environ["ELASTICSEARCH_HOST"]
-es = create_elasticsearch(elasticsearch_host)
-
 from app.globals import DB_NAME
 
 def create_app(debug):
@@ -72,7 +55,7 @@ def create_app(debug):
     app.register_blueprint(events, url_prefix="/")
     app.register_blueprint(search, url_prefix="/")
     app.register_blueprint(filter, url_prefix="/")
-    
+
     app.register_blueprint(user_events, url_prefix="/")
     app.register_blueprint(account, url_prefix="/")
 
@@ -85,7 +68,7 @@ def create_app(debug):
             es.options(ignore_status=[400, 404]).indices.delete(index="events")
         # Initialize the events index to an empty dict
         if not es.indices.exists(index="events"):
-            es.index(index="events", document={})
+            es.index(index="events", body={})
 
         events_data = EventDetails.query.all()
         for row in events_data:
@@ -98,7 +81,7 @@ def create_app(debug):
                 "additional_info": str(getattr(row, "additional_info")),
             }
             logging.info("The event dict for indexing:", event_detail)
-            es.index(index="events", document=event_detail)
+            es.index(index="events", body=event_detail)
 
         es.indices.refresh(index="events")
         logging.info(es.cat.count(index="events", format="json"))
