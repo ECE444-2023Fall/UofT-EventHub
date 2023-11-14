@@ -42,7 +42,8 @@ class UserDetails(db.Model, UserMixin):
 
     def get_id(self):
         return (self.username)
-    
+
+# Defining the Tag model to be used to store event tags
 class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +52,7 @@ class Tag(db.Model):
     def __repr__(self):
         return self.name
 
+# Defining the association table for the many-to-many relationship between EventDetails and Tag
 event_tags = db.Table('event_tags',
     db.Column('event_id', db.Integer, db.ForeignKey('event_details.id'), primary_key=True),
     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
@@ -59,7 +61,7 @@ event_tags = db.Table('event_tags',
 class EventDetails(db.Model):
     __tablename__ = "event_details"
 
-    # Event Indetifier information
+    # Event Indentifier information
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=False)
     short_description = db.Column(db.String(100))
@@ -85,7 +87,7 @@ class EventDetails(db.Model):
     # Ticket Price Information
     ticket_price = db.Column(db.Float)
 
-    # Additional informations
+    # Additional information
     redirect_link = db.Column(db.String(300))
     additional_info = db.Column(db.String(1000))
 
@@ -104,6 +106,7 @@ class EventDetails(db.Model):
         organizer = Credentials.query.filter_by(username=organizer_username).first()
         return organizer.name if organizer else None
     
+    # Method to create am iCal event using the information in the event details
     def to_ical_event(self):
         cal = Calendar()
         event = Event()
