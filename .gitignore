@@ -1,11 +1,11 @@
 flask_env/
 venv/
-app/instance/database.db
+# app/instance/database.db
 **/__pycache__
 virtual-environment-snehNinja/
 **/.DS_Store
 .pytest_cache
 .vscode/
-*.db
-instance/database.db
-app/static/event-assets/event_banner_*.png
+# *.db
+# instance/database.db
+# app/static/event-assets/event_banner_*.png
