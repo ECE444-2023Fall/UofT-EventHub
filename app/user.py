@@ -54,6 +54,7 @@ def main(filter="all", search=None):
     # Get the toggle value stored in the session 
     # OR set it to False by default (if session doesn't have a value)
     toggle = session.get('toggle_value', False)
+    session['toggle_value'] = toggle
 
     return render_template("user_main.html", event_data=dict_of_events_details, event_data_json=event_data_json, 
                            search=search, filter=filter, filter_tags=FILTERS, toggle=toggle)
