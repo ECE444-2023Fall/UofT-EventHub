@@ -225,7 +225,7 @@ ul.navbar-nav {
   padding: 1em 2em;
   height: 3.5vh;
   background: #fff;
-  margin: 100px auto 0;
+  margin: 35px auto 0;
   border-radius: 5px;
   border: 10px solid rgba(255,255,255,.5);
   font-size: 23px;
@@ -269,12 +269,18 @@ button .fa-solid{
 }
 
 .btn-light{
-  background-color: #fff;
-  border-color: #fff;
+  background-color: #f6f6f6;
+  border-color: #f6f6f6;
 }
 
 .btn-light:hover{
   background-color: #FF7F50;
+  color: white;
+}
+
+.btn-toggle{
+  background-color: #FF7F50;
+  border-color: #FF7F50;
   color: white;
 }
 

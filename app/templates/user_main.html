@@ -67,29 +67,26 @@
                   <!-- <button class="btn btn-light my-2 my-sm-0" type="submit" name="clear-search-button" value="clear">Clear Search</button> -->
               </form>
 
-              <!-- Generates a form to toggle between the user views -->
-              <!-- Form sends a POST request to flask to change the toggle value on the backend-side -->
-              <!-- And the new toggle value (from the server) is embedded in the button element -->
-              <form action="{{ url_for('user.toggle', filter=filter, search=search) }}" method="post">
-                <button id="toggleViewButton" class="btn btn-primary" embedded-toggle-data="{{toggle}}" type="submit">Toggle View</button>
-              </form>
-
               <!-- <div class="col-xs-12 col-sm-12" style="text-align: center; display: block; position: relative;"> -->
                 <!-- The text box to display autocomplete suggestions -->
                 <div class="dropdown-menu autocomplete-drop-down"></div>
               <!-- </div> -->
             </div>
           </div>
-          <div class="row" style="text-align: center;">
-            
-          </div>
+          <div class="row" style="text-align: center;"></div>
           <div class="row" style="text-align: center;">
             <div class="col-xs-12 col-sm-12" style="text-align: center;">
-              <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
+              <form action="{{ url_for('filter.filter_events', search=search) }}" method="post" class="d-inline">
                   {% for filter_tag in filter_tags %}
-                  <button id="sort-key-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
+                  <button id="sort-key-btn" class="btn btn-light my-2 my-sm-0" style="margin-right: 10px;" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
                   {% endfor %}
-                  <button id="sort-clear-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
+                  <button id="sort-clear-btn" class="btn btn-light my-2 my-sm-0" style="margin-right: 10px;" type="submit" name="filter-tag" value="clear">Clear Filters</button>
+              </form>
+              <!-- Generates a form to toggle between the user views -->
+              <!-- Form sends a POST request to flask to change the toggle value on the backend-side -->
+              <!-- And the new toggle value (from the server) is embedded in the button element -->
+              <form action="{{ url_for('user.toggle', filter=filter, search=search) }}" method="post" class="d-inline">
+                <button id="toggleViewButton" class="btn btn-toggle" embedded-toggle-data="{{toggle}}" type="submit"><i class="fa-regular fa-calendar fa-xl"></i></button>
               </form>
             </div>
           </div>

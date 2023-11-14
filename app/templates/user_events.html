@@ -83,7 +83,7 @@
             <div class="col-xs-12 col-sm-12" style="text-align: center;">
               <form action="{{ url_for('filter.filter_events', search=search) }}" method="post">
                   {% for filter_tag in filter_tags %}
-                  <button id="sort-key-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
+                  <button id="sort-key-btn" class="btn btn-light my-2 my-sm-0" style="margin-right: 10px;" type="submit" name="filter-tag" value="{{filter_tag | lower}}">{{filter_tag}}</button>
                   {% endfor %}
                   <button id="sort-clear-btn" class="btn btn-light my-2 my-sm-0" type="submit" name="filter-tag" value="clear">Clear Filters</button>
               </form>
@@ -108,7 +108,7 @@
                           </a>
                         </h4>
                         <p class="">
-                            {{value.description}}
+                            {{value.short_description}}
                         </p>
                     </div>
                     <div class="card-read-more">
