@@ -117,6 +117,8 @@ def convert_dictionary_to_JSON(events):
     logging.info(event_data_json)
     return event_data_json
 
+
+# Function for users to view a list of all organizers with upcoming and/or past events
 @user.route("/user/organizers", methods=["GET"])
 @login_required
 @user_required
@@ -130,14 +132,14 @@ def view_all_organizers():
 # Get only the organizers that have upcoming events or had events in the past
 def get_active_organizers():
 
-    # Joining EventDetails and Credentials tables
-    # Selecting only distinct organizer usernames and names
+    # Joining EventDetails and Credentials tables, and selecting only distinct organizer usernames and names
     organizers = db.session.query(Credentials.username, Credentials.name).join(
         EventDetails, Credentials.username == EventDetails.organizer
     ).distinct().all()
 
     return organizers
 
+# Function for users to view individual organizer pages including upcoming and/or past events
 @user.route("/user/organizers/<organizer_username>", methods=["GET"])
 @login_required
 @user_required
@@ -146,6 +148,7 @@ def view_organizer(organizer_username):
 
     organizer_name = EventDetails.get_organizer_name_from_username(organizer_username)
     
+    # Get the upcoming and past events from the current time
     upcoming_events = get_organizer_upcoming_events(organizer_username)
     past_events = get_organizer_past_events(organizer_username)
 

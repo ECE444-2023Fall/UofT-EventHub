@@ -1,13 +1,8 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from sqlalchemy import func
-import matplotlib.pyplot as plt
-from io import BytesIO
-import base64
-import logging
 
 from app.main import db # db is for database
-from app.database import EventDetails, Credentials, UserDetails, EventRegistration, EventRating
+from app.database import EventDetails, Credentials
 from app.auth import organizer_required
 from app.analytics import get_avg_rating
 

@@ -1,21 +1,14 @@
 from flask import (
     Blueprint,
     render_template,
-    send_from_directory,
-    flash,
-    current_app,
-    request,
-    redirect,
-    url_for,
     abort,
 )
 from flask_login import login_required, current_user
-import logging
 
 from app.main import db
 from app.globals import FILTERS, EVENT_CATEGORIES
 from app.auth import login_required, user_required
-from app.database import Credentials, EventRegistration, EventDetails
+from app.database import EventRegistration, EventDetails
 from app.search import get_eventids_matching_search_query
 from app.filter import filter_for_today_events, filter_for_inperson_events, filter_for_free_events, filter_events_on_category, filter_events_on_event_ids_list, filter_for_past_events
 

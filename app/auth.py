@@ -6,7 +6,7 @@ import logging
 
 from app.globals import Role
 from app.main import db
-from app.forms import LoginForm, RegForm, UserRegisterForm
+from app.forms import LoginForm, RegForm
 from app.database import Credentials
 
 auth = Blueprint("auth", __name__)
