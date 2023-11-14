@@ -81,7 +81,7 @@
 
                 <div class="event-section">
                     <h4 class="event-section-header">About this event</h4>
-                    {% if event.additional_info != ""%}
+                    {% if event.long_description != ""%}
                     <p>{{event.long_description}}</p>
                     {% else %}
                     <p>The organizer did not provide detailed information about the event.</p>
@@ -95,11 +95,6 @@
                     {% else %}
                         <p>Tickets cost (per person): {{event.ticket_price}} CAD</p>
                     {% endif %}
-                </div>
-
-                <div class="event-section">
-                    <h4 class="event-section-header">Location</h4>
-                    <p>Venue: {{event.venue}}</p>
                 </div>
 
                 {% if event.additional_info != "" %}

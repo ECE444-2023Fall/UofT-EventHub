@@ -182,7 +182,12 @@ def create_event():
             logging.info("The image supplied is: %s", banner_file)
             
             # Add the banner information for the newly created event
-            filename = "event_banner_" + str(new_event.id) + ".png"
+            # Get number of events
+            num_of_events = len(EventDetails.query.all())
+            # The new event id will always be one more than the current num of events
+            new_event_id = num_of_events + 1
+            # Give the file name according to new event id
+            filename = "event_banner_" + str(new_event_id) + ".png"
             new_event.image = filename
 
             # Save the banner in static/event-assets
