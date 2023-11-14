@@ -64,12 +64,16 @@
 
                 <div class="event-section">
                     <h4 class="event-section-header">Location</h4>
+                    {% if event.is_online == 1 %}
+                    <p>Venue: The event is online. The organizer will reach out to you on your registered email ID.</p>
+                    {% else %}
                     <p>Venue: {{event.venue}}</p>
+                    {% endif %}
                 </div>
 
                 <div class="event-section">
                     <h4 class="event-section-header">About this event</h4>
-                    {% if event.additional_info != ""%}
+                    {% if event.long_description != ""%}
                     <p>{{event.long_description}}</p>
                     {% else %}
                     <p>The organizer did not provide detailed information about the event.</p>
@@ -82,15 +86,6 @@
                         <p>Tickets Cost: Free</p>
                     {% else %}
                         <p>Tickets Cost (per person): {{event.ticket_price}} CAD</p>
-                    {% endif %}
-                </div>
-
-                <div class="event-section">
-                    <h4 class="event-section-header">Location</h4>
-                    {% if event.is_online == 1 %}
-                    <p>Venue: The event is online. The organizer will reach out to you on your registered email ID.</p>
-                    {% else %}
-                    <p>Venue: {{event.venue}}</p>
                     {% endif %}
                 </div>
 
